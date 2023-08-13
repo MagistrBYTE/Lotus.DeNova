@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Lotus.DeNova</RootNamespace>
+    <Configurations>Debug;Release;Publish</Configurations>
+    <OutputPath>..\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>USE_EFC</DefineConstants>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>MagistrBYTE aka DanielDem</Authors>
+    <Company>LotusPlatform</Company>
+    <Copyright>MagistrBYTE aka DanielDem</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <Title>Lotus.DeNova</Title>
+    <PackageTags></PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Модуль игровой вселенной DeNova</Description>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    <PackageIcon>IconTemplate.png</PackageIcon>
+    <PackageIconUrl />
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>1587,1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Publish'">
+    <Content Include="..\..\Resources\IconTemplate.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </Content>
+    <None Include="Readme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Publish|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Publish'">
+    <PackageReference Include="Lotus.Core" Version="1.9.1" />
+    <PackageReference Include="Lotus.Math" Version="1.9.1" />
+    <PackageReference Include="Lotus.Repository" Version="1.9.1" />
+    <PackageReference Include="Lotus.Account" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Publish'">
+    <ProjectReference Include="..\..\Lotus.Basis\Lotus.Math\Lotus.Math.csproj" />
+    <ProjectReference Include="..\..\Lotus.Basis\Lotus.Core\Lotus.Core.csproj" />
+    <ProjectReference Include="..\..\Lotus.Basis\Lotus.Repository\Lotus.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lotus.Account" Version="1.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+</Project>
