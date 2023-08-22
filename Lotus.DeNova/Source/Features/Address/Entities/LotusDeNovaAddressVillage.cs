@@ -3,7 +3,7 @@
 // Раздел: Подсистема адресного хозяйства
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
-/** \file DeNovaAddressVillage.cs
+/** \file LotusDeNovaAddressVillage.cs
 *		Класс представляющий собой компонент адреса - населённый пункт.
 */
 //---------------------------------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class CAddressVillage : EntityDbNotifyProperty<Int32>, IComparable<CAddressVillage>, ILotusSupportViewInspector
+		public class AddressVillage : EntityDbNotifyProperty<Int32>, IComparable<AddressVillage>, ILotusSupportViewInspector
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -90,14 +90,14 @@ namespace Lotus
 			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Конфигурирование модели для типа <see cref="CAddressVillage"/>
+			/// Конфигурирование модели для типа <see cref="AddressVillage"/>
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
 			public static void ModelCreating(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<CAddressVillage>();
+				var model = modelBuilder.Entity<AddressVillage>();
 				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
 			}
 			#endregion
@@ -215,13 +215,13 @@ namespace Lotus
 			/// </summary>
 			[Browsable(false)]
 			[ForeignKey(nameof(VillageSettlementId))]
-			public CAddressVillageSettlement? VillageSettlement { get; set; }
+			public AddressVillageSettlement? VillageSettlement { get; set; }
 
 			/// <summary>
 			/// Список улиц
 			/// </summary>
 			[Browsable(false)]
-			public List<CAddressStreet> Streets { get; set; } = new List<CAddressStreet>();
+			public List<AddressStreet> Streets { get; set; } = new List<AddressStreet>();
 			#endregion
 
 			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
@@ -253,7 +253,7 @@ namespace Lotus
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressVillage()
+			public AddressVillage()
 			{
 			}
 
@@ -263,7 +263,7 @@ namespace Lotus
 			/// </summary>
 			/// <param name="name">Наименование населённого пункта</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressVillage(String name)
+			public AddressVillage(String name)
 			{
 				mName = name;
 			}
@@ -275,7 +275,7 @@ namespace Lotus
 			/// <param name="village_settlement_id">Внешний ключ для сельского поселения</param>
 			/// <param name="name">Наименование населённого пункта</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressVillage(Int32 village_settlement_id, String name)
+			public AddressVillage(Int32 village_settlement_id, String name)
 			{
 				mName = name;
 				VillageSettlementId = village_settlement_id;
@@ -289,7 +289,7 @@ namespace Lotus
 			/// <param name="id">Индекс(ключ) населённого пункта</param>
 			/// <param name="name">Наименование населённого пункта</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressVillage(Int32 village_settlement_id, Int32 id, String name)
+			public AddressVillage(Int32 village_settlement_id, Int32 id, String name)
 			{
 				mName = name;
 				VillageSettlementId = village_settlement_id;
@@ -305,7 +305,7 @@ namespace Lotus
 			/// <param name="other">Сравниваемый объект</param>
 			/// <returns>Статус сравнения объектов</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(CAddressVillage? other)
+			public Int32 CompareTo(AddressVillage? other)
 			{
 				if (other == null) return 0;
 				return (Name.CompareTo(other.Name));

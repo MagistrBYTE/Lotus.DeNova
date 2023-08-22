@@ -64,7 +64,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class CAddressElement : EntityDbNotifyProperty<Int32>, IComparable<CAddressElement>, ILotusSupportViewInspector
+		public class AddressElement : EntityDbNotifyProperty<Int32>, IComparable<AddressElement>, ILotusSupportViewInspector
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -87,14 +87,14 @@ namespace Lotus
 			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Конфигурирование модели для типа <see cref="CAddressElement"/>
+			/// Конфигурирование модели для типа <see cref="AddressElement"/>
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
 			public static void ModelCreating(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<CAddressElement>();
+				var model = modelBuilder.Entity<AddressElement>();
 				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
 			}
 			#endregion
@@ -212,7 +212,7 @@ namespace Lotus
 			/// </summary>
 			[Browsable(false)]
 			[ForeignKey(nameof(StreetId))]
-			public CAddressStreet? Street { get; set; }
+			public AddressStreet? Street { get; set; }
 			#endregion
 
 			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
@@ -244,7 +244,7 @@ namespace Lotus
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressElement()
+			public AddressElement()
 			{
 
 			}
@@ -255,7 +255,7 @@ namespace Lotus
 			/// </summary>
 			/// <param name="number">Номер адресуемого элемента</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressElement(String number)
+			public AddressElement(String number)
 			{
 				mNumber = number;
 			}
@@ -269,7 +269,7 @@ namespace Lotus
 			/// <param name="other">Сравниваемый объект</param>
 			/// <returns>Статус сравнения объектов</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(CAddressElement? other)
+			public Int32 CompareTo(AddressElement? other)
 			{
 				if(other == null) return 0;
 

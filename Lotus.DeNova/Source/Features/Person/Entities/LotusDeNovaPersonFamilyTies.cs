@@ -10,12 +10,13 @@
 // Версия: 1.0.0.0
 // Последнее изменение от 30.04.2023
 //=====================================================================================================================
+using System.ComponentModel.DataAnnotations.Schema;
+//---------------------------------------------------------------------------------------------------------------------
 #if USE_EFC
 using Microsoft.EntityFrameworkCore;
 #endif
 //---------------------------------------------------------------------------------------------------------------------
 using Lotus.Core;
-using System.ComponentModel.DataAnnotations.Schema;
 //=====================================================================================================================
 namespace Lotus
 {
@@ -58,7 +59,7 @@ namespace Lotus
 			/// Навигационное свойство для родителя персонажа
 			/// </summary>
 			[ForeignKey(nameof(ParentId))]
-			public virtual CPerson Parent { get; set; } = null!;
+			public virtual Person Parent { get; set; } = null!;
 
 			/// <summary>
 			/// Внешний ключ для родителя персонажа
@@ -69,7 +70,7 @@ namespace Lotus
 			/// Навигационное свойство для ребенка персонажа
 			/// </summary>
 			[ForeignKey(nameof(ChildId))]
-			public virtual CPerson Child { get; set; } = null!;
+			public virtual Person Child { get; set; } = null!;
 
 			/// <summary>
 			/// Внешний ключ для ребенка персонажа

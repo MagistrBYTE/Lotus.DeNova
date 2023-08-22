@@ -3,7 +3,7 @@
 // Раздел: Подсистема адресного хозяйства
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
-/** \file DeNovaAddressVillageSettlement.cs
+/** \file LotusDeNovaAddressVillageSettlement.cs
 *		Класс представляющий собой компонент адреса - сельское поселение.
 */
 //---------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ namespace Lotus
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
 		[LotusSerializeData]
-		public class CAddressVillageSettlement : EntityDbNotifyProperty<Int32>, IComparable<CAddressVillageSettlement>, 
+		public class AddressVillageSettlement : EntityDbNotifyProperty<Int32>, IComparable<AddressVillageSettlement>, 
 			ILotusSupportViewInspector
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
@@ -56,14 +56,14 @@ namespace Lotus
 			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Конфигурирование модели для типа <see cref="CAddressVillageSettlement"/>
+			/// Конфигурирование модели для типа <see cref="AddressVillageSettlement"/>
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
 			public static void ModelCreating(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<CAddressVillageSettlement>();
+				var model = modelBuilder.Entity<AddressVillageSettlement>();
 				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
 			}
 			#endregion
@@ -136,7 +136,7 @@ namespace Lotus
 			/// Список населённых пунктов
 			/// </summary>
 			[Browsable(false)]
-			public List<CAddressVillage> Villages { get; set; } = new List<CAddressVillage>();
+			public List<AddressVillage> Villages { get; set; } = new List<AddressVillage>();
 			#endregion
 
 			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
@@ -168,7 +168,7 @@ namespace Lotus
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressVillageSettlement()
+			public AddressVillageSettlement()
 			{
 				mName = String.Empty;
 			}
@@ -179,7 +179,7 @@ namespace Lotus
 			/// </summary>
 			/// <param name="name">Наименование сельского поселения</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressVillageSettlement(String name)
+			public AddressVillageSettlement(String name)
 			{
 				mName = name;
 			}
@@ -193,7 +193,7 @@ namespace Lotus
 			/// <param name="other">Сравниваемый объект</param>
 			/// <returns>Статус сравнения объектов</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(CAddressVillageSettlement? other)
+			public Int32 CompareTo(AddressVillageSettlement? other)
 			{
 				if(other == null)	return 0;
 				return (Name.CompareTo(other));

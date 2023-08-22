@@ -38,7 +38,7 @@ export const DesktopViewSettings:IViewSettings =
 {
   headerHeight: 64,
   leftPanelWidthMax: 240,
-  leftPanelWidthMin: 120,
+  leftPanelWidthMin: 60,
   rightPanelWidthMax: 240,
   rightPanelWidthMin: 60,
   footerHeight: 64
@@ -48,9 +48,19 @@ export const PortraitViewSettings:IViewSettings =
 {
   headerHeight: 56,
   leftPanelWidthMax: 240,
-  leftPanelWidthMin: 120,
+  leftPanelWidthMin: 60,
   rightPanelWidthMax: 240,
   rightPanelWidthMin: 60,
+  footerHeight: 56
+}
+
+export const LandscapeViewSettings:IViewSettings = 
+{
+  headerHeight: 56,
+  leftPanelWidthMax: 240,
+  leftPanelWidthMin: 80,
+  rightPanelWidthMax: 240,
+  rightPanelWidthMin: 80,
   footerHeight: 56
 }
 

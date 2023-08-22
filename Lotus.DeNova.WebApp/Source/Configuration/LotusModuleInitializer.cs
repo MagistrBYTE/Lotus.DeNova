@@ -11,6 +11,7 @@
 // Последнее изменение от 30.04.2023
 //=====================================================================================================================
 using System;
+using Lotus.Account;
 using Microsoft.EntityFrameworkCore;
 //=====================================================================================================================
 namespace Lotus
@@ -40,7 +41,10 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public static IServiceCollection AddLotusDeNovaServices(this IServiceCollection services)
             {
-                XMapping.Init();
+				services.AddScoped<ILotusGameContextService, GameContextService>();
+				services.AddScoped<ILotusGameSaveService, GameSaveService>();
+
+				XMapping.Init();
 
                 return services;
             }
@@ -55,10 +59,9 @@ namespace Lotus
             //---------------------------------------------------------------------------------------------------------
             public static IServiceCollection AddLotusDeNovaDatabaseServices(this IServiceCollection services, IConfiguration configuration)
             {
-                // Добавление CDeNovaDbContext для взаимодействия с базой данных
-                services.AddDbContext<CDeNovaDbContext>(options =>
+                // Добавление DeNovaDbContext для взаимодействия с базой данных
+                services.AddDbContext<DeNovaDbContext>(options =>
                 {
-					options.UseOpenIddict();
 					options.UseNpgsql(configuration.GetConnectionString(XDbConstants.ConnectingDenovaDb),
                         optionsBuilder =>
                         {
@@ -87,7 +90,7 @@ namespace Lotus
                 if (application is not null)
                 {
                     using var service_scope = application!.ApplicationServices!.GetService<IServiceScopeFactory>()!.CreateScope();
-                    using var context = service_scope.ServiceProvider.GetRequiredService<CDeNovaDbContext>();
+                    using var context = service_scope.ServiceProvider.GetRequiredService<DeNovaDbContext>();
 
                     try
                     {

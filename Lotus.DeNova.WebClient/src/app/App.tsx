@@ -50,7 +50,7 @@ export const App: React.FC = () =>
         {/* Карта */} 
         <Route
           path={mainNavigations.map.path}
-          element={<MainLayoutPermission {...mainNavigations.map} page={<MapPage/>}/>}/>
+          element={<MainLayout {...mainNavigations.map} page={<MapPage/>}/>}/>
       </Routes>
     </React.Suspense>
   );

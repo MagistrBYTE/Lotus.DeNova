@@ -3,7 +3,7 @@
 // Раздел: Подсистема адресного хозяйства
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
-/** \file DeNovaAddressStreet.cs
+/** \file LotusDeNovaAddressStreet.cs
 *		Класс представляющий собой компонент адреса - элемент улицы в населённом пункте или местоположение 
 *	вне границ населённого пункта.
 */
@@ -69,7 +69,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class CAddressStreet : EntityDbNotifyProperty<Int32>, IComparable<CAddressStreet>, ILotusSupportViewInspector
+		public class AddressStreet : EntityDbNotifyProperty<Int32>, IComparable<AddressStreet>, ILotusSupportViewInspector
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -89,14 +89,14 @@ namespace Lotus
 			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Конфигурирование модели для типа <see cref="CAddressStreet"/>
+			/// Конфигурирование модели для типа <see cref="AddressStreet"/>
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
 			public static void ModelCreating(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<CAddressStreet>();
+				var model = modelBuilder.Entity<AddressStreet>();
 				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
 			}
 			#endregion
@@ -157,13 +157,13 @@ namespace Lotus
 			/// </summary>
 			[Browsable(false)]
 			[ForeignKey(nameof(VillageId))]
-			public CAddressVillage? Village { get; set; }
+			public AddressVillage? Village { get; set; }
 
 			/// <summary>
 			/// Список элементов
 			/// </summary>
 			[Browsable(false)]
-			public List<CAddressElement> Elements { get; set; } = new List<CAddressElement>();
+			public List<AddressElement> Elements { get; set; } = new List<AddressElement>();
 			#endregion
 
 			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
@@ -195,7 +195,7 @@ namespace Lotus
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressStreet()
+			public AddressStreet()
 			{
 			}
 
@@ -205,7 +205,7 @@ namespace Lotus
 			/// </summary>
 			/// <param name="name">Наименование улицы</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CAddressStreet(String name)
+			public AddressStreet(String name)
 			{
 				mName = name;
 			}
@@ -219,7 +219,7 @@ namespace Lotus
 			/// <param name="other">Сравниваемый объект</param>
 			/// <returns>Статус сравнения объектов</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(CAddressStreet? other)
+			public Int32 CompareTo(AddressStreet? other)
 			{
 				if(other == null) return 0;
 				return (Name.CompareTo(other.Name));

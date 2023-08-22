@@ -23,11 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lotus.DeNova\Lotus.DeNova.csproj" />
+    <InternalsVisibleTo Include="Lotus.DeNova.Test" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Source\Controllers\" />
-    <Folder Include="Source\Infrastructure\" />
+    <ProjectReference Include="..\Lotus.DeNova\Lotus.DeNova.csproj" />
   </ItemGroup>
 </Project>

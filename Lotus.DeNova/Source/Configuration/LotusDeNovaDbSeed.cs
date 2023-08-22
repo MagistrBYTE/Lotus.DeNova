@@ -26,7 +26,7 @@ namespace Lotus
         //-------------------------------------------------------------------------------------------------------------
         public static class XDbSeed
         {
-			#region ======================================= МЕТОДЫ СОЗДАНИЯ ===========================================
+			#region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Создание сущностей по умолчанию
@@ -35,6 +35,64 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public static void Create(ModelBuilder modelBuilder)
 			{
+				CreateCampaignSetting(modelBuilder);
+				CreateRace(modelBuilder);
+				CreateAstrology(modelBuilder);
+			}
+			#endregion
+
+			#region ======================================= ОПРЕДЕЛЕНИЕ ДАННЫХ ========================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Создание сеттингов игры
+			/// </summary>
+			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void CreateCampaignSetting(ModelBuilder modelBuilder)
+			{
+				// Определение для таблицы
+				var model = modelBuilder.Entity<CampaignSetting>();
+
+				// Данные
+				model.HasData(XCampaignSettingConstants.Sentra);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Создание рас
+			/// </summary>
+			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void CreateRace(ModelBuilder modelBuilder)
+			{
+				// Определение для таблицы
+				var model = modelBuilder.Entity<Race>();
+
+				// Данные
+				model.HasData(XRaceConstants.Erian, 
+					XRaceConstants.Zavroteanen,
+					XRaceConstants.Leohart, 
+					XRaceConstants.Tribe,
+					XRaceConstants.Gnol,
+					XRaceConstants.Elgou,
+					XRaceConstants.Fergarian);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Создание астрологий
+			/// </summary>
+			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void CreateAstrology(ModelBuilder modelBuilder)
+			{
+				// Определение для таблицы
+				var model = modelBuilder.Entity<Astrology>();
+
+				// Данные
+				model.HasData(XAstrologyConstants.Ophiuchus,
+					XAstrologyConstants.Quetzalcoatl,
+					XAstrologyConstants.Taurus);
 			}
 			#endregion
 		}

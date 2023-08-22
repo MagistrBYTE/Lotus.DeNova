@@ -1,76 +1,63 @@
 import { XMath } from './Common'
 import Vector3 from './Vector3'
 
-export default class Vector2 
+/**
+ * Интерфейс для описания двухмерного вектора
+ */
+export interface IVector2
 {
   /**
-   * Retrieves a new instance of the vector (0, 0)
-   * @returns {Vector2} The zero vector
+   * Координата X
    */
-  static get zero(): Vector2 
-  {
-    return new Vector2([0, 0])
-  }
-
-  private _values = new Float32Array(2)
+  x: number;
 
   /**
-   * @returns {number} The x-component of the vector
+   * Координата Y
    */
-  get x(): number 
-  {
-    return this._values[0]
-  }
+  y: number;
+}
+
+export class Vector2 implements IVector2
+{
+  //
+  // КОНСТАНТНЫЕ ДАННЫЕ
+  //
+  // #region
+  /**
+   * Единичный вектор
+   */  
+  public static readonly One:Vector2 = new Vector2(1, 1);
 
   /**
-   * @returns {number} The y-component of the vectory
+   * Вектор "право"
    */
-  get y(): number 
-  {
-    return this._values[1]
-  }
+  public static readonly Right:Vector2 = new Vector2(1, 0);
 
   /**
-   * @returns {number[]} An array containing the x-component and y-component of the vector
+   * Вектор "влево"
    */
-  get xy(): number[] 
-  {
-    return [this._values[0], this._values[1]]
-  }
+  public static readonly Left:Vector2 = new Vector2(-1, 0);
 
   /**
-   * @param {number} value The new x-component of the vector
+   * Вектор "вверх"
    */
-  set x(value: number) 
-  {
-    this._values[0] = value
-  }
+  public static readonly Up:Vector2 = new Vector2(0, 1);
 
   /**
-   * @param {number} value The new y-component of the vector
+   * Вектор "вниз"
    */
-  set y(value: number) 
-  {
-    this._values[1] = value
-  }
+  public static readonly Down:Vector2 = new Vector2(0, -1);
 
   /**
-   * @param {number[]} values An array containing the new x-component and y-component of the vector
+   * Нулевой вектор
    */
-  set xy(values: number[]) 
-  {
-    this._values[0] = values[0]
-    this._values[1] = values[1]
-  }
+  public static readonly Zero:Vector2 = new Vector2(0, 0);
+  // #endregion
 
-  constructor(values?: number[]) 
-  {
-    if (values) 
-    {
-      this.xy = values
-    }
-  }
-
+  //
+  // СТАТИЧЕСКИЕ МЕТОДЫ
+  //
+  // #region
   static cross(vector: Vector2, vector2: Vector2, dest?: Vector3): Vector3 
   {
     if (!dest) dest = new Vector3()
@@ -128,7 +115,7 @@ export default class Vector2
    */
   static direction(vector: Vector2, vector2: Vector2, dest?: Vector2): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
     const x = vector.x - vector2.x
     const y = vector.y - vector2.y
     let length = Math.sqrt(x * x + y * y)
@@ -154,7 +141,7 @@ export default class Vector2
    */
   static lerp(a: Vector2, b: Vector2, t: number, dest?: Vector2): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
     dest.x = a.x + t * (b.x - a.x)
     dest.y = a.y + t * (b.y - a.y)
     return dest
@@ -170,7 +157,7 @@ export default class Vector2
    */
   static sum(vector: Vector2, vector2: Vector2, dest?: Vector2): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
     dest.x = vector.x + vector2.x
     dest.y = vector.y + vector2.y
     return dest
@@ -190,7 +177,7 @@ export default class Vector2
     dest?: Vector2
   ): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
 
     dest.x = vector.x - vector2.x
     dest.y = vector.y - vector2.y
@@ -208,7 +195,7 @@ export default class Vector2
    */
   static product(vector: Vector2, vector2: Vector2, dest?: Vector2): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
 
     dest.x = vector.x * vector2.x
     dest.y = vector.y * vector2.y
@@ -226,14 +213,60 @@ export default class Vector2
    */
   static quotient(vector: Vector2, vector2: Vector2, dest?: Vector2): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
 
     dest.x = vector.x / vector2.x
     dest.y = vector.y / vector2.y
 
     return dest
   }
+  // #endregion
 
+  //
+  // ДАННЫЕ
+  //
+
+  /**
+   * Координата X
+   */
+  x: number;
+
+  /**
+   * Координата Y
+   */
+  y: number;
+
+  constructor(x: number, y: number) 
+  {
+    this.x = x;
+    this.y = y;
+  }  
+
+  //
+  // СВОЙСТВА
+  //  
+
+  /**
+   * @returns {number[]} An array containing the x-component and y-component of the vector
+   */
+  get xy(): number[] 
+  {
+    return [this.x, this.y]
+  }
+
+  /**
+   * @param {number[]} values An array containing the new x-component and y-component of the vector
+   */
+  set xy(values: number[]) 
+  {
+    this.x = values[0]
+    this.y = values[1]
+  }
+
+  //
+  // ОБЩИЕ МЕТОДЫ
+  // 
+  // #region
   /**
    * Retrieves the x-component or y-component of the vector.
    * @param {number} index
@@ -241,7 +274,8 @@ export default class Vector2
    */
   at(index: number): number 
   {
-    return this._values[index]
+    if(index === 0) return this.x;
+    return this.y;
   }
 
   /**
@@ -261,7 +295,7 @@ export default class Vector2
    */
   copy(dest?: Vector2): Vector2 
   {
-    if (!dest) dest = new Vector2()
+    if (!dest) dest = new Vector2(0, 0)
     dest.xy = this.xy
     return dest
   }
@@ -423,6 +457,5 @@ export default class Vector2
   {
     return '(' + this.x + ', ' + this.y + ')'
   }
-  // TODO: Multiply Matrix2
-  // TODO: Multiply Matrix3
+  // #endregion
 }

@@ -1,5 +1,4 @@
 //---------------------------------------------------------------------------------------------------------------------
-using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Lotus.DeNova;
 using Lotus.Web;
@@ -101,3 +100,8 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
+
+/// <summary>
+/// Для тестирования
+/// </summary>
+public partial class Program { }

@@ -35,7 +35,7 @@ namespace Lotus
             /// Конфигурация и первоначальная инициализация базы данных
             /// </summary>
             /// <remarks>
-            /// Вызывается в <see cref="CDeNovaDbContext.OnModelCreating(ModelBuilder)"/>
+            /// Вызывается в <see cref="DeNovaDbContext.OnModelCreating(ModelBuilder)"/>
             /// </remarks>
             /// <param name="modelBuilder">Интерфейс для построения моделей</param>
             //---------------------------------------------------------------------------------------------------------
@@ -44,21 +44,38 @@ namespace Lotus
 				//
 				// ТЕРРИТОРИАЛЬНО-АДРЕСНОЕ ХОЗЯЙСТВО
 				//
-				CAddressElement.ModelCreating(modelBuilder);
-				CAddressStreet.ModelCreating(modelBuilder);
-				CAddressVillage.ModelCreating(modelBuilder);
-				CAddressVillageSettlement.ModelCreating(modelBuilder);
+				AddressElement.ModelCreating(modelBuilder);
+				AddressStreet.ModelCreating(modelBuilder);
+				AddressVillage.ModelCreating(modelBuilder);
+				AddressVillageSettlement.ModelCreating(modelBuilder);
+
+				//
+				// ДАННЫЕ
+				//
+				CampaignSetting.ModelCreating(modelBuilder);
+				Race.ModelCreating(modelBuilder);
+				Astrology.ModelCreating(modelBuilder);
+				Image.ModelCreating(modelBuilder);
+
+				//
+				// ИГРОВОЙ КОНТЕКСТ
+				//
+				GameContext.ModelCreating(modelBuilder);
+				GameSave.ModelCreating(modelBuilder);
 
 				//
 				// ПЕРСОНАЖ
 				//
-				CPerson.ModelCreating(modelBuilder);
-				CAddressInfo.ModelCreating(modelBuilder);
-				CAstrologyInfo.ModelCreating(modelBuilder);
-				CAvatarInfo.ModelCreating(modelBuilder);
-				CBirthdayInfo.ModelCreating(modelBuilder);
+				Person.ModelCreating(modelBuilder);
 				CFamilyTies.ModelCreating(modelBuilder);
-				CIdentityInfo.ModelCreating(modelBuilder);
+
+				//
+				// ДИНАМИЧЕСКИЕ ДАННЫЕ
+				//
+				BirthdayInfo.ModelCreating(modelBuilder);
+				AddressInfo.ModelCreating(modelBuilder);
+				AvatarInfo.ModelCreating(modelBuilder);
+				IdentityInfo.ModelCreating(modelBuilder);
 
 				// Первоначальная инициализация через миграцию
 				XDbSeed.Create(modelBuilder);

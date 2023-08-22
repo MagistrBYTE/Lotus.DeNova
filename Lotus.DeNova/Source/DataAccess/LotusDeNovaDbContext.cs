@@ -4,7 +4,7 @@
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
 /** \file LotusDeNovaDbContext.cs
-*		Контекс базы данных для хранения пользователей и учетных данных.
+*		Контекс базы данных для хранения данных игровой вселенной DeNova.
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
@@ -14,24 +14,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 //---------------------------------------------------------------------------------------------------------------------
 using Lotus.Account;
+using Lotus.Repository;
+using Lotus.Core;
 //=====================================================================================================================
 namespace Lotus
 {
     namespace DeNova
     {
-        //-------------------------------------------------------------------------------------------------------------
-        /**
+		//-------------------------------------------------------------------------------------------------------------
+		/**
          * \defgroup DeNovaDataAccess Слой данных
          * \ingroup DeNova
          * \brief Слой данных модуля.
          * @{
          */
-        //-------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Контекст базы данных представляющий собой всех пользователей и учетных данных
-        /// </summary>
-        //-------------------------------------------------------------------------------------------------------------
-        public class CDeNovaDbContext : CAccountDbContext
+		//-------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// Контекс базы данных для хранения данных игровой вселенной DeNova
+		/// </summary>
+		//-------------------------------------------------------------------------------------------------------------
+		public class DeNovaDbContext : CAccountDbContext
         {
 			#region ======================================= СВОЙСТВА ==================================================
 			//
@@ -40,22 +42,58 @@ namespace Lotus
 			/// <summary>
 			/// Список сельских поселений
 			/// </summary>
-			public DbSet<CAddressVillageSettlement> AddressVillageSettlements { get; set; } = default!;
+			public DbSet<AddressVillageSettlement> AddressVillageSettlements { get; set; } = default!;
 
 			/// <summary>
 			/// Список населенных пунктов
 			/// </summary>
-			public DbSet<CAddressVillage> AddressVillages { get; set; } = default!;
+			public DbSet<AddressVillage> AddressVillages { get; set; } = default!;
 
 			/// <summary>
 			/// Список улиц
 			/// </summary>
-			public DbSet<CAddressStreet> AddressStreets { get; set; } = default!;
+			public DbSet<AddressStreet> AddressStreets { get; set; } = default!;
 
 			/// <summary>
 			/// Список адресов
 			/// </summary>
-			public DbSet<CAddressElement> AddressElements { get; set; } = default!;
+			public DbSet<AddressElement> AddressElements { get; set; } = default!;
+
+			//
+			// ДАННЫЕ
+			//
+			/// <summary>
+			/// Игровые сеттинги
+			/// </summary>
+			public DbSet<CampaignSetting> CampaignSettings { get; set; } = default!;
+
+			/// <summary>
+			/// Расы
+			/// </summary>
+			public DbSet<Race> Races { get; set; } = default!;
+
+			/// <summary>
+			/// Астралогия
+			/// </summary>
+			public DbSet<Astrology> Astrologies { get; set; } = default!;
+
+			/// <summary>
+			/// Астралогия
+			/// </summary>
+			public DbSet<Image> Images { get; set; } = default!;
+
+			//
+			// ИГРОВОЙ КОНТЕКСТ
+			//
+			/// <summary>
+			/// Игры
+			/// </summary>
+			public DbSet<GameContext> GameContexts { get; set; } = default!;
+
+			/// <summary>
+			/// Игры
+			/// </summary>
+			public DbSet<GameSave> GameSaves { get; set; } = default!;
 
 			//
 			// ПЕРСОНАЖ
@@ -63,32 +101,30 @@ namespace Lotus
 			/// <summary>
 			/// Список персонажей
 			/// </summary>
-			public DbSet<CPerson> Persons { get; set; } = default!;
+			public DbSet<Person> Persons { get; set; } = default!;
+
+			//
+			// ДИНАМИЧЕСКИЕ ДАННЫЕ
+			//
+			/// <summary>
+			/// Список информации о рождении персонажа
+			/// </summary>
+			public DbSet<BirthdayInfo> BirthdayInfos { get; set; } = default!;
 
 			/// <summary>
-			/// Список адресов регистраций персонажей
+			/// Список мест жительств персонажа
 			/// </summary>
-			public DbSet<CAddressInfo> AddressInfos { get; set; } = default!;
+			public DbSet<AddressInfo> AddressInfos { get; set; } = default!;
 
 			/// <summary>
-			/// Список астрологических сведений персонажей
+			/// Список аваторов для персонажа
 			/// </summary>
-			public DbSet<CAstrologyInfo> AstrologyInfos { get; set; } = default!;
+			public DbSet<AvatarInfo> AvatarInfos { get; set; } = default!;
 
 			/// <summary>
-			/// Список аваторов для персонажей
+			/// Список идентификационных сведений о персонаже
 			/// </summary>
-			public DbSet<CAvatarInfo> AvatarInfos { get; set; } = default!;
-
-			/// <summary>
-			/// Список сведений о рождении персонажа
-			/// </summary>
-			public DbSet<CBirthdayInfo> BirthdayInfos { get; set; } = default!;
-
-			/// <summary>
-			/// Список идентификационных сведений о персонажа
-			/// </summary>
-			public DbSet<CIdentityInfo> IdentityInfos { get; set; } = default!;
+			public DbSet<IdentityInfo> IdentityInfos { get; set; } = default!;
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -97,7 +133,7 @@ namespace Lotus
 			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
 			/// </summary>
 			//---------------------------------------------------------------------------------------------------------
-			public CDeNovaDbContext()
+			public DeNovaDbContext()
             {
             }
 
@@ -107,13 +143,13 @@ namespace Lotus
 			/// </summary>
 			/// <param name="options">Параметры конфигурации</param>
 			//---------------------------------------------------------------------------------------------------------
-			public CDeNovaDbContext(DbContextOptions<CDeNovaDbContext> options)
+			public DeNovaDbContext(DbContextOptions<DeNovaDbContext> options)
 				: base(options)
 			{
 			}
 			#endregion
 
-			#region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
+			#region ======================================= ПЕРЕГРУЖЕННЫЕ МЕТОДЫ ======================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
 			/// Конфигурирование моделей
@@ -126,11 +162,109 @@ namespace Lotus
 
                 XDbConfiguration.ConfigurationDenovaDatabase(modelBuilder);
             }
-            #endregion
-        }
-        //-------------------------------------------------------------------------------------------------------------
-        /**@}*/
-        //-------------------------------------------------------------------------------------------------------------
-    }
+			#endregion
+
+			#region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Сохранение всех сущностей укзанного типа поддерживающих сохранение
+			/// </summary>
+			/// <typeparam name="TEntity">Тип сущности</typeparam>
+			/// <param name="gameContextId">Идентификатор контекста игры</param>
+			/// <param name="gameSaveId">Идентификатор сохранения</param>
+			/// <param name="token">Токен отмены</param>
+			/// <returns>Задача</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public async Task SaveGameEntity<TEntity>(Guid gameContextId, Guid gameSaveId, CancellationToken token)
+				where TEntity : class, ILotusGameEntitySaveable, ILotusDuplicate<TEntity>
+			{
+				var entities = this.Set<TEntity>();
+
+				// Получаем все актуальные сущности для данного игрового контекста
+				var entitiesActual = await entities
+					.Where(x => x.GameContextId == gameContextId)
+					.Where(x => x.GameSaveId == null)
+					.ToArrayAsync(token);
+				if (entitiesActual.Length == 0)
+				{
+					// Сущностей для сохранения нет
+					return;
+				}
+
+				// Удаляем все сущности под указанным сохранением
+				var entitiesDelete = await entities
+					.Where(x => x.GameSaveId == gameSaveId)
+					.ToArrayAsync(token);
+				if (entitiesDelete.Length > 0)
+				{
+					entities.RemoveRange(entitiesDelete);
+					await this.SaveChangesAsync(token);
+				}
+
+				// Копируем
+				var entitiesSave = entitiesActual.Select(x => x.Duplicate());
+				foreach (var entity in entitiesSave)
+				{
+					entity.GameSaveId = gameSaveId;
+				}
+
+				// Сохраняем
+				entities.AddRange(entitiesSave);
+				await this.SaveChangesAsync(token);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Загрузка всех сущностей укзанного типа поддерживающих сохранение
+			/// </summary>
+			/// <typeparam name="TEntity">Тип сущности</typeparam>
+			/// <param name="gameContextId">Идентификатор контекста игры</param>
+			/// <param name="gameSaveId">Идентификатор сохранения</param>
+			/// <param name="token">Токен отмены</param>
+			/// <returns>Задача</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public async Task LoadGameEntity<TEntity>(Guid gameContextId, Guid gameSaveId, CancellationToken token)
+				where TEntity : class, ILotusGameEntitySaveable, ILotusDuplicate<TEntity>
+			{
+				var entities = this.Set<TEntity>();
+
+				// Получаем все сущности под указанным сохранением
+				var entitiesSave = await entities
+					.Where(x => x.GameSaveId == gameSaveId)
+					.ToArrayAsync(token);
+				if (entitiesSave.Length == 0)
+				{
+					// Сущностей для загрузки нет
+					return;
+				}
+
+				// Получаем все актуальные сущности для данного игрового контекста и удаляем их
+				var entitiesActual = await entities
+					.Where(x => x.GameContextId == gameContextId)
+					.Where(x => x.GameSaveId == null)
+					.ToArrayAsync(token);
+				if (entitiesActual.Length > 0)
+				{
+					entities.RemoveRange(entitiesActual);
+					await SaveChangesAsync(token);
+				}
+
+				// Копируем параметры сохранённых сущностей в текущее состояние
+				var entitiesNewActual = entitiesSave.Select(x => x.Duplicate());
+				foreach (var entity in entitiesNewActual)
+				{
+					entity.GameSaveId = null;
+				}
+
+				// Сохраняем
+				entities.AddRange(entitiesNewActual);
+				await SaveChangesAsync(token);
+			}
+			#endregion
+		}
+		//-------------------------------------------------------------------------------------------------------------
+		/**@}*/
+		//-------------------------------------------------------------------------------------------------------------
+	}
 }
 //=====================================================================================================================

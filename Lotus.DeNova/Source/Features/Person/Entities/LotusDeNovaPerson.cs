@@ -37,7 +37,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class CPerson : EntityDbNotifyProperty<Guid>, IComparable<CPerson>, ILotusSupportViewInspector
+		public class Person : EntityDb<Guid>, IComparable<Person>
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -46,36 +46,30 @@ namespace Lotus
 			public const String TABLE_NAME = "Person";
 			#endregion
 
-			#region ======================================= СТАТИЧЕСКИЕ ДАННЫЕ ========================================
-			//
-			// Константы для информирования об изменении свойств
-			//
-			#endregion
-
 			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Конфигурирование модели для типа <see cref="CPerson"/>
+			/// Конфигурирование модели для типа <see cref="Person"/>
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
 			public static void ModelCreating(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<CPerson>();
+				var model = modelBuilder.Entity<Person>();
 				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
 
-				modelBuilder.Entity<CPerson>()
+				modelBuilder.Entity<Person>()
 					.HasMany(p => p.Children)
 					.WithOne()
 					.HasForeignKey(p => p.Id);
 
-				modelBuilder.Entity<CPerson>()
+				modelBuilder.Entity<Person>()
 					.HasOne(p => p.Father)
 					.WithMany()
 					.HasForeignKey(p => p.FatherId);
 
-				modelBuilder.Entity<CPerson>()
+				modelBuilder.Entity<Person>()
 					.HasOne(p => p.Mother)
 					.WithMany()
 					.HasForeignKey(p => p.MotherId);
@@ -83,19 +77,11 @@ namespace Lotus
 			#endregion
 
 			#region ======================================= СВОЙСТВА ==================================================
+			//
+			// РОДСТВЕННЫЕ ОТНОШЕНИЯ
+			//
 			/// <summary>
-			/// Внешний ключ для рождения
-			/// </summary>
-			public Int32? BirthdayInfoId { get; set; }
-
-			/// <summary>
-			/// Навигационное свойство для рождения
-			/// </summary>
-			[ForeignKey(nameof(BirthdayInfoId))]
-			public CBirthdayInfo? BirthdayInfo { get; set; }
-
-			/// <summary>
-			/// Внешний ключ для отца персонажа
+			/// Идентификатор отца персонажа
 			/// </summary>
 			public Guid? FatherId { get; set; }
 
@@ -103,86 +89,77 @@ namespace Lotus
 			/// Отец персонажа
 			/// </summary>
 			[ForeignKey(nameof(FatherId))]
-			public CPerson? Father { get; set; }
+			public Person? Father { get; set; }
 
 			/// <summary>
-			/// Внешний ключ для матери персонажа
+			/// Идентификатор матери персонажа
 			/// </summary>
 			public Guid? MotherId { get; set; }
 
 			/// <summary>
 			/// Мать персонажа
 			/// </summary>
-			public CPerson? Mother { get; set; }
+			[ForeignKey(nameof(MotherId))]
+			public Person? Mother { get; set; }
 
 			/// <summary>
 			/// Список детей персонажа
 			/// </summary>
-			public List<CPerson> Children { get; set; } = new List<CPerson>();
+			public List<Person>? Children { get; set; }
+
+			//
+			// РОЖДЕНИЕ
+			//
+			/// <summary>
+			/// Идентификатор информации о рождении
+			/// </summary>
+			public Guid? BirthdayInfoId { get; set; }
 
 			/// <summary>
-			/// Внешний ключ для астрологических сведений
+			/// Информация о рождении
 			/// </summary>
-			public Int32? AstrologyInfoId { get; set; }
+			[ForeignKey(nameof(BirthdayInfoId))]
+			public BirthdayInfo? BirthdayInfo { get; set; }
 
 			/// <summary>
-			/// Навигационное свойство для астрологических сведений
+			/// Идентификатор расы
 			/// </summary>
-			[ForeignKey(nameof(AstrologyInfoId))]
-			public CAstrologyInfo? AstrologyInfo { get; set; }
+			public Int32? RaceId { get; set; }
 
 			/// <summary>
-			/// Список идентификационных сведений персонажа
+			/// Раса
 			/// </summary>
-			[Browsable(false)]
-			public List<CIdentityInfo> IdentityInfos { get; set; } = new List<CIdentityInfo>();
+			[ForeignKey(nameof(RaceId))]
+			public Race? Race { get; set; }
 
 			/// <summary>
-			/// Список аватаров персонажа
+			/// Идентификатор информации о астрологических сведениях
 			/// </summary>
-			[Browsable(false)]
-			public List<CAvatarInfo> AvatarInfos { get; set; } = new List<CAvatarInfo>();
+			public Int32? AstrologyId { get; set; }
 
 			/// <summary>
-			/// Список адресов пользователей
+			/// Информация о астрологических сведениях
 			/// </summary>
-			[Browsable(false)]
-			public List<CAddressInfo> AddressInfos { get; set; } = new List<CAddressInfo>();
-			#endregion
+			[ForeignKey(nameof(AstrologyId))]
+			public Astrology? Astrology { get; set; }
 
-			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
+			//
+			// ДИНАМИЧЕСКИЕ ДАННЫЕ
+			//
 			/// <summary>
-			/// Отображаемое имя типа в инспекторе свойств
+			/// Список идентификационных сведений
 			/// </summary>
-			[Browsable(false)]
-			public String InspectorTypeName
-			{
-				get { return ("ПЕРСОНАЖ"); }
-			}
+			public List<IdentityInfo> IdentityInfos { get; set; } = new List<IdentityInfo>();
 
 			/// <summary>
-			/// Отображаемое имя объекта в инспекторе свойств
+			/// Список аватаров
 			/// </summary>
-			[Browsable(false)]
-			public String InspectorObjectName
-			{
-				get
-				{
-					return (String.Empty);
-				}
-			}
-			#endregion
+			public List<AvatarInfo> AvatarInfos { get; set; } = new List<AvatarInfo>();
 
-			#region ======================================= КОНСТРУКТОРЫ ==============================================
-			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Конструктор по умолчанию инициализирует объект класса предустановленными значениями
+			/// Список мест жительств
 			/// </summary>
-			//---------------------------------------------------------------------------------------------------------
-			public CPerson()
-			{
-
-			}
+			public List<AddressInfo> AddressInfos { get; set; } = new List<AddressInfo>();
 			#endregion
 
 			#region ======================================= СИСТЕМНЫЕ МЕТОДЫ ==========================================
@@ -193,7 +170,7 @@ namespace Lotus
 			/// <param name="other">Сравниваемый объект</param>
 			/// <returns>Статус сравнения объектов</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(CPerson? other)
+			public Int32 CompareTo(Person? other)
 			{
 				return 0;
 			}
@@ -206,7 +183,12 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public override String ToString()
 			{
-				return (InspectorObjectName);
+				var last = IdentityInfos.Last();
+				if(last is not null)
+				{
+					return last.ToString();
+				}
+				return (Id.ToString());
 			}
 			#endregion
 		}

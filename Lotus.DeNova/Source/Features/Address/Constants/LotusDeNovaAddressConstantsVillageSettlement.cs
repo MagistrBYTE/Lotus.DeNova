@@ -21,7 +21,7 @@ namespace Lotus
 		*@{*/
 		//-------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Статический класс для определения констант и первоначальных данных типа <see cref="CAddressVillageSettlement"/>
+		/// Статический класс для определения констант и первоначальных данных типа <see cref="AddressVillageSettlement"/>
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		public static class XAddressConstantsVillageSettlement
@@ -29,7 +29,7 @@ namespace Lotus
 			/// <summary>
 			/// Андреевское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Andreyevskoye = new()
+			public static readonly AddressVillageSettlement Andreyevskoye = new()
 			{
 				Id = 1,
 				Name = "Андреевское сельское поселение",
@@ -40,7 +40,7 @@ namespace Lotus
 			/// <summary>
 			/// Атамановское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Atamanovskoye = new()
+			public static readonly AddressVillageSettlement Atamanovskoye = new()
 			{
 				Id = 2,
 				Name = "Атамановское сельское поселение",
@@ -51,7 +51,7 @@ namespace Lotus
 			/// <summary>
 			/// Белокаменское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Belokamenskoye = new()
+			public static readonly AddressVillageSettlement Belokamenskoye = new()
 			{
 				Id = 3,
 				Name = "Белокаменское сельское поселение",
@@ -62,7 +62,7 @@ namespace Lotus
 			/// <summary>
 			/// Боровское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Borovskoye = new()
+			public static readonly AddressVillageSettlement Borovskoye = new()
 			{
 				Id = 4,
 				Name = "Боровское сельское поселение",
@@ -73,7 +73,7 @@ namespace Lotus
 			/// <summary>
 			/// Брединское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Bredinskoye = new()
+			public static readonly AddressVillageSettlement Bredinskoye = new()
 			{
 				Id = 5,
 				Name = "Брединское сельское поселение",
@@ -84,7 +84,7 @@ namespace Lotus
 			/// <summary>
 			/// Калининское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Kalininskoye = new()
+			public static readonly AddressVillageSettlement Kalininskoye = new()
 			{
 				Id = 6,
 				Name = "Калининское сельское поселение",
@@ -95,7 +95,7 @@ namespace Lotus
 			/// <summary>
 			/// Княженское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Knyazhenskoye = new()
+			public static readonly AddressVillageSettlement Knyazhenskoye = new()
 			{
 				Id = 7,
 				Name = "Княженское сельское поселение",
@@ -106,7 +106,7 @@ namespace Lotus
 			/// <summary>
 			/// Комсомольское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Komsomolskoye = new()
+			public static readonly AddressVillageSettlement Komsomolskoye = new()
 			{
 				Id = 8,
 				Name = "Комсомольское сельское поселение",
@@ -117,7 +117,7 @@ namespace Lotus
 			/// <summary>
 			/// Наследницкое сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Naslednitskoye = new()
+			public static readonly AddressVillageSettlement Naslednitskoye = new()
 			{
 				Id = 9,
 				Name = "Наследницкое сельское поселение",
@@ -128,7 +128,7 @@ namespace Lotus
 			/// <summary>
 			/// Павловское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Pavlovskoye = new()
+			public static readonly AddressVillageSettlement Pavlovskoye = new()
 			{
 				Id = 10,
 				Name = "Павловское сельское поселение",
@@ -139,7 +139,7 @@ namespace Lotus
 			/// <summary>
 			/// Рымникское сельское поселение
 			/// </summary>
-			public static readonly CAddressVillageSettlement Rymnikskoye = new()
+			public static readonly AddressVillageSettlement Rymnikskoye = new()
 			{
 				Id = 11,
 				Name = "Рымникское сельское поселение",
