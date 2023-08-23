@@ -125,6 +125,11 @@ namespace Lotus
 			/// Список идентификационных сведений о персонаже
 			/// </summary>
 			public DbSet<IdentityInfo> IdentityInfos { get; set; } = default!;
+
+			/// <summary>
+			/// Список местоположений персонажа
+			/// </summary>
+			public DbSet<PlacementInfo> PlacementInfos { get; set; } = default!;
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -202,7 +207,7 @@ namespace Lotus
 				}
 
 				// Копируем
-				var entitiesSave = entitiesActual.Select(x => x.Duplicate());
+				var entitiesSave = entitiesActual.Select(x => x.Duplicate()).ToArray();
 				foreach (var entity in entitiesSave)
 				{
 					entity.GameSaveId = gameSaveId;
@@ -250,7 +255,7 @@ namespace Lotus
 				}
 
 				// Копируем параметры сохранённых сущностей в текущее состояние
-				var entitiesNewActual = entitiesSave.Select(x => x.Duplicate());
+				var entitiesNewActual = entitiesSave.Select(x => x.Duplicate()).ToArray();
 				foreach (var entity in entitiesNewActual)
 				{
 					entity.GameSaveId = null;

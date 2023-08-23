@@ -1,10 +1,10 @@
 ﻿//=====================================================================================================================
 // Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема место жительства
+// Раздел: Подсистема перемещения персонажа
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaAddressInfoService.cs
-*		Cервис для работы с местом жительства персонажа.
+/** \file LotusDeNovaPlacementInfoService.cs
+*		Cервис для работы с местоположением персонажа.
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
@@ -20,14 +20,14 @@ namespace Lotus
     namespace DeNova
 	{
 		//-------------------------------------------------------------------------------------------------------------
-		/** \addtogroup DeNovaAddressInfo
+		/** \addtogroup DeNovaPlacementInfo
 		*@{*/
 		//-------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Cервис для работы с местом жительства персонажа
+		/// Cервис для работы с местоположением персонажа
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
-		public class AddressInfoService : ILotusAddressInfoService
+		public class PlacementInfoService : ILotusPlacementInfoService
         {
             #region ======================================= ДАННЫЕ ====================================================
             private readonly DeNovaDbContext _context;
@@ -40,7 +40,7 @@ namespace Lotus
             /// </summary>
             /// <param name="context">Контекст БД</param>
             //---------------------------------------------------------------------------------------------------------
-            public AddressInfoService(DeNovaDbContext context)
+            public PlacementInfoService(DeNovaDbContext context)
             {
                 _context = context;
             }
@@ -49,112 +49,112 @@ namespace Lotus
             #region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
             //---------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// Создание места жительства персонажа по указанным данным
+            /// Создание местоположения персонажа по указанным данным
             /// </summary>
-            /// <param name="addressInfoCreate">Параметры для создания места жительства персонажа</param>
+            /// <param name="placementInfoCreate">Параметры для создания местоположения персонажа</param>
             /// <param name="token">Токен отмены</param>
-            /// <returns>Место жительства персонажа</returns>
+            /// <returns>Местоположение персонажа</returns>
             //---------------------------------------------------------------------------------------------------------
-            public async Task<Response<AddressInfoDto>> CreateAsync(AddressInfoCreateDto addressInfoCreate, CancellationToken token)
+            public async Task<Response<PlacementInfoDto>> CreateAsync(PlacementInfoCreateDto placementInfoCreate, CancellationToken token)
             {
-                AddressInfo entity = addressInfoCreate.Adapt<AddressInfo>();
+                PlacementInfo entity = placementInfoCreate.Adapt<PlacementInfo>();
+				
+				entity.PlacementInfoId = Guid.NewGuid();
 
-				entity.AddressInfoId = Guid.NewGuid();
-
-				_context.AddressInfos.Add(entity);
+				_context.PlacementInfos.Add(entity);
                 await _context.SaveChangesAsync(token);
 
-                AddressInfoDto result = entity.Adapt<AddressInfoDto>();
+                PlacementInfoDto result = entity.Adapt<PlacementInfoDto>();
 
                 return XResponse.Succeed(result);
             }
 
             //---------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// Обновление данных указанного места жительства персонажа
+            /// Обновление данных указанного местоположения персонажа
             /// </summary>
-            /// <param name="addressInfoUpdate">Параметры обновляемой места жительства персонажа</param>
+            /// <param name="placementInfoUpdate">Параметры обновляемого местоположения персонажа</param>
             /// <param name="token">Токен отмены</param>
-            /// <returns>Место жительства персонажа</returns>
+            /// <returns>Местоположение персонажа</returns>
             //---------------------------------------------------------------------------------------------------------
-            public async Task<Response<AddressInfoDto>> UpdateAsync(AddressInfoDto addressInfoUpdate, CancellationToken token)
+            public async Task<Response<PlacementInfoDto>> UpdateAsync(PlacementInfoDto placementInfoUpdate, CancellationToken token)
             {
-                AddressInfo entity = addressInfoUpdate.Adapt<AddressInfo>();
+                PlacementInfo entity = placementInfoUpdate.Adapt<PlacementInfo>();
 
-                _context.AddressInfos.Update(entity);
+                _context.PlacementInfos.Update(entity);
                 await _context.SaveChangesAsync(token);
 
-                AddressInfoDto result = entity.Adapt<AddressInfoDto>();
+                PlacementInfoDto result = entity.Adapt<PlacementInfoDto>();
 
                 return XResponse.Succeed(result);
             }
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение указанного места жительства персонажа
+			/// Получение указанного местоположения персонажа
 			/// </summary>
-			/// <param name="addressInfoId">Идентификатор места жительства персонажа</param>
+			/// <param name="placementInfoId">Идентификатор местоположения персонажа</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Место жительства персонажа</returns>
+			/// <returns>Местоположение персонажа</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public async Task<Response<AddressInfoDto>> GetAsync(Guid addressInfoId, CancellationToken token)
+			public async Task<Response<PlacementInfoDto>> GetAsync(Guid placementInfoId, CancellationToken token)
 			{
-				AddressInfo? entity = await _context.AddressInfos
-					.FirstOrDefaultAsync(x => (x.AddressInfoId == addressInfoId && x.GameSaveId == null), token);
+				PlacementInfo? entity = await _context.PlacementInfos
+					.FirstOrDefaultAsync(x => (x.PlacementInfoId == placementInfoId && x.GameSaveId == null), token);
 				if (entity == null)
 				{
-					return XResponse.Failed<AddressInfoDto>(XAddressInfoErrors.NotFound);
+					return XResponse.Failed<PlacementInfoDto>(XPlacementInfoErrors.NotFound);
 				}
 
-				AddressInfoDto result = entity.Adapt<AddressInfoDto>();
+				PlacementInfoDto result = entity.Adapt<PlacementInfoDto>();
 
 				return XResponse.Succeed(result);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение списка мест жительств персонажа 
+			/// Получение списка местоположений персонажа 
 			/// </summary>
-			/// <param name="addressInfoRequest">Параметры получения списка</param>
+			/// <param name="placementInfoRequest">Параметры получения списка</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Cписок мест жительств персонажа </returns>
+			/// <returns>Список местоположений персонажа</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public async Task<ResponsePage<AddressInfoDto>> GetAllAsync(AddressInfosDto addressInfoRequest, CancellationToken token)
+			public async Task<ResponsePage<PlacementInfoDto>> GetAllAsync(PlacementInfosDto placementInfoRequest, CancellationToken token)
             {
-                var query = _context.AddressInfos.AsQueryable();
+                var query = _context.PlacementInfos.AsQueryable();
 
 				query = query
-					.Where(x => x.GameContextId == addressInfoRequest.GameContextId &&
-								x.PersonId == addressInfoRequest.PersonId &&
+					.Where(x => x.GameContextId == placementInfoRequest.GameContextId &&
+								x.PersonId == placementInfoRequest.PersonId &&
 								x.GameSaveId == null);
 
-				query = query.Filter(addressInfoRequest.Filtering);
+				query = query.Filter(placementInfoRequest.Filtering);
 
-				var queryOrder = query.Sort(addressInfoRequest.Sorting, x => x.BeginPeriod);
+				var queryOrder = query.Sort(placementInfoRequest.Sorting, x => x.Id);
 
-				var result = await queryOrder.ToResponsePageAsync<AddressInfo, AddressInfoDto>(addressInfoRequest, token);
+				var result = await queryOrder.ToResponsePageAsync<PlacementInfo, PlacementInfoDto>(placementInfoRequest, token);
 
                 return result;
             }
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Удаление места жительства персонажа
+			/// Удаление местоположения персонажа
 			/// </summary>
-			/// <param name="addressInfoId">Идентификатор места жительства персонажа</param>
+			/// <param name="placementInfoId">Идентификатор местоположения персонажа</param>
 			/// <param name="token">Токен отмены</param>
 			/// <returns>Статус успешности</returns>
 			//---------------------------------------------------------------------------------------------------------
-			public async Task<Response> DeleteAsync(Guid addressInfoId, CancellationToken token)
+			public async Task<Response> DeleteAsync(Guid placementInfoId, CancellationToken token)
             {
-                AddressInfo? entity = await _context.AddressInfos
-					.FirstOrDefaultAsync(x => (x.AddressInfoId == addressInfoId && x.GameSaveId == null), token);
+                PlacementInfo? entity = await _context.PlacementInfos
+					.FirstOrDefaultAsync(x => (x.PlacementInfoId == placementInfoId && x.GameSaveId == null), token);
                 if (entity == null)
                 {
-                    return XResponse.Failed(XAddressInfoErrors.NotFound);
+                    return XResponse.Failed(XPlacementInfoErrors.NotFound);
                 }
 
-                _context.AddressInfos.Remove(entity!);
+                _context.PlacementInfos.Remove(entity!);
                 await _context.SaveChangesAsync(token);
 
                 return XResponse.Succeed();

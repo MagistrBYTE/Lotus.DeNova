@@ -11,7 +11,6 @@
 // Последнее изменение от 30.04.2023
 //=====================================================================================================================
 using System;
-using Lotus.Account;
 using Microsoft.EntityFrameworkCore;
 //=====================================================================================================================
 namespace Lotus
@@ -41,8 +40,17 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public static IServiceCollection AddLotusDeNovaServices(this IServiceCollection services)
             {
+				services.AddScoped<ILotusAstrologyService, AstrologyService>();
+				services.AddScoped<ILotusImageService, ImageService>();
+				services.AddScoped<ILotusRaceService, RaceService>();
+
 				services.AddScoped<ILotusGameContextService, GameContextService>();
 				services.AddScoped<ILotusGameSaveService, GameSaveService>();
+
+				services.AddScoped<ILotusAddressInfoService, AddressInfoService>();
+				services.AddScoped<ILotusAvatarInfoService, AvatarInfoService>();
+				services.AddScoped<ILotusIdentityInfoService, IdentityInfoService>();
+				services.AddScoped<ILotusPlacementInfoService, PlacementInfoService>();
 
 				XMapping.Init();
 
@@ -80,7 +88,7 @@ namespace Lotus
             /// <param name="application">Построитель web-приложения</param>
 			/// <returns>Задача</returns>
             //---------------------------------------------------------------------------------------------------------
-            public static async Task InitLotusDeNovaDatabase(this IApplicationBuilder application)
+            public static async Task InitLotusDeNovaDatabaseAsync(this IApplicationBuilder application)
             {
                 if (application == null)
                 {

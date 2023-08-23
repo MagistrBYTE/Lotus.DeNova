@@ -23,33 +23,26 @@ namespace Lotus.DeNova.Test
     public class DeNovaDefaultFactory : WebApplicationFactory<Program>
     {
 		/// <summary>
-		/// Администратор системы
-		/// </summary>
-		public static readonly CUser AdminUser = new CUser
-		{
-			Id = Guid.Parse("e3182c8f-87bc-4e27-a27f-b32e3e2b8018"),
-			Login = "DanielDem",
-			PasswordHash = XHashHelper.GetHash("!198418dsfA!"),
-			Email = "dementevds@gmail.com",
-			Name = "Даниил",
-			Surname = "Дементьев",
-			Patronymic = "Сергеевич",
-			RoleId = XRoleConstants.Admin.Id
-		};
-
-		/// <summary>
-		/// Администратор системы
+		/// Пользователь
 		/// </summary>
 		public static readonly CUser DefaultUser = new CUser
 		{
 			Id = Guid.Parse("42863dae-924f-4385-9967-fb800f44a984"),
-			Login = "DanielDem",
+			Login = "DemDaniel",
 			PasswordHash = XHashHelper.GetHash("123456"),
-			Email = "dementevds@gmail.com",
+			Email = "demdaniel@gmail.com",
 			Name = "Даниил",
 			Surname = "Дементьев",
 			Patronymic = "Сергеевич",
 			RoleId = XRoleConstants.User.Id
+		};
+
+		/// <summary>
+		/// Персонаж
+		/// </summary>
+		public static readonly Person DefaultPerson = new Person
+		{
+			Id = Guid.Parse("de19c086-d40b-4477-8b08-97772722c657"),
 		};
 
 		private IServiceScope _scope;
@@ -73,7 +66,7 @@ namespace Lotus.DeNova.Test
 		/// <summary>
 		/// Поставщик сервисов
 		/// </summary>
-		private IServiceScope Scope => _scope ??= Services.CreateScope();
+		public IServiceScope Scope => _scope ??= Services.CreateScope();
 
 		/// <summary>
 		/// Конструктор по умолчанию
@@ -89,9 +82,9 @@ namespace Lotus.DeNova.Test
         /// <returns>Хост билдера</returns>
         protected override IHostBuilder CreateHostBuilder()
         {
-            var builder = base.CreateHostBuilder();
+			var builder = base.CreateHostBuilder();
 
-            builder.ConfigureAppConfiguration((hostingContext, config) =>
+			builder.ConfigureAppConfiguration((hostingContext, config) =>
             {
                 var env = hostingContext.HostingEnvironment;
                 config.SetBasePath(env.ContentRootPath);
@@ -115,11 +108,11 @@ namespace Lotus.DeNova.Test
             return builder;
         }
 
-        /// <summary>
-        /// Конфигурация хоста приложения
-        /// </summary>
-        /// <param name="builder">Хост билдера</param>
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+		/// <summary>
+		/// Конфигурация хоста приложения
+		/// </summary>
+		/// <param name="builder">Хост билдера</param>
+		protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) =>
             {
@@ -159,7 +152,7 @@ namespace Lotus.DeNova.Test
             }
 
             base.Dispose(disposing);
-        }
+		}
 
         private void Initialize()
         {
@@ -186,8 +179,9 @@ namespace Lotus.DeNova.Test
         {
             Context.GetService<IMigrator>().Migrate();
 
-			Context.Users.Add(AdminUser);
 			Context.Users.Add(DefaultUser);
+			Context.Persons.Add(DefaultPerson);
+
 			Context.SaveChanges();
 		}
 

@@ -58,8 +58,9 @@ namespace Lotus
             public async Task<Response<IdentityInfoDto>> CreateAsync(IdentityInfoCreateDto identityInfoCreate, CancellationToken token)
             {
                 IdentityInfo entity = identityInfoCreate.Adapt<IdentityInfo>();
+				entity.IdentityInfoId = Guid.NewGuid();
 
-                _context.IdentityInfos.Add(entity);
+				_context.IdentityInfos.Add(entity);
                 await _context.SaveChangesAsync(token);
 
                 IdentityInfoDto result = entity.Adapt<IdentityInfoDto>();
@@ -69,9 +70,9 @@ namespace Lotus
 
             //---------------------------------------------------------------------------------------------------------
             /// <summary>
-            /// Обновление данных указанного идентификационных сведений о персонаже
+            /// Обновление данных указанных идентификационных сведений о персонаже
             /// </summary>
-            /// <param name="identityInfoUpdate">Параметры обновляемой идентификационных сведений о персонаже</param>
+            /// <param name="identityInfoUpdate">Параметры обновляемых идентификационных сведений о персонаже</param>
             /// <param name="token">Токен отмены</param>
             /// <returns>Идентификационные сведения о персонаже</returns>
             //---------------------------------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ namespace Lotus
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение указанного идентификационных сведений о персонаже
+			/// Получение указанных идентификационных сведений о персонаже
 			/// </summary>
 			/// <param name="identityInfoId">Идентификатор идентификационных сведений о персонаже</param>
 			/// <param name="token">Токен отмены</param>
@@ -111,11 +112,11 @@ namespace Lotus
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение списка мест жительств персонажа 
+			/// Получение списка идентификационных сведений о персонаже
 			/// </summary>
 			/// <param name="identityInfoRequest">Параметры получения списка</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Список аватаров персонажа </returns>
+			/// <returns>Список идентификационных сведений о персонаже</returns>
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<IdentityInfoDto>> GetAllAsync(IdentityInfosDto identityInfoRequest, CancellationToken token)
             {

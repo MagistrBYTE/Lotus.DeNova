@@ -1069,6 +1069,40 @@ namespace Lotus.DeNova.Migrations
                     b.ToTable("Person", "denova");
                 });
 
+            modelBuilder.Entity("Lotus.DeNova.PlacementInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GameContextId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("GameSaveId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PlacementInfoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("PositionX")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PositionY")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PositionZ")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PlacementInfo", "denova");
+                });
+
             modelBuilder.Entity("Lotus.DeNova.Race", b =>
                 {
                     b.Property<int>("Id")
@@ -1380,6 +1414,15 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Mother");
 
                     b.Navigation("Race");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PlacementInfo", b =>
+                {
+                    b.HasOne("Lotus.DeNova.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Lotus.Account.CDevice", b =>

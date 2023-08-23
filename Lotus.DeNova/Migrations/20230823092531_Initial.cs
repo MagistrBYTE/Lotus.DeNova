@@ -697,6 +697,31 @@ namespace Lotus.DeNova.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PlacementInfo",
+                schema: "denova",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PlacementInfoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GameContextId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GameSaveId = table.Column<Guid>(type: "uuid", nullable: true),
+                    PositionX = table.Column<int>(type: "integer", nullable: false),
+                    PositionY = table.Column<int>(type: "integer", nullable: false),
+                    PositionZ = table.Column<int>(type: "integer", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlacementInfo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlacementInfo_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalSchema: "denova",
+                        principalTable: "Person",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 schema: "denova",
                 table: "Astrology",
@@ -908,6 +933,12 @@ namespace Lotus.DeNova.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlacementInfo_PersonId",
+                schema: "denova",
+                table: "PlacementInfo",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolePermission_PermissionId",
                 schema: "adm",
                 table: "RolePermission",
@@ -1053,6 +1084,10 @@ namespace Lotus.DeNova.Migrations
 
             migrationBuilder.DropTable(
                 name: "PersonFamilyTies",
+                schema: "denova");
+
+            migrationBuilder.DropTable(
+                name: "PlacementInfo",
                 schema: "denova");
 
             migrationBuilder.DropTable(

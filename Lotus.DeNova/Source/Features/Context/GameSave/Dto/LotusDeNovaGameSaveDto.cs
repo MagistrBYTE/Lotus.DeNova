@@ -24,12 +24,12 @@ namespace Lotus
 		/// Класс для сохранения контекста игры
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
-		public class GameSaveDto
+		public class GameSaveDto : IdentifierDtoId<Guid>
         {
 			/// <summary>
-			/// Идентификатор сохранения
+			/// Идентификатор контекста игры
 			/// </summary>
-			public Guid GameSaveId { get; set; }
+			public Guid GameContextId { get; set; }
 
 			/// <summary>
 			/// Название сохранения

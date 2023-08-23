@@ -59,7 +59,9 @@ namespace Lotus
             {
                 AvatarInfo entity = avatarInfoCreate.Adapt<AvatarInfo>();
 
-                _context.AvatarInfos.Add(entity);
+				entity.AvatarInfoId = Guid.NewGuid();
+
+				_context.AvatarInfos.Add(entity);
                 await _context.SaveChangesAsync(token);
 
                 AvatarInfoDto result = entity.Adapt<AvatarInfoDto>();
@@ -111,7 +113,7 @@ namespace Lotus
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение списка мест жительств персонажа 
+			/// Получение списка аватаров персонажа 
 			/// </summary>
 			/// <param name="avatarInfoRequest">Параметры получения списка</param>
 			/// <param name="token">Токен отмены</param>

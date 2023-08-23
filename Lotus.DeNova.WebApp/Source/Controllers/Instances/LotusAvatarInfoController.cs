@@ -3,51 +3,37 @@
 // Раздел: Подсистема контролеров
 // Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
 //---------------------------------------------------------------------------------------------------------------------
-/** \file LotusAuthorizeController.cs
-*		Контролёр для авторизации и аутентификации пользователя.
+/** \file LotusAvatarInfoController.cs
+*		Контролёр для работы с аватаром персонажа.
 */
 //---------------------------------------------------------------------------------------------------------------------
 // Версия: 1.0.0.0
 // Последнее изменение от 30.04.2023
 //=====================================================================================================================
-using System.Security.Claims;
-using System.Net;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Abstractions;
-using OpenIddict.Server.AspNetCore;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 //---------------------------------------------------------------------------------------------------------------------
 using Lotus.Web;
-using Lotus.Core;
 using Lotus.Repository;
-using Lotus.Account;
 //=====================================================================================================================
 namespace Lotus
 {
     namespace DeNova
 	{
 		//-------------------------------------------------------------------------------------------------------------
-		/**
-         * \defrace DeNovaWebAppController Подсистема контролеров
-         * \inrace DeNovaWebApp
-         * \brief Подсистема контролеров.
-         * @{
-         */
+		/** \addtogroup DeNovaWebAppController
+        *@{*/
 		//-------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Контролёр для работы с расами
+		/// Контролёр для работы с аватаром персонажа
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[ApiController]
         [Route($"{XConstants.PrefixApi}/[controller]")]
-        public class RaceController : ControllerResultBase
+        public class AvatarInfoController : ControllerResultBase
 		{
 			#region ======================================= ДАННЫЕ ====================================================
-			private readonly ILotusRaceService _raceService;
-			private readonly ILogger<RaceController> _logger;
+			private readonly ILotusAvatarInfoService _avatarInfoService;
+			private readonly ILogger<AvatarInfoController> _logger;
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -55,12 +41,12 @@ namespace Lotus
 			/// <summary>
 			/// Конструктор инициализирует объект класса указанными параметрами
 			/// </summary>
-			/// <param name="raceService">Интерфейс сервиса для работы с расами</param>
+			/// <param name="avatarInfoService">Интерфейс сервиса для работы с аватаром персонажа</param>
 			/// <param name="logger">Интерфейс сервиса логгера</param>
 			//---------------------------------------------------------------------------------------------------------
-			public RaceController(ILotusRaceService raceService, ILogger<RaceController> logger)
+			public AvatarInfoController(ILotusAvatarInfoService avatarInfoService, ILogger<AvatarInfoController> logger)
 			{
-				_raceService = raceService;
+				_avatarInfoService = avatarInfoService;
 				_logger = logger;
 			}
 			#endregion
@@ -68,84 +54,83 @@ namespace Lotus
 			#region ======================================= ОБЩИЕ МЕТОДЫ ==============================================
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Создание расы по указанным данным
+			/// Создание аватара персонажа по указанным данным
 			/// </summary>
-			/// <param name="raceCreate">Параметры для создания расы</param>
+			/// <param name="avatarInfoCreate">Параметры для создания аватара персонажа</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Раса</returns>
+			/// <returns>Аватар персонажа</returns>
 			//---------------------------------------------------------------------------------------------------------
 			[HttpPost("create")]
-			[ProducesResponseType(typeof(Response<RaceDto>), StatusCodes.Status201Created)]
-			public async Task<IActionResult> Create([FromBody] RaceCreateDto raceCreate, CancellationToken token)
+			[ProducesResponseType(typeof(Response<AvatarInfoDto>), StatusCodes.Status201Created)]
+			public async Task<IActionResult> Create([FromBody] AvatarInfoCreateDto avatarInfoCreate, CancellationToken token)
 			{
-				var result = await _raceService.CreateAsync(raceCreate, token);
+				var result = await _avatarInfoService.CreateAsync(avatarInfoCreate, token);
 				return SendResponse(result);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Обновление данных указанной расы
+			/// Обновление данных указанного аватара персонажа
 			/// </summary>
-			/// <param name="raceUpdate">Параметры обновляемой расы</param>
+			/// <param name="avatarInfoUpdate">Параметры обновляемого аватара персонажа</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Раса</returns>
+			/// <returns>Аватар персонажа</returns>
 			//---------------------------------------------------------------------------------------------------------
 			[HttpPut("update")]
-			[ProducesResponseType(typeof(Response<RaceDto>), StatusCodes.Status200OK)]
-			public async Task<IActionResult> Update([FromBody] RaceDto raceUpdate, CancellationToken token)
+			[ProducesResponseType(typeof(Response<AvatarInfoDto>), StatusCodes.Status200OK)]
+			public async Task<IActionResult> Update([FromBody] AvatarInfoDto avatarInfoUpdate, CancellationToken token)
 			{
-				var result = await _raceService.UpdateAsync(raceUpdate, token);
+				var result = await _avatarInfoService.UpdateAsync(avatarInfoUpdate, token);
 				return SendResponse(result);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение указанной расы
+			/// Получение указанного аватара персонажа
 			/// </summary>
-			/// <param name="id">Идентификатор расы</param>
+			/// <param name="id">Идентификатор аватара персонажа</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Раса</returns>
+			/// <returns>Аватар персонажа</returns>
 			//---------------------------------------------------------------------------------------------------------
 			[HttpGet("get")]
-			[ProducesResponseType(typeof(ResponsePage<RaceDto>), StatusCodes.Status200OK)]
-			public async Task<IActionResult> Get([FromQuery] Int32 id, CancellationToken token)
+			[ProducesResponseType(typeof(ResponsePage<AvatarInfoDto>), StatusCodes.Status200OK)]
+			public async Task<IActionResult> Get([FromQuery] Guid id, CancellationToken token)
 			{
-				var result = await _raceService.GetAsync(id, token);
+				var result = await _avatarInfoService.GetAsync(id, token);
 				return SendResponse(result);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Получение списка рас
+			/// Получение списка аватаров персонажа
 			/// </summary>
-			/// <param name="raceRequest">Параметры получения списка</param>
+			/// <param name="avatarInfoRequest">Параметры получения списка</param>
 			/// <param name="token">Токен отмены</param>
-			/// <returns>Cписок рас</returns>
+			/// <returns>Cписок аватаров персонажа</returns>
 			//---------------------------------------------------------------------------------------------------------
 			[HttpGet("getall")]
-			[ProducesResponseType(typeof(ResponsePage<RaceDto>), StatusCodes.Status200OK)]
-			public async Task<IActionResult> GetAll([FromQuery] RacesDto raceRequest, CancellationToken token)
+			[ProducesResponseType(typeof(ResponsePage<AvatarInfoDto>), StatusCodes.Status200OK)]
+			public async Task<IActionResult> GetAll([FromQuery] AvatarInfosDto avatarInfoRequest, CancellationToken token)
 			{
-				var result = await _raceService.GetAllAsync(raceRequest, token);
+				var result = await _avatarInfoService.GetAllAsync(avatarInfoRequest, token);
 				return SendResponse(result);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Удаление расы
+			/// Удаление аватара персонажа
 			/// </summary>
-			/// <param name="id">Идентификатор расы</param>
+			/// <param name="id">Идентификатор аватара персонажа</param>
 			/// <param name="token">Токен отмены</param>
 			/// <returns>Статус успешности</returns>
 			//---------------------------------------------------------------------------------------------------------
 			[HttpDelete("delete")]
-			public async Task<IActionResult> Delete([FromQuery] Int32 id, CancellationToken token)
+			public async Task<IActionResult> Delete([FromQuery] Guid id, CancellationToken token)
 			{
-				var result = await _raceService.DeleteAsync(id, token);
+				var result = await _avatarInfoService.DeleteAsync(id, token);
 				return SendResponse(result);
 			}
 			#endregion
-
 		}
 		//-------------------------------------------------------------------------------------------------------------
 		/**@}*/

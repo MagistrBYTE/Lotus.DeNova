@@ -14,6 +14,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 //---------------------------------------------------------------------------------------------------------------------
 using Lotus.Repository;
+using Lotus.Core;
 //=====================================================================================================================
 namespace Lotus
 {
@@ -84,6 +85,7 @@ namespace Lotus
 				await _context.SaveGameEntity<AddressInfo>(entity.GameContextId, entity.Id, token);
 				await _context.SaveGameEntity<AvatarInfo>(entity.GameContextId, entity.Id, token);
 				await _context.SaveGameEntity<IdentityInfo>(entity.GameContextId, entity.Id, token);
+				await _context.SaveGameEntity<PlacementInfo>(entity.GameContextId, entity.Id, token);
 
 				return XResponse.Succeed(result);
 			}
@@ -104,7 +106,7 @@ namespace Lotus
 				await _context.LoadGameEntity<AddressInfo>(load.GameContextId, load.GameSaveId, token);
 				await _context.LoadGameEntity<AvatarInfo>(load.GameContextId, load.GameSaveId, token);
 				await _context.LoadGameEntity<IdentityInfo>(load.GameContextId, load.GameSaveId, token);
-
+				await _context.LoadGameEntity<PlacementInfo>(load.GameContextId, load.GameSaveId, token);
 				return XResponse.Succeed();
 			}
 

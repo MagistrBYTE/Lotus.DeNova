@@ -76,6 +76,7 @@ namespace Lotus
 				AddressInfo.ModelCreating(modelBuilder);
 				AvatarInfo.ModelCreating(modelBuilder);
 				IdentityInfo.ModelCreating(modelBuilder);
+				PlacementInfo.ModelCreating(modelBuilder);
 
 				// Первоначальная инициализация через миграцию
 				XDbSeed.Create(modelBuilder);
