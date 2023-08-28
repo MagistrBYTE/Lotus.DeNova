@@ -56,18 +56,13 @@ namespace Lotus
 				Race.ModelCreating(modelBuilder);
 				Astrology.ModelCreating(modelBuilder);
 				Image.ModelCreating(modelBuilder);
+				Person.ModelCreating(modelBuilder);
 
 				//
 				// ИГРОВОЙ КОНТЕКСТ
 				//
 				GameContext.ModelCreating(modelBuilder);
 				GameSave.ModelCreating(modelBuilder);
-
-				//
-				// ПЕРСОНАЖ
-				//
-				Person.ModelCreating(modelBuilder);
-				CFamilyTies.ModelCreating(modelBuilder);
 
 				//
 				// ДИНАМИЧЕСКИЕ ДАННЫЕ

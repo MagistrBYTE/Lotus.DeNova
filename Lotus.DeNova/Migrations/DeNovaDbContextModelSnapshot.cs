@@ -608,8 +608,8 @@ namespace Lotus.DeNova.Migrations
                     b.Property<Guid?>("GameSaveId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -787,8 +787,8 @@ namespace Lotus.DeNova.Migrations
                     b.Property<int?>("ImageId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -814,8 +814,8 @@ namespace Lotus.DeNova.Migrations
                     b.Property<Guid>("GameContextId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -854,27 +854,6 @@ namespace Lotus.DeNova.Migrations
                             DisplayName = "Сентра",
                             Name = "Sentra"
                         });
-                });
-
-            modelBuilder.Entity("Lotus.DeNova.CFamilyTies", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ChildId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ParentId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChildId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("PersonFamilyTies", "denova");
                 });
 
             modelBuilder.Entity("Lotus.DeNova.GameContext", b =>
@@ -979,8 +958,8 @@ namespace Lotus.DeNova.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Surname")
                         .HasMaxLength(20)
@@ -1035,34 +1014,31 @@ namespace Lotus.DeNova.Migrations
 
             modelBuilder.Entity("Lotus.DeNova.Person", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AstrologyId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("BirthdayInfoId")
-                        .HasColumnType("uuid");
+                    b.Property<int?>("AvatarId")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid?>("FatherId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.Property<Guid?>("MotherId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("RaceId")
+                    b.Property<int>("RaceId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AstrologyId");
 
-                    b.HasIndex("BirthdayInfoId");
-
-                    b.HasIndex("FatherId");
-
-                    b.HasIndex("MotherId");
+                    b.HasIndex("AvatarId");
 
                     b.HasIndex("RaceId");
 
@@ -1081,8 +1057,8 @@ namespace Lotus.DeNova.Migrations
                     b.Property<Guid?>("GameSaveId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("PlacementInfoId")
                         .HasColumnType("uuid");
@@ -1291,7 +1267,7 @@ namespace Lotus.DeNova.Migrations
                         .HasForeignKey("AddressId");
 
                     b.HasOne("Lotus.DeNova.Person", "Person")
-                        .WithMany("AddressInfos")
+                        .WithMany()
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1326,8 +1302,10 @@ namespace Lotus.DeNova.Migrations
                         .HasForeignKey("ImageId");
 
                     b.HasOne("Lotus.DeNova.Person", "Person")
-                        .WithMany("AvatarInfos")
-                        .HasForeignKey("PersonId");
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Image");
 
@@ -1342,37 +1320,22 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasOne("Lotus.DeNova.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Address");
 
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.CFamilyTies", b =>
-                {
-                    b.HasOne("Lotus.DeNova.Person", "Child")
-                        .WithMany()
-                        .HasForeignKey("ChildId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lotus.DeNova.Person", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Child");
-
-                    b.Navigation("Parent");
-                });
-
             modelBuilder.Entity("Lotus.DeNova.IdentityInfo", b =>
                 {
                     b.HasOne("Lotus.DeNova.Person", "Person")
-                        .WithMany("IdentityInfos")
-                        .HasForeignKey("PersonId");
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
                 });
@@ -1383,35 +1346,19 @@ namespace Lotus.DeNova.Migrations
                         .WithMany()
                         .HasForeignKey("AstrologyId");
 
-                    b.HasOne("Lotus.DeNova.BirthdayInfo", "BirthdayInfo")
+                    b.HasOne("Lotus.DeNova.Image", "Avatar")
                         .WithMany()
-                        .HasForeignKey("BirthdayInfoId");
-
-                    b.HasOne("Lotus.DeNova.Person", "Father")
-                        .WithMany()
-                        .HasForeignKey("FatherId");
-
-                    b.HasOne("Lotus.DeNova.Person", null)
-                        .WithMany("Children")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lotus.DeNova.Person", "Mother")
-                        .WithMany()
-                        .HasForeignKey("MotherId");
+                        .HasForeignKey("AvatarId");
 
                     b.HasOne("Lotus.DeNova.Race", "Race")
                         .WithMany()
-                        .HasForeignKey("RaceId");
+                        .HasForeignKey("RaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Astrology");
 
-                    b.Navigation("BirthdayInfo");
-
-                    b.Navigation("Father");
-
-                    b.Navigation("Mother");
+                    b.Navigation("Avatar");
 
                     b.Navigation("Race");
                 });
@@ -1420,7 +1367,9 @@ namespace Lotus.DeNova.Migrations
                 {
                     b.HasOne("Lotus.DeNova.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
                 });
@@ -1458,17 +1407,6 @@ namespace Lotus.DeNova.Migrations
             modelBuilder.Entity("Lotus.DeNova.AddressVillageSettlement", b =>
                 {
                     b.Navigation("Villages");
-                });
-
-            modelBuilder.Entity("Lotus.DeNova.Person", b =>
-                {
-                    b.Navigation("AddressInfos");
-
-                    b.Navigation("AvatarInfos");
-
-                    b.Navigation("Children");
-
-                    b.Navigation("IdentityInfos");
                 });
 #pragma warning restore 612, 618
         }

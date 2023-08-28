@@ -42,7 +42,9 @@ namespace Lotus.DeNova.Test
 		/// </summary>
 		public static readonly Person DefaultPerson = new Person
 		{
-			Id = Guid.Parse("de19c086-d40b-4477-8b08-97772722c657"),
+			Id = 1,
+			Name = "DefaultPerson",
+			RaceId = XRaceConstants.Fergarian.Id,
 		};
 
 		private IServiceScope _scope;

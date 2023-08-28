@@ -39,10 +39,9 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Publish'">
-    <PackageReference Include="Lotus.Core" Version="1.9.1" />
+    <PackageReference Include="Lotus.Core" Version="1.9.2" />
     <PackageReference Include="Lotus.Math" Version="1.9.1" />
-    <PackageReference Include="Lotus.Repository" Version="1.9.1" />
-    <PackageReference Include="Lotus.Account" Version="1.0.0" />
+    <PackageReference Include="Lotus.Repository" Version="1.9.2" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Publish'">
@@ -52,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lotus.Account" Version="1.0.4" />
+    <PackageReference Include="Lotus.Account" Version="1.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
   </ItemGroup>

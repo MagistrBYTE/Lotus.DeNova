@@ -11,9 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lotus.Account" Version="1.0.4" />
-    <PackageReference Include="Lotus.Account.Web" Version="1.0.4" />
-    <PackageReference Include="Lotus.Web.Common" Version="1.9.1" />
+    <PackageReference Include="Lotus.Account" Version="1.0.5" />
+    <PackageReference Include="Lotus.Account.Web" Version="1.0.5" />
+    <PackageReference Include="Lotus.Web.Common" Version="1.9.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.20">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

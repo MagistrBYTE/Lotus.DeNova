@@ -34,7 +34,7 @@ namespace Lotus
 			/// <summary>
 			/// Идентификатор персонажа
 			/// </summary>
-			public Guid PersonId { get; set; }
+			public Int32 PersonId { get; set; }
 
 			/// <summary>
 			/// Имя персонажа

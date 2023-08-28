@@ -7,6 +7,7 @@ import { ConfigurationPage, NotificationsPage, ProfilePage } from 'src/shared/ac
 import { accountNavigation } from 'src/shared/account/accountNavigation';
 import { MainLayoutPermission } from 'src/shared/layout/ui/MainLayoutPermission';
 import { MainLayout } from 'src/shared/layout/ui';
+import { PersonsPage } from 'src/modules/Definitions/Person';
 import { HomePage } from './HomePage';
 import { mainNavigations } from './mainNavigations';
 
@@ -46,6 +47,10 @@ export const App: React.FC = () =>
           path={accountNavigation.configuration.path} 
           element={<MainLayoutPermission {...accountNavigation.configuration} page={<ConfigurationPage/>}/>}/>
 
+        {/* Персонаж */} 
+        <Route
+          path={mainNavigations.persons.path}
+          element={<MainLayout {...mainNavigations.persons} page={<PersonsPage/>}/>}/>
 
         {/* Карта */} 
         <Route

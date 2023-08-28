@@ -43,6 +43,7 @@ namespace Lotus
 				services.AddScoped<ILotusAstrologyService, AstrologyService>();
 				services.AddScoped<ILotusImageService, ImageService>();
 				services.AddScoped<ILotusRaceService, RaceService>();
+				services.AddScoped<ILotusPersonService, PersonService>();
 
 				services.AddScoped<ILotusGameContextService, GameContextService>();
 				services.AddScoped<ILotusGameSaveService, GameSaveService>();

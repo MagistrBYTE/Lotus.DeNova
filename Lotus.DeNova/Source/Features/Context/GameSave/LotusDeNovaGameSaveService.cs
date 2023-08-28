@@ -132,6 +132,29 @@ namespace Lotus
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
+			/// Получение списка сохранений контекста игры
+			/// </summary>
+			/// <param name="saveRequest">Параметры получения списка</param>
+			/// <param name="token">Токен отмены</param>
+			/// <returns>Cписок сохранений контекста игры</returns>
+			//---------------------------------------------------------------------------------------------------------
+			public async Task<ResponsePage<GameSaveDto>> GetAllAsync(GameSavesDto saveRequest, CancellationToken token)
+			{
+				var query = _context.GameSaves.AsQueryable();
+
+				query = query.Where(x => x.GameContextId == saveRequest.GameContextId);
+
+				query = query.Filter(saveRequest.Filtering);
+
+				var queryOrder = query.Sort(saveRequest.Sorting, x => x.Created);
+
+				var result = await queryOrder.ToResponsePageAsync<GameSave, GameSaveDto>(saveRequest, token);
+
+				return result;
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
 			/// Удаление сохранения контекста игры
 			/// </summary>
 			/// <param name="id">Идентификатор сохранения контекста игры</param>

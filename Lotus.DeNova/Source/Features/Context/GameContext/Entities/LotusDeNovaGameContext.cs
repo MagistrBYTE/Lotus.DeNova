@@ -37,7 +37,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class GameContext : EntityBase<Guid>, IComparable<GameContext>
+		public class GameContext : RepositoryEntityBase<Guid>, IComparable<GameContext>
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>

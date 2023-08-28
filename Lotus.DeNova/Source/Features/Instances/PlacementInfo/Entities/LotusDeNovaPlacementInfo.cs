@@ -95,13 +95,13 @@ namespace Lotus
 			/// <summary>
 			/// Идентификатор персонажа
 			/// </summary>
-			public Guid? PersonId { get; set; }
+			public Int32 PersonId { get; set; }
 
 			/// <summary>
 			/// Навигационное свойство для персонажа
 			/// </summary>
 			[ForeignKey(nameof(PersonId))]
-			public virtual Person? Person { get; set; }
+			public virtual Person Person { get; set; } = default!;
 			#endregion
 
 			#region ======================================= СИСТЕМНЫЕ МЕТОДЫ ==========================================

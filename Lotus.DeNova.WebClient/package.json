@@ -1,5 +1,5 @@
 {
-  "name": "DeNova-WebClient",
+  "name": "denova-webclient",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,11 +29,13 @@
     "react": "^18.2.0",
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
     "react-konva": "^18.2.10",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.3",
+    "sass": "^1.66.1",
     "typescript": "^4.9.5",
     "use-image": "^1.1.1",
     "web-vitals": "^2.1.4"

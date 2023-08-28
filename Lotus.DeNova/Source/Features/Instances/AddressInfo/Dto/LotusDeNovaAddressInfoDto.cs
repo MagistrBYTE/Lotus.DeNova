@@ -39,7 +39,12 @@ namespace Lotus
 			/// <summary>
 			/// Идентификатор персонажа
 			/// </summary>
-			public Guid PersonId { get; set; }
+			public Int32 PersonId { get; set; }
+
+			/// <summary>
+			/// Идентификатор адреса
+			/// </summary>
+			public Int32? AddressId { get; set; }
 
 			/// <summary>
 			/// Дата начала
