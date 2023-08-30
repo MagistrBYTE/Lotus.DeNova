@@ -71,6 +71,7 @@ namespace Lotus
                 // Добавление DeNovaDbContext для взаимодействия с базой данных
                 services.AddDbContext<DeNovaDbContext>(options =>
                 {
+					options.UseOpenIddict();
 					options.UseNpgsql(configuration.GetConnectionString(XDbConstants.ConnectingDenovaDb),
                         optionsBuilder =>
                         {

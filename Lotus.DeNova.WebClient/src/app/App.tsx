@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Route, Routes  } from 'react-router-dom';
 import { LoginPage, AutoLoginPage, RegisterPage, RestorePasswordPage, authNavigation } from 'src/shared/auth';
 import { useScreenTypeChanged } from 'src/shared/layout';
-import { MapPage } from 'src/modules/map';
 import { ConfigurationPage, NotificationsPage, ProfilePage } from 'src/shared/account';
 import { accountNavigation } from 'src/shared/account/accountNavigation';
 import { MainLayoutPermission } from 'src/shared/layout/ui/MainLayoutPermission';
 import { MainLayout } from 'src/shared/layout/ui';
-import { PersonsPage } from 'src/modules/Definitions/Person';
+import { PersonsPage } from 'src/modules/UserSlice/Person';
+import { MapPage } from 'src/modules/DefinitionsSlice/Map';
 import { HomePage } from './HomePage';
 import { mainNavigations } from './mainNavigations';
 
@@ -50,12 +50,12 @@ export const App: React.FC = () =>
         {/* Персонаж */} 
         <Route
           path={mainNavigations.persons.path}
-          element={<MainLayout {...mainNavigations.persons} page={<PersonsPage/>}/>}/>
+          element={<MainLayoutPermission {...mainNavigations.persons} page={<PersonsPage/>}/>}/>
 
         {/* Карта */} 
         <Route
           path={mainNavigations.map.path}
-          element={<MainLayout {...mainNavigations.map} page={<MapPage/>}/>}/>
+          element={<MainLayoutPermission {...mainNavigations.map} page={<MapPage/>}/>}/>
       </Routes>
     </React.Suspense>
   );

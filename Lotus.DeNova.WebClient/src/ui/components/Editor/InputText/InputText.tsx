@@ -1,24 +1,9 @@
-import React, { useState } from 'react';
-import { BaseTextFieldProps, SxProps, TextField, Typography } from '@mui/material';
-import { Label } from '@mui/icons-material';
+import React, { ChangeEvent, useState } from 'react';
+import { BaseTextFieldProps, TextField } from '@mui/material';
+import { ILabelProps, Label } from '../../Info/Label';
 
-export interface IInputTextProps extends BaseTextFieldProps 
+export interface IInputTextProps extends BaseTextFieldProps, ILabelProps
 {
-  /**
-   * Дополнительное описание
-   */
-  textInfo?: string;
-
-  /**
-   * Показывать отдельно надпись
-   */
-  isShowLabel?: boolean;
-
-  /**
-   * Параметры надпись
-   */
-  labelProps?: SxProps;
-
   /**
    * Функция обратного вызова для установки введеного значения
    * @param value Выбранное значение
@@ -32,20 +17,26 @@ export interface IInputTextProps extends BaseTextFieldProps
   initialValue?: string;
 }  
 
-export const InputText = ({textInfo, onSetValue, initialValue, ...props}: IInputTextProps) =>
+export const InputText: React.FC<IInputTextProps> = ({onSetValue, initialValue, textInfo, textInfoKey, labelProps, ...props}: IInputTextProps) =>
 {
   const [value, setValue] = useState<string>(initialValue ?? '');
+
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+  {
+    setValue(event.target.value);
+    if(onSetValue)
+    {
+      onSetValue(event.target.value);
+    }
+  }
  
-  if(props.label)
-  {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', width: '100%' }}>
-        <Typography sx={props.labelProps}>{props.label}</Typography>
-        <TextField {...props} label={undefined} />
-      </div>);
-  }
-  else
-  {
-    return (<TextField {...props} />)
-  }
+  return (
+    <Label
+      label={props.label}
+      labelProps={labelProps}
+      fullWidth={props.fullWidth} 
+      textInfo={textInfo} 
+      textInfoKey={textInfoKey} >
+      <TextField {...props} onChange={handleChange} label={undefined} value={value} />
+    </Label>);  
 };

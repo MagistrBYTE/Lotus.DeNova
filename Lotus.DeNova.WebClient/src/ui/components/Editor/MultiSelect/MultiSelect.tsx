@@ -1,25 +1,11 @@
 import React, { useState } from 'react';
-import { Checkbox, ListItemIcon, ListItemText, MenuItem, Select, SelectProps, SxProps, Typography } from '@mui/material';
+import { Checkbox, ListItemIcon, MenuItem, Select, SelectProps } from '@mui/material';
 import { ISelectOption, getSelectOptionTexts } from 'src/core/types/SelectOption';
 import { TKey } from 'src/core/types/Key';
+import { ILabelProps, Label } from '../../Info/Label';
 
-export interface IMultiSelectProps<TValueOption extends TKey = TKey> extends SelectProps
+export interface IMultiSelectProps<TValueOption extends TKey = TKey> extends SelectProps, Omit<ILabelProps, 'label'>
 {
-   /**
-   * Дополнительное описание
-   */
-  textInfo?: string;
-
-  /**
-   * Надпись
-   */
-  label?: string;
-
-  /**
-   * Параметры надписи
-   */
-  labelProps?: SxProps;  
-
   /**
    * Список опций
    */
@@ -38,7 +24,8 @@ export interface IMultiSelectProps<TValueOption extends TKey = TKey> extends Sel
   initialSelectedValues?: TValueOption[];
 }  
 
-export const MultiSelect = <TValueOption extends TKey = TKey>({label, options, onSetSelectedValues, initialSelectedValues, ...props}: IMultiSelectProps<TValueOption>) =>
+export const MultiSelect = <TValueOption extends TKey = TKey>({options, onSetSelectedValues, initialSelectedValues, 
+  textInfo, textInfoKey, labelProps, ...props}: IMultiSelectProps<TValueOption>) =>
 {
   const [selectedValues, setSelectedValues] = useState<TValueOption[]>(initialSelectedValues ?? []);
   const [selectedTexts, setSelectedTexts] = useState<string[]>(getSelectOptionTexts(options, initialSelectedValues));
@@ -58,7 +45,7 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({label, options, o
     }
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => 
+  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => 
   {
     const value = getActualValue(event.target.value);
     if(checked)
@@ -114,7 +101,7 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({label, options, o
     }
   };
   
-  const SelectNativeItem = (option:ISelectOption) =>
+  const RenderItem = (option:ISelectOption) =>
   {
     if(option.icon)
     {
@@ -122,7 +109,7 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({label, options, o
       {
         return (<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
           <img src={option.icon} width="32" height="32"/>
-          <Checkbox onChange={handleChange} value={option.value} checked={Boolean(selectedValues.indexOf(option.value as TValueOption) > -1)} />
+          <Checkbox onChange={handleChecked} value={option.value} checked={Boolean(selectedValues.indexOf(option.value as TValueOption) > -1)} />
           <span style={{paddingLeft: 8}}>{option.text}</span>
         </div>)
       }
@@ -132,7 +119,7 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({label, options, o
           <ListItemIcon>
             {option.icon}
           </ListItemIcon>
-          <Checkbox onChange={handleChange} value={option.value} checked={Boolean(selectedValues.indexOf(option.value as TValueOption) > -1)} />
+          <Checkbox onChange={handleChecked} value={option.value} checked={Boolean(selectedValues.indexOf(option.value as TValueOption) > -1)} />
           <span>{option.text}</span>
         </>)        
       }
@@ -140,35 +127,30 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({label, options, o
     else
     {
       return (<>
-        <Checkbox onChange={handleChange} value={option.value} checked={Boolean(selectedValues.indexOf(option.value as TValueOption) > -1)} />
+        <Checkbox onChange={handleChecked} value={option.value} checked={Boolean(selectedValues.indexOf(option.value as TValueOption) > -1)} />
         <span>{option.text}</span>
       </>);
     }
   }
 
-  const SelectNative = () =>
-  {
-    return <Select 
-      value={selectedValues} 
-      {...props} 
-      multiple={true}
-      renderValue={(selected) => selectedTexts.join(', ')}
-    >
-      {options.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
-          <SelectNativeItem {...option}/>
-        </MenuItem>
-      ))}
-    </Select> 
-  }
-
-  if(label && label !== '')
-  {
-    return (<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', width: '100%' }}>
-      <Typography sx={props.labelProps}>{label}</Typography>
-      <SelectNative/>
-    </div>)
-  }
-
-  return <SelectNative/>  
+  return (
+    <Label
+      label={props.label}
+      labelProps={labelProps}
+      fullWidth={props.fullWidth} 
+      textInfo={textInfo} 
+      textInfoKey={textInfoKey} >
+      <Select 
+        value={selectedValues} 
+        {...props} 
+        multiple={true}
+        renderValue={(selected) => selectedTexts.join(', ')}
+      >
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            <RenderItem {...option}/>
+          </MenuItem>
+        ))}
+      </Select> 
+    </Label>);
 };

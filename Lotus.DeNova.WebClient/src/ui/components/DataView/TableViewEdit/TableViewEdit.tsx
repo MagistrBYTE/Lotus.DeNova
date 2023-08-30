@@ -15,10 +15,12 @@ import { IPropertiesInfo } from 'src/shared/reflection/PropertiesInfo';
 import { convertColumnsFilterToFilterObjects, convertPropertyDescriptorToColumn } from 'src/shared/reflection/utilMaterialReactTable';
 import { IRequest } from 'src/shared/request/Request';
 import { localization } from 'src/shared/localization';
-import { MultiSelect, OneSelect } from '../../Editor';
+import { ImageDatabase } from 'src/shared/image';
+import { ImageGallery, MultiSelect, OneSelect } from '../../Editor';
 import { ToastWrapper, toastError, toastPromise } from '../../Info/Toast';
 import { EditTableFilterArray, EditTableFilterEnum, EditTableFilterString } from './TableViewEditFilterTypes';
 import './TableViewEdit.scss';
+
 
 export interface IFormCreatedItem<TItem extends Record<string, any> | null>
 {
@@ -199,20 +201,34 @@ export const TableViewEdit = <TItem extends Record<string, any> & IEditable,>(pr
 
     if(property.viewImage)
     {
-      column.Cell = ({ renderedCellValue, row }) => 
+      column.Cell = ({ cell, row }) => 
       {
+        const id = cell.getValue() as number;
+        console.log(`id = ${id}`);
+        console.log(cell);
         return <Box sx={{display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <img
             alt="avatar"
-            height={30}
-            src={row.original.avatar}
+            height={32}
+            width={32}
+            src={ImageDatabase.getImageById(id)?.source}
             loading="lazy"
             style={{ borderRadius: '50%' }}
           />
-          {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
-          <span>{renderedCellValue}</span>
         </Box>
-      }      
+      }
+      
+      column.Edit = ({ cell, column, table }) => 
+      {
+        const id = cell.getValue() as number;
+
+        return <ImageGallery size='small' 
+          fullWidth
+          variant='outlined'
+          initialSelectedValue={id}
+          onSetSelectedValue={(selectedValue) => { setSelectedValue(property.fieldName, selectedValue); } } 
+          images={ImageDatabase.getAllImages()} />        
+      }       
     }
     return column;
   })

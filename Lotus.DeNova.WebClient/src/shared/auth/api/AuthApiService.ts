@@ -36,6 +36,13 @@ export class AuthApiService extends ApiService
   constructor()
   {
     super();
+    this.Login = this.Login.bind(this);
+    this.RefreshToken = this.RefreshToken.bind(this);
+    this.Logout = this.Logout.bind(this);
+    this.Registr = this.Registr.bind(this);
+    this.SetAuthCookie = this.SetAuthCookie.bind(this);
+    this.IsAuthCookie = this.IsAuthCookie.bind(this);
+    this.LoginAuthCookie = this.LoginAuthCookie.bind(this);      
   }   
 
   /**

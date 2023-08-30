@@ -1,5 +1,6 @@
 export const person =
 {
+  createPerson: 'Создание персонажа',
   person: 'Персонаж',
   id: 'Идентификатор',
   idDesc: 'Идентификатор персонажа',
@@ -8,5 +9,5 @@ export const person =
   name: 'Имя',
   nameDesc: 'Имя персонажа',
   raceId: 'Раса',
-  raceIdDesc: 'Список рас'    
+  raceIdDesc: 'Список рас'
 };
