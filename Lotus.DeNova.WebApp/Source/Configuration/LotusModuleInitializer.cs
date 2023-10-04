@@ -40,18 +40,21 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public static IServiceCollection AddLotusDeNovaServices(this IServiceCollection services)
             {
-				services.AddScoped<ILotusAstrologyService, AstrologyService>();
-				services.AddScoped<ILotusImageService, ImageService>();
-				services.AddScoped<ILotusRaceService, RaceService>();
+				services.AddScoped<ILotusAstrologyTypeService, AstrologyTypeService>();
+				services.AddScoped<ILotusRaceTypeService, RaceTypeService>();
+				services.AddScoped<ILotusScenarioTypeService, ScenarioTypeService>();
+				services.AddScoped<ILotusParameterTypeService, ParameterTypeService>();
+				services.AddScoped<ILotusParameterAspectTypeService, ParameterAspectTypeService>();
+
+				services.AddScoped<ILotusGameService, GameService>();
 				services.AddScoped<ILotusPersonService, PersonService>();
+				services.AddScoped<ILotusPersonParameterService, PersonParameterService>();
+				services.AddScoped<ILotusPersonParameterAspectService, PersonParameterAspectService>();
 
-				services.AddScoped<ILotusGameContextService, GameContextService>();
-				services.AddScoped<ILotusGameSaveService, GameSaveService>();
-
-				services.AddScoped<ILotusAddressInfoService, AddressInfoService>();
-				services.AddScoped<ILotusAvatarInfoService, AvatarInfoService>();
-				services.AddScoped<ILotusIdentityInfoService, IdentityInfoService>();
-				services.AddScoped<ILotusPlacementInfoService, PlacementInfoService>();
+				services.AddScoped<ILotusAddressStateService, AddressStateService>();
+				services.AddScoped<ILotusAvatarStateService, AvatarStateService>();
+				services.AddScoped<ILotusIdentityStateService, IdentityStateService>();
+				services.AddScoped<ILotusPlacementStateService, PlacementStateService>();
 
 				XMapping.Init();
 

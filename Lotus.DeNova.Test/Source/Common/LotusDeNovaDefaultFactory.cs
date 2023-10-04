@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Lotus.Account;
 using Lotus.Core;
+using Polly;
 
 namespace Lotus.DeNova.Test
 {
@@ -25,7 +26,7 @@ namespace Lotus.DeNova.Test
 		/// <summary>
 		/// Пользователь
 		/// </summary>
-		public static readonly CUser DefaultUser = new CUser
+		public static readonly User DefaultUser = new User
 		{
 			Id = Guid.Parse("42863dae-924f-4385-9967-fb800f44a984"),
 			Login = "DemDaniel",
@@ -34,17 +35,7 @@ namespace Lotus.DeNova.Test
 			Name = "Даниил",
 			Surname = "Дементьев",
 			Patronymic = "Сергеевич",
-			RoleId = XRoleConstants.User.Id
-		};
-
-		/// <summary>
-		/// Персонаж
-		/// </summary>
-		public static readonly Person DefaultPerson = new Person
-		{
-			Id = 1,
-			Name = "DefaultPerson",
-			RaceId = XRaceConstants.Fergarian.Id,
+			RoleId = XUserRoleConstants.User.Id
 		};
 
 		private IServiceScope _scope;
@@ -95,7 +86,7 @@ namespace Lotus.DeNova.Test
                 var projectDir = Directory.GetCurrentDirectory();
 
                 var applicationName = "Lotus.DeNova.Test";
-                int index = projectDir.IndexOf(applicationName) + applicationName.Length;
+                var index = projectDir.IndexOf(applicationName) + applicationName.Length;
                 projectDir = projectDir.Remove(index);
 
                 var pathAppsettings = Path.Combine(projectDir, "appsettings.json");
@@ -182,7 +173,6 @@ namespace Lotus.DeNova.Test
             Context.GetService<IMigrator>().Migrate();
 
 			Context.Users.Add(DefaultUser);
-			Context.Persons.Add(DefaultPerson);
 
 			Context.SaveChanges();
 		}

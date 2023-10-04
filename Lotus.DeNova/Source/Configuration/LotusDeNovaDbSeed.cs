@@ -35,9 +35,12 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public static void Create(ModelBuilder modelBuilder)
 			{
-				CreateCampaignSetting(modelBuilder);
-				CreateRace(modelBuilder);
-				CreateAstrology(modelBuilder);
+				CreateGameSettingType(modelBuilder);
+				CreateRaceType(modelBuilder);
+				CreateAstrologyType(modelBuilder);
+				CreateScenarioType(modelBuilder);
+				CreateParameterType(modelBuilder);
+				CreateParameterAspectType(modelBuilder);
 			}
 			#endregion
 
@@ -48,13 +51,13 @@ namespace Lotus
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
-			public static void CreateCampaignSetting(ModelBuilder modelBuilder)
+			public static void CreateGameSettingType(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<CampaignSetting>();
+				var model = modelBuilder.Entity<GameSettingType>();
 
 				// Данные
-				model.HasData(XCampaignSettingConstants.Sentra);
+				model.HasData(XGameSettingTypeConstants.Sentra);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
@@ -63,36 +66,98 @@ namespace Lotus
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
-			public static void CreateRace(ModelBuilder modelBuilder)
+			public static void CreateRaceType(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<Race>();
+				var model = modelBuilder.Entity<RaceType>();
 
 				// Данные
-				model.HasData(XRaceConstants.Erian, 
-					XRaceConstants.Zavroteanen,
-					XRaceConstants.Leohart, 
-					XRaceConstants.Tribe,
-					XRaceConstants.Gnol,
-					XRaceConstants.Elgou,
-					XRaceConstants.Fergarian);
+				model.HasData(XRaceTypeConstants.Erian, 
+					XRaceTypeConstants.Zavroteanen,
+					XRaceTypeConstants.Leohart, 
+					XRaceTypeConstants.Tribe,
+					XRaceTypeConstants.Gwell,
+					XRaceTypeConstants.Elgou,
+					XRaceTypeConstants.Fergarian);
 			}
 
 			//---------------------------------------------------------------------------------------------------------
 			/// <summary>
-			/// Создание астрологий
+			/// Создание данных по астрологии
 			/// </summary>
 			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
 			//---------------------------------------------------------------------------------------------------------
-			public static void CreateAstrology(ModelBuilder modelBuilder)
+			public static void CreateAstrologyType(ModelBuilder modelBuilder)
 			{
 				// Определение для таблицы
-				var model = modelBuilder.Entity<Astrology>();
+				var model = modelBuilder.Entity<AstrologyType>();
 
 				// Данные
-				model.HasData(XAstrologyConstants.Ophiuchus,
-					XAstrologyConstants.Quetzalcoatl,
-					XAstrologyConstants.Taurus);
+				model.HasData(XAstrologyTypeConstants.Ophiuchus,
+					XAstrologyTypeConstants.Quetzalcoatl,
+					XAstrologyTypeConstants.Taurus);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Создание сценариев
+			/// </summary>
+			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void CreateScenarioType(ModelBuilder modelBuilder)
+			{
+				// Определение для таблицы
+				var model = modelBuilder.Entity<ScenarioType>();
+
+				// Данные
+				model.HasData(XScenarioTypeConstants.Sandbox);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Создание типов параметров существ
+			/// </summary>
+			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void CreateParameterType(ModelBuilder modelBuilder)
+			{
+				// Определение для таблицы
+				var model = modelBuilder.Entity<ParameterType>();
+
+				// Данные
+				model.HasData(
+					XParameterTypeConstants.PhysicalStrength,
+					XParameterTypeConstants.Dexterity,
+					XParameterTypeConstants.Endurance,
+					XParameterTypeConstants.Physique,
+
+					XParameterTypeConstants.Perception,
+					XParameterTypeConstants.Mind,
+					XParameterTypeConstants.Willpower,
+					XParameterTypeConstants.Spirituality,
+
+					XParameterTypeConstants.Appearance,
+					XParameterTypeConstants.Charisma,
+					XParameterTypeConstants.Influence,
+					XParameterTypeConstants.Status
+					);
+			}
+
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Создание типов аспектов параметров существ
+			/// </summary>
+			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
+			//---------------------------------------------------------------------------------------------------------
+			public static void CreateParameterAspectType(ModelBuilder modelBuilder)
+			{
+				// Определение для таблицы
+				var model = modelBuilder.Entity<ParameterAspectType>();
+
+				// Данные
+				model.HasData(
+					XParameterAspectTypeConstants.StrongArms
+					);
 			}
 			#endregion
 		}

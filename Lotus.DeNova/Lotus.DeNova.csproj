@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Lotus.DeNova</RootNamespace>
@@ -42,22 +42,30 @@
     <PackageReference Include="Lotus.Core" Version="1.9.2" />
     <PackageReference Include="Lotus.Math" Version="1.9.1" />
     <PackageReference Include="Lotus.Repository" Version="1.9.2" />
+    <PackageReference Include="Lotus.Account" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Publish'">
     <ProjectReference Include="..\..\Lotus.Basis\Lotus.Math\Lotus.Math.csproj" />
     <ProjectReference Include="..\..\Lotus.Basis\Lotus.Core\Lotus.Core.csproj" />
     <ProjectReference Include="..\..\Lotus.Basis\Lotus.Repository\Lotus.Repository.csproj" />
+    <ProjectReference Include="..\..\Lotus.Account\Lotus.Account\Lotus.Account.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lotus.Account" Version="1.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.20" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
+    <Compile Remove="Source\Features\GameTypes\PersonParameterType\**" />
+    <EmbeddedResource Remove="Source\Features\GameTypes\PersonParameterType\**" />
+    <None Remove="Source\Features\GameTypes\PersonParameterType\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Source\Features\PlayerContext\PersonParameterAspect\" />
   </ItemGroup>
 
 </Project>

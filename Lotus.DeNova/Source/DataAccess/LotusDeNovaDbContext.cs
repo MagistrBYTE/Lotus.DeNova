@@ -33,7 +33,7 @@ namespace Lotus
 		/// Контекс базы данных для хранения данных игровой вселенной DeNova
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
-		public class DeNovaDbContext : CAccountDbContext
+		public class DeNovaDbContext : AccountDbContext
         {
 			#region ======================================= СВОЙСТВА ==================================================
 			//
@@ -65,22 +65,32 @@ namespace Lotus
 			/// <summary>
 			/// Игровые сеттинги
 			/// </summary>
-			public DbSet<CampaignSetting> CampaignSettings { get; set; } = default!;
+			public DbSet<GameSettingType> GameSettingTypes { get; set; } = default!;
 
 			/// <summary>
 			/// Расы
 			/// </summary>
-			public DbSet<Race> Races { get; set; } = default!;
+			public DbSet<RaceType> RaceTypes { get; set; } = default!;
 
 			/// <summary>
-			/// Астралогия
+			/// Астрология
 			/// </summary>
-			public DbSet<Astrology> Astrologies { get; set; } = default!;
+			public DbSet<AstrologyType> AstrologyTypes { get; set; } = default!;
 
 			/// <summary>
-			/// Астралогия
+			/// Сценарии
 			/// </summary>
-			public DbSet<Image> Images { get; set; } = default!;
+			public DbSet<ScenarioType> ScenarioTypes { get; set; } = default!;
+
+			/// <summary>
+			/// Параметры существ
+			/// </summary>
+			public DbSet<ParameterType> ParameterTypes { get; set; } = default!;
+
+			/// <summary>
+			/// Аспекты параметров существ
+			/// </summary>
+			public DbSet<ParameterAspectType> ParameterAspectTypes { get; set; } = default!;
 
 			//
 			// ИГРОВОЙ КОНТЕКСТ
@@ -88,7 +98,7 @@ namespace Lotus
 			/// <summary>
 			/// Игры
 			/// </summary>
-			public DbSet<GameContext> GameContexts { get; set; } = default!;
+			public DbSet<Game> Games { get; set; } = default!;
 
 			/// <summary>
 			/// Игры
@@ -103,33 +113,43 @@ namespace Lotus
 			/// </summary>
 			public DbSet<Person> Persons { get; set; } = default!;
 
+			/// <summary>
+			/// Список параметров персонажей
+			/// </summary>
+			public DbSet<PersonParameter> PersonParameters { get; set; } = default!;
+
+			/// <summary>
+			/// Список аспектов параметров персонажей
+			/// </summary>
+			public DbSet<PersonParameterAspect> PersonParameterAspects { get; set; } = default!;
+
 			//
 			// ДИНАМИЧЕСКИЕ ДАННЫЕ
 			//
 			/// <summary>
 			/// Список информации о рождении персонажа
 			/// </summary>
-			public DbSet<BirthdayInfo> BirthdayInfos { get; set; } = default!;
+			public DbSet<BirthdayState> BirthdayStates { get; set; } = default!;
 
 			/// <summary>
 			/// Список мест жительств персонажа
 			/// </summary>
-			public DbSet<AddressInfo> AddressInfos { get; set; } = default!;
+			public DbSet<AddressState> AddressStates { get; set; } = default!;
 
 			/// <summary>
 			/// Список аваторов для персонажа
 			/// </summary>
-			public DbSet<AvatarInfo> AvatarInfos { get; set; } = default!;
+			public DbSet<AvatarState> AvatarStates { get; set; } = default!;
 
 			/// <summary>
 			/// Список идентификационных сведений о персонаже
 			/// </summary>
-			public DbSet<IdentityInfo> IdentityInfos { get; set; } = default!;
+			public DbSet<IdentityState> IdentityStates { get; set; } = default!;
 
 			/// <summary>
 			/// Список местоположений персонажа
 			/// </summary>
-			public DbSet<PlacementInfo> PlacementInfos { get; set; } = default!;
+			public DbSet<PlacementState> PlacementStates { get; set; } = default!;
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -175,7 +195,7 @@ namespace Lotus
 			/// Сохранение всех сущностей укзанного типа поддерживающих сохранение
 			/// </summary>
 			/// <typeparam name="TEntity">Тип сущности</typeparam>
-			/// <param name="gameContextId">Идентификатор контекста игры</param>
+			/// <param name="gameContextId">Идентификатор игры</param>
 			/// <param name="gameSaveId">Идентификатор сохранения</param>
 			/// <param name="token">Токен отмены</param>
 			/// <returns>Задача</returns>
@@ -187,7 +207,7 @@ namespace Lotus
 
 				// Получаем все актуальные сущности для данного игрового контекста
 				var entitiesActual = await entities
-					.Where(x => x.GameContextId == gameContextId)
+					.Where(x => x.GameId == gameContextId)
 					.Where(x => x.GameSaveId == null)
 					.ToArrayAsync(token);
 				if (entitiesActual.Length == 0)
@@ -223,7 +243,7 @@ namespace Lotus
 			/// Загрузка всех сущностей укзанного типа поддерживающих сохранение
 			/// </summary>
 			/// <typeparam name="TEntity">Тип сущности</typeparam>
-			/// <param name="gameContextId">Идентификатор контекста игры</param>
+			/// <param name="gameContextId">Идентификатор игры</param>
 			/// <param name="gameSaveId">Идентификатор сохранения</param>
 			/// <param name="token">Токен отмены</param>
 			/// <returns>Задача</returns>
@@ -245,7 +265,7 @@ namespace Lotus
 
 				// Получаем все актуальные сущности для данного игрового контекста и удаляем их
 				var entitiesActual = await entities
-					.Where(x => x.GameContextId == gameContextId)
+					.Where(x => x.GameId == gameContextId)
 					.Where(x => x.GameSaveId == null)
 					.ToArrayAsync(token);
 				if (entitiesActual.Length > 0)

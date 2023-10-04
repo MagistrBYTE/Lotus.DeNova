@@ -17,67 +17,87 @@ namespace Lotus.DeNova.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.20")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Lotus.Account.CAvatar", b =>
+            modelBuilder.Entity("Lotus.Account.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid?>("AvatarId")
+                        .HasColumnType("uuid");
 
-                    b.Property<byte[]>("FullImage")
-                        .HasColumnType("bytea");
+                    b.Property<DateOnly?>("Birthday")
+                        .HasColumnType("date");
 
-                    b.Property<byte[]>("SmallImage")
-                        .HasColumnType("bytea");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Avatar", "adm");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CDevice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Brand")
+                    b.Property<string>("Email")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<string>("CodeId")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
-
-                    b.Property<string>("Family")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
-
-                    b.Property<bool>("IsMobileDevice")
+                    b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Model")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
-                    b.Property<string>("Platform")
+                    b.Property<string>("Name")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Patronymic")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RoleSystemName")
+                        .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Surname")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Device", "adm");
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("User", "adm");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e3182c8f-87bc-4e27-a27f-b32e3e2b8018"),
+                            Email = "dementevds@gmail.com",
+                            EmailConfirmed = false,
+                            Login = "DanielDem",
+                            Name = "Даниил",
+                            PasswordHash = "012f28fd2973783520fa3115f886102a09c8a15e",
+                            Patronymic = "Сергеевич",
+                            RoleId = 1,
+                            RoleSystemName = "Нет роли",
+                            Surname = "Дементьев"
+                        });
                 });
 
-            modelBuilder.Entity("Lotus.Account.CFieldActivity", b =>
+            modelBuilder.Entity("Lotus.Account.UserFieldActivity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,21 +105,21 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<string>("DisplayName")
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
-                    b.Property<string>("ShortName")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("FieldActivity", "adm");
+                    b.ToTable("UserFieldActivity", "adm");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CGroup", b =>
+            modelBuilder.Entity("Lotus.Account.UserFieldActivityRelation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,53 +127,99 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<int>("FieldActivityId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FieldActivityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFieldActivityRelation", "adm");
+                });
+
+            modelBuilder.Entity("Lotus.Account.UserGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DisplayName")
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
-                    b.Property<string>("ShortName")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Group", "adm");
+                    b.ToTable("UserGroup", "adm");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Name = "Хранители",
-                            ShortName = "Хранители"
+                            DisplayName = "Хранители",
+                            Name = "Хранители"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Север",
-                            ShortName = "Север"
+                            DisplayName = "Север",
+                            Name = "Север"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Юг",
-                            ShortName = "Юг"
+                            DisplayName = "Юг",
+                            Name = "Юг"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Восток",
-                            ShortName = "Восток"
+                            DisplayName = "Восток",
+                            Name = "Восток"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Запад",
-                            ShortName = "Запад"
+                            DisplayName = "Запад",
+                            Name = "Запад"
                         });
                 });
 
-            modelBuilder.Entity("Lotus.Account.CMessage", b =>
+            modelBuilder.Entity("Lotus.Account.UserGroupRelation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGroupRelation", "adm");
+                });
+
+            modelBuilder.Entity("Lotus.Account.UserMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,10 +247,10 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("ReceiverId");
 
-                    b.ToTable("Message", "adm");
+                    b.ToTable("UserMessage", "adm");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CNotification", b =>
+            modelBuilder.Entity("Lotus.Account.UserNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,10 +280,10 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notification", "adm");
+                    b.ToTable("UserNotification", "adm");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CPermission", b =>
+            modelBuilder.Entity("Lotus.Account.UserPermission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,89 +291,89 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DispalyName")
+                    b.Property<string>("DisplayName")
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
-
-                    b.Property<string>("SystemName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Permission", "adm");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DispalyName = "Администрирование системы",
-                            SystemName = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DispalyName = "Модератор",
-                            SystemName = "editor"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DispalyName = "Пользователь",
-                            SystemName = "user"
-                        });
-                });
-
-            modelBuilder.Entity("Lotus.Account.CPosition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
-
-                    b.Property<string>("ShortName")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Position", "adm");
+                    b.ToTable("UserPermission", "adm");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Name = "Инспектор",
-                            ShortName = "Инспектор"
+                            DisplayName = "Администратор",
+                            Name = "admin"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Старший инспектор",
-                            ShortName = "Старший инспектор"
+                            DisplayName = "Модератор",
+                            Name = "editor"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Ведущий специалист",
-                            ShortName = "Ведущий специалист"
+                            DisplayName = "Пользователь",
+                            Name = "user"
+                        });
+                });
+
+            modelBuilder.Entity("Lotus.Account.UserPosition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPosition", "adm");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Инспектор",
+                            Name = "Инспектор"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DisplayName = "Старший инспектор",
+                            Name = "Старший инспектор"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DisplayName = "Ведущий специалист",
+                            Name = "Ведущий специалист"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Начальник отдела",
-                            ShortName = "Начальник отдела"
+                            DisplayName = "Начальник отдела",
+                            Name = "Начальник отдела"
                         });
                 });
 
-            modelBuilder.Entity("Lotus.Account.CRole", b =>
+            modelBuilder.Entity("Lotus.Account.UserRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -315,41 +381,41 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DispalyName")
+                    b.Property<string>("DisplayName")
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
-                    b.Property<string>("SystemName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role", "adm");
+                    b.ToTable("UserRole", "adm");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            DispalyName = "Администратор",
-                            SystemName = "admin"
+                            DisplayName = "Администратор",
+                            Name = "admin"
                         },
                         new
                         {
                             Id = 2,
-                            DispalyName = "Редактор",
-                            SystemName = "editor"
+                            DisplayName = "Редактор",
+                            Name = "editor"
                         },
                         new
                         {
                             Id = 3,
-                            DispalyName = "Пользователь",
-                            SystemName = "user"
+                            DisplayName = "Пользователь",
+                            Name = "user"
                         });
                 });
 
-            modelBuilder.Entity("Lotus.Account.CRolePermission", b =>
+            modelBuilder.Entity("Lotus.Account.UserRolePermissionRelation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -369,7 +435,7 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RolePermission", "adm");
+                    b.ToTable("UserRolePermissionRelation", "adm");
 
                     b.HasData(
                         new
@@ -390,159 +456,6 @@ namespace Lotus.DeNova.Migrations
                             PermissionId = 3,
                             RoleId = 3
                         });
-                });
-
-            modelBuilder.Entity("Lotus.Account.CSession", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("BeginTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Browser")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<int?>("DeviceId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Session", "adm");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("AvatarId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateOnly?>("Birthday")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("Patronymic")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("RoleSystemName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AvatarId");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("User", "adm");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e3182c8f-87bc-4e27-a27f-b32e3e2b8018"),
-                            Email = "dementevds@gmail.com",
-                            EmailConfirmed = false,
-                            Login = "DanielDem",
-                            Name = "Даниил",
-                            PasswordHash = "012f28fd2973783520fa3115f886102a09c8a15e",
-                            Patronymic = "Сергеевич",
-                            RoleId = 1,
-                            RoleSystemName = "Нет роли",
-                            Surname = "Дементьев"
-                        });
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUserFieldActivity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FieldActivityId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FieldActivityId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFieldActivity", "adm");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUserGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserGroup", "adm");
                 });
 
             modelBuilder.Entity("Lotus.DeNova.AddressElement", b =>
@@ -584,7 +497,7 @@ namespace Lotus.DeNova.Migrations
                     b.ToTable("AddressElement", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.AddressInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.AddressState", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -593,7 +506,7 @@ namespace Lotus.DeNova.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("AddressInfoId")
+                    b.Property<Guid>("AddressStateId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("BeginPeriod")
@@ -602,14 +515,14 @@ namespace Lotus.DeNova.Migrations
                     b.Property<DateOnly?>("EndPeriod")
                         .HasColumnType("date");
 
-                    b.Property<Guid>("GameContextId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("GameSaveId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -617,7 +530,7 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("AddressInfo", "denova");
+                    b.ToTable("AddressState", "denova");
                 });
 
             modelBuilder.Entity("Lotus.DeNova.AddressStreet", b =>
@@ -709,7 +622,7 @@ namespace Lotus.DeNova.Migrations
                     b.ToTable("AddressVillageSettlement", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.Astrology", b =>
+            modelBuilder.Entity("Lotus.DeNova.AstrologyType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -717,7 +630,7 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CampaignSettingId")
+                    b.Property<int?>("GameSettingTypeId")
                         .HasColumnType("integer");
 
                     b.Property<string>("StoneZodiac")
@@ -734,13 +647,13 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Astrology", "denova");
+                    b.ToTable("AstrologyType", "denova");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CampaignSettingId = 1,
+                            GameSettingTypeId = 1,
                             StoneZodiac = "Алмаз",
                             TreeZodiac = "Лиана",
                             ZodiacSign = "Змееносец"
@@ -748,7 +661,7 @@ namespace Lotus.DeNova.Migrations
                         new
                         {
                             Id = 2,
-                            CampaignSettingId = 1,
+                            GameSettingTypeId = 1,
                             StoneZodiac = "Изумруд",
                             TreeZodiac = "Ива",
                             ZodiacSign = "Кецалькоатль"
@@ -756,20 +669,20 @@ namespace Lotus.DeNova.Migrations
                         new
                         {
                             Id = 3,
-                            CampaignSettingId = 1,
+                            GameSettingTypeId = 1,
                             StoneZodiac = "Топаз",
                             TreeZodiac = "Дуб",
                             ZodiacSign = "Телец"
                         });
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.AvatarInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.AvatarState", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AvatarInfoId")
+                    b.Property<Guid>("AvatarStateId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("BeginPeriod")
@@ -778,17 +691,17 @@ namespace Lotus.DeNova.Migrations
                     b.Property<DateTime?>("EndPeriod")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GameContextId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("GameSaveId")
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -796,10 +709,10 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("AvatarInfo", "denova");
+                    b.ToTable("AvatarState", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.BirthdayInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.BirthdayState", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -811,11 +724,11 @@ namespace Lotus.DeNova.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GameContextId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -823,47 +736,14 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("BirthdayInfo", "denova");
+                    b.ToTable("BirthdayState", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.CampaignSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DisplayName")
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CampaignSetting", "denova");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DisplayName = "Сентра",
-                            Name = "Sentra"
-                        });
-                });
-
-            modelBuilder.Entity("Lotus.DeNova.GameContext", b =>
+            modelBuilder.Entity("Lotus.DeNova.Game", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<int?>("CampaignSettingId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
@@ -880,17 +760,15 @@ namespace Lotus.DeNova.Migrations
                         .HasColumnName("modified")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<int>("ScenarioId")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameContext", "denova");
+                    b.ToTable("Game", "denova");
                 });
 
             modelBuilder.Entity("Lotus.DeNova.GameSave", b =>
@@ -905,7 +783,7 @@ namespace Lotus.DeNova.Migrations
                         .HasColumnName("created")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<Guid>("GameContextId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Modified")
@@ -924,7 +802,37 @@ namespace Lotus.DeNova.Migrations
                     b.ToTable("GameSave", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.IdentityInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.GameSettingType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameSettingType", "denova");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Сентра",
+                            Name = "Sentra"
+                        });
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.IdentityState", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -944,13 +852,13 @@ namespace Lotus.DeNova.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<Guid>("GameContextId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("GameSaveId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdentityInfoId")
+                    b.Property<Guid>("IdentityStateId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -958,8 +866,8 @@ namespace Lotus.DeNova.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Surname")
                         .HasMaxLength(20)
@@ -969,10 +877,10 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("IdentityInfo", "denova");
+                    b.ToTable("IdentityState", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.Image", b =>
+            modelBuilder.Entity("Lotus.DeNova.ParameterAspectType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -980,49 +888,15 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CampaignSettingId")
-                        .HasColumnType("integer");
-
-                    b.Property<byte[]>("DataImage")
-                        .HasColumnType("bytea");
-
-                    b.Property<int?>("Height")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsLocal")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("LoadPath")
+                    b.Property<string>("AdditionalInfo")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
-                    b.Property<int?>("SizeInBytes")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Width")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Image", "denova");
-                });
-
-            modelBuilder.Entity("Lotus.DeNova.Person", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AstrologyId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("AvatarId")
+                    b.Property<int?>("GameSettingTypeId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -1030,39 +904,316 @@ namespace Lotus.DeNova.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<int>("RaceId")
+                    b.Property<int>("ParameterTypeId")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AstrologyId");
+                    b.HasIndex("ParameterTypeId");
 
-                    b.HasIndex("AvatarId");
+                    b.ToTable("ParameterAspectType", "denova");
 
-                    b.HasIndex("RaceId");
-
-                    b.ToTable("Person", "denova");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Сильные руки",
+                            GameSettingTypeId = 1,
+                            Name = "StrongArms",
+                            ParameterTypeId = 1
+                        });
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.PlacementInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.ParameterType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<int?>("GameSettingTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ParameterType", "denova");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Физическая сила",
+                            GameSettingTypeId = 1,
+                            Name = "PhysicalStrength"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DisplayName = "Ловкость",
+                            GameSettingTypeId = 1,
+                            Name = "Dexterity"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DisplayName = "Выносливость",
+                            GameSettingTypeId = 1,
+                            Name = "Endurance"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DisplayName = "Телосложение",
+                            GameSettingTypeId = 1,
+                            Name = "Physique"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DisplayName = "Восприятие",
+                            GameSettingTypeId = 1,
+                            Name = "Perception"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DisplayName = "Разум",
+                            GameSettingTypeId = 1,
+                            Name = "Mind"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DisplayName = "Сила воли",
+                            GameSettingTypeId = 1,
+                            Name = "Willpower"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DisplayName = "Духовность",
+                            GameSettingTypeId = 1,
+                            Name = "Spirituality"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DisplayName = "Внешность",
+                            GameSettingTypeId = 1,
+                            Name = "Appearance"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            DisplayName = "Харизма",
+                            GameSettingTypeId = 1,
+                            Name = "Charisma"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            DisplayName = "Влияние",
+                            GameSettingTypeId = 1,
+                            Name = "Influence"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            DisplayName = "Статус",
+                            GameSettingTypeId = 1,
+                            Name = "Status"
+                        });
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.Person", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("GameContextId")
+                    b.Property<Guid>("AppearanceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("AstrologyTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("AvatarId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CharismaId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DexterityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EnduranceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InfluenceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MindId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("PerceptionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PhysicalStrengthId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PhysiqueId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("RaceTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SpiritualityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("WillpowerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppearanceId")
+                        .IsUnique();
+
+                    b.HasIndex("AstrologyTypeId");
+
+                    b.HasIndex("AvatarId");
+
+                    b.HasIndex("CharismaId")
+                        .IsUnique();
+
+                    b.HasIndex("DexterityId")
+                        .IsUnique();
+
+                    b.HasIndex("EnduranceId")
+                        .IsUnique();
+
+                    b.HasIndex("InfluenceId")
+                        .IsUnique();
+
+                    b.HasIndex("MindId")
+                        .IsUnique();
+
+                    b.HasIndex("PerceptionId")
+                        .IsUnique();
+
+                    b.HasIndex("PhysicalStrengthId")
+                        .IsUnique();
+
+                    b.HasIndex("PhysiqueId")
+                        .IsUnique();
+
+                    b.HasIndex("RaceTypeId");
+
+                    b.HasIndex("SpiritualityId")
+                        .IsUnique();
+
+                    b.HasIndex("StatusId")
+                        .IsUnique();
+
+                    b.HasIndex("WillpowerId")
+                        .IsUnique();
+
+                    b.ToTable("Person", "denova");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PersonParameter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<float>("BaseValue")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ParameterTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParameterTypeId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PersonParameter", "denova");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PersonParameterAspect", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ParameterAspectTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PersonParameterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<float>("Value")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParameterAspectTypeId");
+
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("PersonParameterId");
+
+                    b.ToTable("PersonParameterAspect", "denova");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PlacementState", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("GameSaveId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("PlacementInfoId")
+                    b.Property<Guid>("PlacementStateId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("PositionX")
@@ -1078,10 +1229,10 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("PlacementInfo", "denova");
+                    b.ToTable("PlacementState", "denova");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.Race", b =>
+            modelBuilder.Entity("Lotus.DeNova.RaceType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1089,12 +1240,16 @@ namespace Lotus.DeNova.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CampaignSettingId")
-                        .HasColumnType("integer");
+                    b.Property<string>("AdditionalInfo")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
+
+                    b.Property<int?>("GameSettingTypeId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1103,58 +1258,142 @@ namespace Lotus.DeNova.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Race", "denova");
+                    b.ToTable("RaceType", "denova");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CampaignSettingId = 1,
                             DisplayName = "Эриец",
+                            GameSettingTypeId = 1,
                             Name = "Erian"
                         },
                         new
                         {
                             Id = 2,
-                            CampaignSettingId = 1,
                             DisplayName = "Завротеанен",
+                            GameSettingTypeId = 1,
                             Name = "Zavroteanen"
                         },
                         new
                         {
                             Id = 3,
-                            CampaignSettingId = 1,
                             DisplayName = "Леохарт",
+                            GameSettingTypeId = 1,
                             Name = "Leohart"
                         },
                         new
                         {
                             Id = 4,
-                            CampaignSettingId = 1,
                             DisplayName = "Триб",
+                            GameSettingTypeId = 1,
                             Name = "Tribe"
                         },
                         new
                         {
                             Id = 5,
-                            CampaignSettingId = 1,
-                            DisplayName = "Гнол",
-                            Name = "Gnol"
+                            DisplayName = "Гвелл",
+                            GameSettingTypeId = 1,
+                            Name = "Gwell"
                         },
                         new
                         {
                             Id = 6,
-                            CampaignSettingId = 1,
                             DisplayName = "Эль`гоу",
+                            GameSettingTypeId = 1,
                             Name = "Elgou"
                         },
                         new
                         {
                             Id = 7,
-                            CampaignSettingId = 1,
                             DisplayName = "Фергариец",
+                            GameSettingTypeId = 1,
                             Name = "Fergarian"
                         });
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.ScenarioType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<int?>("GameSettingTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ScenarioType", "denova");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DisplayName = "Песочница",
+                            GameSettingTypeId = 1,
+                            Name = "Sandbox"
+                        });
+                });
+
+            modelBuilder.Entity("Lotus.Repository.ResourceFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AuthorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<byte[]>("Data")
+                        .HasColumnType("bytea");
+
+                    b.Property<int?>("FileTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LoadPath")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("SaveFormat")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SizeInBytes")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StorageType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ResourceFile");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication", b =>
@@ -1355,13 +1594,58 @@ namespace Lotus.DeNova.Migrations
                     b.ToTable("OpenIddictTokens", "security");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CMessage", b =>
+            modelBuilder.Entity("Lotus.Account.User", b =>
                 {
-                    b.HasOne("Lotus.Account.CUser", "Author")
+                    b.HasOne("Lotus.Account.UserPosition", "Post")
+                        .WithMany("Users")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("Lotus.Account.UserRole", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Lotus.Account.UserFieldActivityRelation", b =>
+                {
+                    b.HasOne("Lotus.Account.UserFieldActivity", null)
+                        .WithMany()
+                        .HasForeignKey("FieldActivityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.Account.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Lotus.Account.UserGroupRelation", b =>
+                {
+                    b.HasOne("Lotus.Account.UserGroup", null)
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.Account.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Lotus.Account.UserMessage", b =>
+                {
+                    b.HasOne("Lotus.Account.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Lotus.Account.CUser", "Receiver")
+                    b.HasOne("Lotus.Account.User", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId");
 
@@ -1370,83 +1654,17 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Receiver");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CRolePermission", b =>
+            modelBuilder.Entity("Lotus.Account.UserRolePermissionRelation", b =>
                 {
-                    b.HasOne("Lotus.Account.CPermission", null)
+                    b.HasOne("Lotus.Account.UserPermission", null)
                         .WithMany()
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Lotus.Account.CRole", null)
+                    b.HasOne("Lotus.Account.UserRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Lotus.Account.CSession", b =>
-                {
-                    b.HasOne("Lotus.Account.CDevice", "Device")
-                        .WithMany("Sessions")
-                        .HasForeignKey("DeviceId");
-
-                    b.HasOne("Lotus.Account.CUser", "User")
-                        .WithMany("Sessions")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Device");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUser", b =>
-                {
-                    b.HasOne("Lotus.Account.CAvatar", "Avatar")
-                        .WithMany()
-                        .HasForeignKey("AvatarId");
-
-                    b.HasOne("Lotus.Account.CPosition", "Post")
-                        .WithMany("Users")
-                        .HasForeignKey("PostId");
-
-                    b.HasOne("Lotus.Account.CRole", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId");
-
-                    b.Navigation("Avatar");
-
-                    b.Navigation("Post");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUserFieldActivity", b =>
-                {
-                    b.HasOne("Lotus.Account.CFieldActivity", null)
-                        .WithMany()
-                        .HasForeignKey("FieldActivityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Lotus.Account.CUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUserGroup", b =>
-                {
-                    b.HasOne("Lotus.Account.CGroup", null)
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Lotus.Account.CUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -1460,7 +1678,7 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Street");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.AddressInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.AddressState", b =>
                 {
                     b.HasOne("Lotus.DeNova.AddressElement", "Address")
                         .WithMany()
@@ -1495,9 +1713,9 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("VillageSettlement");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.AvatarInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.AvatarState", b =>
                 {
-                    b.HasOne("Lotus.DeNova.Image", "Image")
+                    b.HasOne("Lotus.Repository.ResourceFile", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
 
@@ -1512,7 +1730,7 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.BirthdayInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.BirthdayState", b =>
                 {
                     b.HasOne("Lotus.DeNova.AddressElement", "Address")
                         .WithMany()
@@ -1529,7 +1747,7 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.IdentityInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.IdentityState", b =>
                 {
                     b.HasOne("Lotus.DeNova.Person", "Person")
                         .WithMany()
@@ -1540,30 +1758,181 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.Person", b =>
+            modelBuilder.Entity("Lotus.DeNova.ParameterAspectType", b =>
                 {
-                    b.HasOne("Lotus.DeNova.Astrology", "Astrology")
+                    b.HasOne("Lotus.DeNova.ParameterType", "ParameterType")
                         .WithMany()
-                        .HasForeignKey("AstrologyId");
-
-                    b.HasOne("Lotus.DeNova.Image", "Avatar")
-                        .WithMany()
-                        .HasForeignKey("AvatarId");
-
-                    b.HasOne("Lotus.DeNova.Race", "Race")
-                        .WithMany()
-                        .HasForeignKey("RaceId")
+                        .HasForeignKey("ParameterTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Astrology");
+                    b.Navigation("ParameterType");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.Person", b =>
+                {
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Appearance")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "AppearanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.AstrologyType", "AstrologyType")
+                        .WithMany()
+                        .HasForeignKey("AstrologyTypeId");
+
+                    b.HasOne("Lotus.Repository.ResourceFile", "Avatar")
+                        .WithMany()
+                        .HasForeignKey("AvatarId");
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Charisma")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "CharismaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Dexterity")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "DexterityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Endurance")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "EnduranceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Influence")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "InfluenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Mind")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "MindId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Perception")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "PerceptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "PhysicalStrength")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "PhysicalStrengthId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Physique")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "PhysiqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.RaceType", "RaceType")
+                        .WithMany()
+                        .HasForeignKey("RaceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Spirituality")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "SpiritualityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Status")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "Willpower")
+                        .WithOne()
+                        .HasForeignKey("Lotus.DeNova.Person", "WillpowerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appearance");
+
+                    b.Navigation("AstrologyType");
 
                     b.Navigation("Avatar");
 
-                    b.Navigation("Race");
+                    b.Navigation("Charisma");
+
+                    b.Navigation("Dexterity");
+
+                    b.Navigation("Endurance");
+
+                    b.Navigation("Influence");
+
+                    b.Navigation("Mind");
+
+                    b.Navigation("Perception");
+
+                    b.Navigation("PhysicalStrength");
+
+                    b.Navigation("Physique");
+
+                    b.Navigation("RaceType");
+
+                    b.Navigation("Spirituality");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("Willpower");
                 });
 
-            modelBuilder.Entity("Lotus.DeNova.PlacementInfo", b =>
+            modelBuilder.Entity("Lotus.DeNova.PersonParameter", b =>
+                {
+                    b.HasOne("Lotus.DeNova.ParameterType", "ParameterType")
+                        .WithMany()
+                        .HasForeignKey("ParameterTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId");
+
+                    b.Navigation("ParameterType");
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PersonParameterAspect", b =>
+                {
+                    b.HasOne("Lotus.DeNova.ParameterAspectType", "ParameterAspectType")
+                        .WithMany()
+                        .HasForeignKey("ParameterAspectTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lotus.DeNova.PersonParameter", "PersonParameter")
+                        .WithMany("Aspects")
+                        .HasForeignKey("PersonParameterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParameterAspectType");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("PersonParameter");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PlacementState", b =>
                 {
                     b.HasOne("Lotus.DeNova.Person", "Person")
                         .WithMany()
@@ -1598,24 +1967,14 @@ namespace Lotus.DeNova.Migrations
                     b.Navigation("Authorization");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CDevice", b =>
-                {
-                    b.Navigation("Sessions");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CPosition", b =>
+            modelBuilder.Entity("Lotus.Account.UserPosition", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Lotus.Account.CRole", b =>
+            modelBuilder.Entity("Lotus.Account.UserRole", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Lotus.Account.CUser", b =>
-                {
-                    b.Navigation("Sessions");
                 });
 
             modelBuilder.Entity("Lotus.DeNova.AddressStreet", b =>
@@ -1631,6 +1990,11 @@ namespace Lotus.DeNova.Migrations
             modelBuilder.Entity("Lotus.DeNova.AddressVillageSettlement", b =>
                 {
                     b.Navigation("Villages");
+                });
+
+            modelBuilder.Entity("Lotus.DeNova.PersonParameter", b =>
+                {
+                    b.Navigation("Aspects");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication", b =>

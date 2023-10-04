@@ -11,49 +11,68 @@ namespace Lotus.DeNova.Test
     public sealed class GameContextScenario : IClassFixture<DeNovaDefaultFactory>
     {
         private readonly DeNovaDefaultFactory _factory;
+		private PersonDto _testPerson;
 
-        /// <summary>
-        /// Конструктор по умолчанию
-        /// </summary>
-        public GameContextScenario(DeNovaDefaultFactory factory)
+		/// <summary>
+		/// Конструктор по умолчанию
+		/// </summary>
+		public GameContextScenario(DeNovaDefaultFactory factory)
         {
             _factory = factory;
         }
 
-        [Fact(DisplayName = "Создания новой игры")]
+		[Fact(DisplayName = "Создания персонажа")]
+		public async Task CreatePerson()
+		{
+			ILotusPersonService personService = _factory.ServiceProvider.GetRequiredService<ILotusPersonService>();
+
+			var personCreate = new PersonCreateRequest()
+			{
+				UserId = DeNovaDefaultFactory.DefaultUser.Id,
+				Name = "Тестовый персонажа",
+				RaceTypeId = XRaceTypeConstants.Tribe.Id
+			};
+			var _testPersonResponce = await personService.CreateAsync(personCreate, CancellationToken.None);
+			Assert.NotNull(_testPersonResponce.Payload);
+
+			var person = _testPersonResponce.Payload;
+			Assert.Equal(personCreate.Name, person.Name);
+
+			Assert.Equal(personCreate.Name, person.Name);
+		}
+
+		[Fact(DisplayName = "Создания новой игры")]
         public async Task NewGame()
         {
-			ILotusGameContextService gameContextService = _factory.ServiceProvider.GetRequiredService<ILotusGameContextService>();
+			ILotusGameService gameService = _factory.ServiceProvider.GetRequiredService<ILotusGameService>();
 
 			// Создаем игру
-			var gameCreate = new GameContextCreateDto()
+			var gameCreate = new GameCreateRequest()
 			{
-				Name = "Новая игра 1",
-				CampaignSettingId = XCampaignSettingConstants.Sentra.Id,
 				UserId = DeNovaDefaultFactory.DefaultUser.Id,
+				ScenarioId = XScenarioTypeConstants.Sandbox.Id
 			};
 
-			var gameContext = await gameContextService.CreateAsync(gameCreate, CancellationToken.None);
+			var gameContext = await gameService.CreateAsync(gameCreate, CancellationToken.None);
 
 			// Новая игра должна быть создана и должна быть текущей
 			Assert.NotNull(gameContext.Payload);
 			Assert.True(gameContext.Payload.IsCurrent);
 
 			// Создаем игру
-			var gameCreate2 = new GameContextCreateDto()
+			var gameCreate2 = new GameCreateRequest()
 			{
-				Name = "Новая игра 2",
-				CampaignSettingId = XCampaignSettingConstants.Sentra.Id,
 				UserId = DeNovaDefaultFactory.DefaultUser.Id,
+				ScenarioId = XScenarioTypeConstants.Sandbox.Id
 			};
 
 			// Новая игра должна быть создана и должна быть текущей
-			var gameContext2 = await gameContextService.CreateAsync(gameCreate2, CancellationToken.None);
+			var gameContext2 = await gameService.CreateAsync(gameCreate2, CancellationToken.None);
 			Assert.NotNull(gameContext2.Payload);
 			Assert.True(gameContext2.Payload.IsCurrent);
 
 			// Предыдущая игра должна быть неактивной
-			var gameContext3 = await gameContextService.GetAsync(gameContext.Payload.Id, CancellationToken.None);
+			var gameContext3 = await gameService.GetAsync(gameContext.Payload.Id, CancellationToken.None);
 			Assert.NotNull(gameContext3.Payload);
 			Assert.False(gameContext3.Payload.IsCurrent);
 		}
@@ -61,19 +80,18 @@ namespace Lotus.DeNova.Test
 		[Fact(DisplayName = "Сохранение игры")]
 		public async Task SaveGame()
 		{
-			ILotusGameContextService gameContextService = _factory.ServiceProvider.GetRequiredService<ILotusGameContextService>();
+			ILotusGameService gameService = _factory.ServiceProvider.GetRequiredService<ILotusGameService>();
 
 			//
 			// Создаем игру
 			//
-			var gameCreate = new GameContextCreateDto()
+			var gameCreate = new GameCreateRequest()
 			{
-				Name = "Новая игра 1",
-				CampaignSettingId = XCampaignSettingConstants.Sentra.Id,
 				UserId = DeNovaDefaultFactory.DefaultUser.Id,
+				ScenarioId = XScenarioTypeConstants.Sandbox.Id
 			};
 
-			var gameContext = await gameContextService.CreateAsync(gameCreate, CancellationToken.None);
+			var gameContext = await gameService.CreateAsync(gameCreate, CancellationToken.None);
 
 			//
 			// Новая игра должна быть создана и должна быть текущей
@@ -84,12 +102,12 @@ namespace Lotus.DeNova.Test
 			//
 			// Добавляем новые сведения о персонаже
 			//
-			ILotusIdentityInfoService identityInfoService = _factory.ServiceProvider.GetRequiredService<ILotusIdentityInfoService>();
+			ILotusIdentityStateService identityInfoService = _factory.ServiceProvider.GetRequiredService<ILotusIdentityStateService>();
 
-			var identityInfoCreate = new IdentityInfoCreateDto()
+			var identityInfoCreate = new IdentityStateCreateRequest()
 			{
-				GameContextId = gameContext.Payload.Id,
-				PersonId = DeNovaDefaultFactory.DefaultPerson.Id,
+				GameId = gameContext.Payload.Id,
+				PersonId = _testPerson.Id,
 				Name = "Иван",
 				BeginPeriod = new DateTime(1900, 3, 2).ToUniversalTime(),
 			};
@@ -97,30 +115,29 @@ namespace Lotus.DeNova.Test
 			var identityInfo = await identityInfoService.CreateAsync(identityInfoCreate, CancellationToken.None);
 			Assert.NotNull(identityInfo.Payload);
 			Assert.Equal(identityInfoCreate.Name, identityInfo.Payload.Name);
-			Assert.Equal(identityInfoCreate.GameContextId, identityInfo.Payload.GameContextId);
+			Assert.Equal(identityInfoCreate.GameId, identityInfo.Payload.GameId);
 			Assert.Equal(identityInfoCreate.PersonId, identityInfo.Payload.PersonId);
 			Assert.Equal(identityInfoCreate.BeginPeriod, identityInfo.Payload.BeginPeriod);
 
 			//
 			// Сохраняем игру
 			//
-			ILotusGameSaveService gameSaveService = _factory.ServiceProvider.GetRequiredService<ILotusGameSaveService>();
-			var saveCreate = new GameSaveCreateDto()
+			var saveCreate = new GameSaveCreateRequest()
 			{
-				GameContextId = gameContext.Payload.Id,
+				GameId = gameContext.Payload.Id,
 				Name = "test2",
 			};
-			var gameSave = await gameSaveService.SaveAsync(saveCreate, CancellationToken.None);
+			var gameSave = await gameService.SaveAsync(saveCreate, CancellationToken.None);
 			Assert.NotNull(gameSave.Payload);
 			Assert.Equal(saveCreate.Name, gameSave.Payload.Name);
 
 			//
 			// Добавляем еще одни сведения
 			//
-			var identityInfoCreate2 = new IdentityInfoCreateDto()
+			var identityInfoCreate2 = new IdentityStateCreateRequest()
 			{
-				GameContextId = gameContext.Payload.Id,
-				PersonId = DeNovaDefaultFactory.DefaultPerson.Id,
+				GameId = gameContext.Payload.Id,
+				PersonId = _testPerson.Id,
 				Name = "Суриков",
 				BeginPeriod = new DateTime(1952, 3, 2).ToUniversalTime(),
 			};
@@ -128,22 +145,17 @@ namespace Lotus.DeNova.Test
 			var identityInfo2 = await identityInfoService.CreateAsync(identityInfoCreate2, CancellationToken.None);
 			Assert.NotNull(identityInfo2.Payload);
 			Assert.Equal(identityInfoCreate2.Name, identityInfo2.Payload.Name);
-			Assert.Equal(identityInfoCreate2.GameContextId, identityInfo2.Payload.GameContextId);
+			Assert.Equal(identityInfoCreate2.GameId, identityInfo2.Payload.GameId);
 			Assert.Equal(identityInfoCreate2.PersonId, identityInfo2.Payload.PersonId);
 			Assert.Equal(identityInfoCreate2.BeginPeriod, identityInfo2.Payload.BeginPeriod);
 
 			//
 			// Убеждаемся что у нас два сведения о персонаже
 			//
-			IdentityInfosDto identityInfoRequest = new IdentityInfosDto()
+			var identityInfoRequest = new IdentityStatesDto()
 			{
-				GameContextId = gameContext.Payload.Id,
-				PersonId = DeNovaDefaultFactory.DefaultPerson.Id,
-				PageInfo = new Repository.CPageInfoRequest()
-				{
-					PageNumber = 0,
-					PageSize = 9999
-				}
+				GameId = gameContext.Payload.Id,
+				PersonId = _testPerson.Id,
 			};
 			var identityInfos = await identityInfoService.GetAllAsync(identityInfoRequest, CancellationToken.None);
 			Assert.NotNull(identityInfos.Payload);
@@ -152,12 +164,12 @@ namespace Lotus.DeNova.Test
 			//
 			// Загружаем игру
 			//
-			GameLoadDto gameLoad = new GameLoadDto()
+			var gameLoad = new GameLoadRequest()
 			{
-				GameContextId = gameContext.Payload.Id,
+				GameId = gameContext.Payload.Id,
 				GameSaveId = gameSave.Payload.Id
 			};
-			await gameSaveService.LoadAsync(gameLoad, CancellationToken.None);
+			await gameService.LoadAsync(gameLoad, CancellationToken.None);
 
 			//
 			// Проверяем, должны быть одни сведения
