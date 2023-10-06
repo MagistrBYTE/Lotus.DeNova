@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Checkbox, ListItemIcon, MenuItem, Select, SelectProps } from '@mui/material';
-import { ISelectOption, getSelectOptionTexts } from 'src/core/types/SelectOption';
-import { TKey } from 'src/core/types/Key';
-import { ILabelProps, Label } from '../../Info/Label';
+import { ISelectOption, getSelectOptionTexts } from 'src/shared/types/SelectOption';
+import { TKey } from 'src/shared/types/Key';
+import { ILabelProps, Label } from '../../Display/Label';
+import { HorizontalStack } from '../../Layout';
 
 export interface IMultiSelectProps<TValueOption extends TKey = TKey> extends SelectProps, Omit<ILabelProps, 'label'>
 {
@@ -16,16 +17,21 @@ export interface IMultiSelectProps<TValueOption extends TKey = TKey> extends Sel
    * @param selectedValues Выбранные значения или пустой массив
    * @returns 
    */
-  onSetSelectedValues?: (selectedValues: TKey[])=>void;
+  onSetSelectedValues?: (selectedValues: TValueOption[])=>void;
 
   /**
    * Изначально выбранные значения
    */
   initialSelectedValues?: TValueOption[];
+
+  /**
+   * Дополнительный элемент справа
+   */
+  rightElement?: ReactNode;
 }  
 
 export const MultiSelect = <TValueOption extends TKey = TKey>({options, onSetSelectedValues, initialSelectedValues, 
-  textInfo, textInfoKey, labelProps, ...props}: IMultiSelectProps<TValueOption>) =>
+  textInfo, textInfoKey, labelStyle, isTopLabel, rightElement, ...props}: IMultiSelectProps<TValueOption>) =>
 {
   const [selectedValues, setSelectedValues] = useState<TValueOption[]>(initialSelectedValues ?? []);
   const [selectedTexts, setSelectedTexts] = useState<string[]>(getSelectOptionTexts(options, initialSelectedValues));
@@ -70,7 +76,6 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({options, onSetSel
             newTexts.push(element.text)
           }
         });
-
         setSelectedTexts(newTexts);
       }
     }
@@ -136,21 +141,28 @@ export const MultiSelect = <TValueOption extends TKey = TKey>({options, onSetSel
   return (
     <Label
       label={props.label}
-      labelProps={labelProps}
+      labelStyle={labelStyle}
+      isTopLabel={isTopLabel}
       fullWidth={props.fullWidth} 
       textInfo={textInfo} 
       textInfoKey={textInfoKey} >
-      <Select 
-        value={selectedValues} 
-        {...props} 
-        multiple={true}
-        renderValue={(selected) => selectedTexts.join(', ')}
-      >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            <RenderItem {...option}/>
-          </MenuItem>
-        ))}
-      </Select> 
+      <HorizontalStack fullWidth>       
+        <Select 
+          {...props} 
+          value={selectedValues} 
+          multiple={true}
+          renderValue={(selected) => 
+          {
+            return selectedTexts.join(', ');
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              <RenderItem {...option}/>
+            </MenuItem>
+          ))}
+        </Select>
+        {rightElement}
+      </HorizontalStack>
     </Label>);
 };

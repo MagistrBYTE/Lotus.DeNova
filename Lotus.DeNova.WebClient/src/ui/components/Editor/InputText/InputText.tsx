@@ -1,6 +1,7 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, ReactNode, useState } from 'react';
 import { BaseTextFieldProps, TextField } from '@mui/material';
-import { ILabelProps, Label } from '../../Info/Label';
+import { ILabelProps, Label } from '../../Display/Label';
+import { HorizontalStack } from '../../Layout';
 
 export interface IInputTextProps extends BaseTextFieldProps, ILabelProps
 {
@@ -15,9 +16,15 @@ export interface IInputTextProps extends BaseTextFieldProps, ILabelProps
    * Изначально значение
    */  
   initialValue?: string;
+
+  /**
+   * Дополнительный элемент справа
+   */
+  rightElement?: ReactNode;  
 }  
 
-export const InputText: React.FC<IInputTextProps> = ({onSetValue, initialValue, textInfo, textInfoKey, labelProps, ...props}: IInputTextProps) =>
+export const InputText: React.FC<IInputTextProps> = ({onSetValue, initialValue, 
+  textInfo, textInfoKey, labelStyle, isTopLabel, rightElement, ...props}: IInputTextProps) =>
 {
   const [value, setValue] = useState<string>(initialValue ?? '');
 
@@ -33,10 +40,14 @@ export const InputText: React.FC<IInputTextProps> = ({onSetValue, initialValue, 
   return (
     <Label
       label={props.label}
-      labelProps={labelProps}
+      labelStyle={labelStyle}
+      isTopLabel={isTopLabel}
       fullWidth={props.fullWidth} 
       textInfo={textInfo} 
       textInfoKey={textInfoKey} >
-      <TextField {...props} onChange={handleChange} label={undefined} value={value} />
+      <HorizontalStack fullWidth>  
+        <TextField {...props} onChange={handleChange} label={undefined} value={value} />
+        {rightElement}
+      </HorizontalStack>
     </Label>);  
 };

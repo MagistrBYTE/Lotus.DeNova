@@ -1,10 +1,9 @@
-import { readSync } from 'fs';
 import React, { ReactNode, useState } from 'react';
-import { Checkbox, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, SelectProps, SxProps, Typography } from '@mui/material';
-import { ISelectOption, getDefaulValueSelectOption, getSelectOptionIcon, getSelectOptionText, getSelectOptionTexts } from 'src/core/types/SelectOption';
-import { TKey } from 'src/core/types/Key';
-import { ContentCut } from '@mui/icons-material';
-import { ILabelProps, Label } from '../../Info/Label';
+import { ListItemIcon, MenuItem, Select, SelectChangeEvent, SelectProps } from '@mui/material';
+import { TKey } from 'src/shared/types/Key';
+import { ISelectOption, getDefaulValueSelectOption, getSelectOptionText, getSelectOptionIcon } from 'src/shared/types/SelectOption';
+import { ILabelProps, Label } from '../../Display/Label';
+import { HorizontalStack } from '../../Layout';
 
 export interface IOneSelectProps<TValueOption extends TKey = TKey> extends SelectProps<TValueOption>, Omit<ILabelProps, 'label'>
 {
@@ -24,10 +23,15 @@ export interface IOneSelectProps<TValueOption extends TKey = TKey> extends Selec
    * Изначально выбранное значение
    */  
   initialSelectedValue?: TValueOption;
+
+  /**
+   * Дополнительный элемент справа
+   */
+  rightElement?: ReactNode;  
 }  
 
 export const OneSelect = <TValueOption extends TKey = TKey>({options, onSetSelectedValue, initialSelectedValue, 
-  textInfo, textInfoKey, labelProps,...props}: IOneSelectProps<TValueOption>) =>
+  textInfo, textInfoKey, labelStyle, isTopLabel, rightElement, ...props}: IOneSelectProps<TValueOption>) =>
 {
   const [selectedValue, setSelectedValue] = useState<TValueOption>(getDefaulValueSelectOption(options, initialSelectedValue));
   const [selectedText, setSelectedText] = useState<string>(getSelectOptionText(options, initialSelectedValue));
@@ -75,25 +79,29 @@ export const OneSelect = <TValueOption extends TKey = TKey>({options, onSetSelec
   return (
     <Label
       label={props.label}
-      labelProps={labelProps}
+      labelStyle={labelStyle}
+      isTopLabel={isTopLabel}
       fullWidth={props.fullWidth} 
       textInfo={textInfo} 
       textInfoKey={textInfoKey} >
-      <Select
-        value={selectedValue} 
-        {...props} 
-        renderValue={(selected) => 
-        {
-          const option = options.find((x) => x.value === selected)!;
-          return <RenderItem {...option} />
-        }}
-        onChange={handleSelect}
-      >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            <RenderItem {...option} />
-          </MenuItem>
-        ))}
-      </Select>
+      <HorizontalStack fullWidth> 
+        <Select
+          {...props}
+          value={selectedValue} 
+          renderValue={(selected) => 
+          {
+            const option = options.find((x) => x.value === selected)!;
+            return <RenderItem {...option} />
+          }}
+          onChange={handleSelect}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              <RenderItem {...option} />
+            </MenuItem>
+          ))}
+        </Select>
+        {rightElement}
+      </HorizontalStack>
     </Label>);
 };

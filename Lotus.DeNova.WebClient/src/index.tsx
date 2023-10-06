@@ -4,9 +4,9 @@ import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@mui/material';
 import registerServiceWorker from './registerServiceWorker';
-import useThemeSelector, { ColorModeContext } from './ui/hooks/useThemeSelector';
 import { store } from './app/store';
 import { App } from './app/App';
+import { useThemeSelector, ColorModeContext } from './app/theme';
 
 const container = document.getElementById('root');
 const root = createRoot(container as HTMLElement);
