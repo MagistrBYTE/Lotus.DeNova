@@ -74,7 +74,7 @@ namespace Lotus
 			/// <summary>
 			/// Дата окончания
 			/// </summary>
-			public DateOnly? EndPeriod { get; set; }
+			public DateTime? EndPeriod { get; set; }
 
 			/// <summary>
 			/// Идентификатор адреса

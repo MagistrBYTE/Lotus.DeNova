@@ -142,7 +142,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			[HttpGet("getAllSave")]
 			[ProducesResponseType(typeof(ResponsePage<GameSaveDto>), StatusCodes.Status200OK)]
-			public async Task<IActionResult> GetAll([FromQuery] GameSavesRequest saveRequest, CancellationToken token)
+			public async Task<IActionResult> GetAllSave([FromQuery] GameSavesRequest saveRequest, CancellationToken token)
 			{
 				var result = await _gameService.GetAllSaveAsync(saveRequest, token);
 				return SendResponse(result);

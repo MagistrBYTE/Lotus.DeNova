@@ -108,7 +108,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			[HttpGet("getAll")]
 			[ProducesResponseType(typeof(ResponsePage<AddressStateDto>), StatusCodes.Status200OK)]
-			public async Task<IActionResult> GetAll([FromQuery] AddressStatesDto addressInfoRequest, CancellationToken token)
+			public async Task<IActionResult> GetAll([FromQuery] AddressStatesRequest addressInfoRequest, CancellationToken token)
 			{
 				var result = await _addressInfoService.GetAllAsync(addressInfoRequest, token);
 				return SendResponse(result);
