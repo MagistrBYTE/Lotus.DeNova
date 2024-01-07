@@ -3,9 +3,12 @@ import FiberNewIcon from '@mui/icons-material/FiberNew';
 import PeopleIcon from '@mui/icons-material/People';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import MapIcon from '@mui/icons-material/Map';
 import { CommandService, CommandServiceClass } from 'src/shared/command/CommandService';
 import { BaseCommand, ICommand } from 'src/shared/command/Command';
 import { localization } from 'src/resources/localization';
+import { NavigationCommand } from 'src/shared/command/NavigationCommand';
+import { routes } from 'src/app/routes';
 
 class PlayerCommandsClass extends CommandServiceClass
 {
@@ -36,6 +39,11 @@ class PlayerCommandsClass extends CommandServiceClass
    * Персонажи
    */
   persons: ICommand;
+
+  /**
+   * Карта
+   */
+  map: ICommand;  
   // #endregion 
 
   constructor() 
@@ -60,11 +68,17 @@ class PlayerCommandsClass extends CommandServiceClass
     this.loadGame.group = 'player';
     this.commands.push(this.loadGame);
     
-    this.persons = new BaseCommand('persons');
+    this.persons = new NavigationCommand('persons', routes.persons);
     this.persons.icon = <PeopleIcon/>;
     this.persons.label = localization.person.person;
     this.persons.group = 'player';
     this.commands.push(this.persons);
+
+    this.map = new NavigationCommand('map', routes.gameMap);
+    this.map.icon = <MapIcon/>;
+    this.map.label = localization.map.map;
+    this.map.group = 'player';
+    this.commands.push(this.map);
 
     CommandService.addCommands(this.commands);
   }

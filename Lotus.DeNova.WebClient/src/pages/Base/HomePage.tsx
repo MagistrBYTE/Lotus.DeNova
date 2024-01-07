@@ -6,7 +6,7 @@ import { useAppDispatch } from 'src/app/store';
 import { AdminCommands } from 'src/modules/admin';
 import { TokenHelper } from 'src/modules/auth';
 import { BaseCommands } from 'src/modules/base';
-import { PlayerCommands } from 'src/modules/player-context';
+import { PlayerCommands, PlayerService } from 'src/modules/player-context';
 import { DelimiterCommandDefault } from 'src/shared/command/DelimiterCommand';
 import { PageContainer } from 'src/ui/components/Layout';
 
@@ -17,28 +17,8 @@ export const HomePage: React.FC = () =>
 
   useEffect(()=>
   {
-    if(isAuth)
-    {
-      if(dispatch)
-      {
-        const commandsName: string[] = [];
-        commandsName.push(PlayerCommands.newGame.name, 
-          PlayerCommands.loadGame.name, 
-          PlayerCommands.persons.name, 
-          DelimiterCommandDefault.name,
-          BaseCommands.home.name, 
-          BaseCommands.about.name);
-        console.log(commandsName);
-        dispatch(setCommandsLeftPanelLayoutAction(commandsName));
-      }      
-    }
-    else
-    {
-      if(dispatch)
-      {
-        dispatch(setCommandsLeftPanelLayoutAction([BaseCommands.home.name, BaseCommands.about.name]));
-      }
-    }
+    const commandsName = PlayerService.getCommandsName();
+    dispatch(setCommandsLeftPanelLayoutAction(commandsName));
   }, [])
 
   return (

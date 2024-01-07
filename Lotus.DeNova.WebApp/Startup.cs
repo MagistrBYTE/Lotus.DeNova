@@ -44,7 +44,8 @@ namespace Lotus.DeNova
 			//
 			// Сервисы контролеров и сессии
 			//
-			services.AddControllers();
+			var assembly = typeof(AuthorizeController).Assembly;
+			services.AddControllers().AddApplicationPart(assembly);
 			services.AddDistributedMemoryCache();
 			services.AddSession();
 

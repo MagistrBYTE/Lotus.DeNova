@@ -107,7 +107,7 @@ export const LeftPanel: React.FC<ILeftPanelProps> = (props:ILeftPanelProps) =>
         else
         {         
           return <CommandButton key={index} 
-            isVisibleLabel 
+            isVisibleLabel
             buttonType={TCommandButtonType.Icon}
             command={command}
             onBeforeCommand={handleBeforeNavigation} />;

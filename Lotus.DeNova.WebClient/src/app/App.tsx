@@ -4,7 +4,7 @@ import { AboutPage, HomePage } from 'src/pages/Base';
 import { AutoLoginPage, LoginPage, RegisterPage, RestorePasswordPage } from 'src/pages/Auth';
 import { UserNotificationsPage, UserProfilePage, UserSettingsPage } from 'src/pages/Account';
 import { UserGroupsPage, UserPermissionsPage, UserPositionsPage, UserRolesPage, UsersPage } from 'src/pages/Admin';
-import { MapPage, PersonsPage } from 'src/pages/Game';
+import { GameMapPage, MapPage, PersonsPage } from 'src/pages/Game';
 import { routes } from './routes';
 import { MainLayout } from './layout/ui';
 import { useScreenTypeChanged } from './layout';
@@ -42,13 +42,13 @@ export const App: React.FC = () =>
         {/* Личные страницы */}
         <Route 
           path={routes.userProfile.path} 
-          element={<MainLayoutPermission {...routes.userProfile} page={<UserProfilePage />} />}/>
+          element={<MainLayout {...routes.userProfile} page={<UserProfilePage />} />}/>
         <Route 
           path={routes.userNotifications.path} 
-          element={<MainLayoutPermission {...routes.userNotifications} page={<UserNotificationsPage/>}/>}/>
+          element={<MainLayout {...routes.userNotifications} page={<UserNotificationsPage/>}/>}/>
         <Route 
           path={routes.userSettings.path} 
-          element={<MainLayoutPermission {...routes.userSettings} page={<UserSettingsPage/>}/>}/>
+          element={<MainLayout {...routes.userSettings} page={<UserSettingsPage/>}/>}/>
 
         {/* Управление */}
         <Route 
@@ -74,28 +74,28 @@ export const App: React.FC = () =>
         {/* Стартовый экран */}
         <Route 
           path={routes.persons.path} 
-          element={<MainLayoutPermission {...routes.persons} page={<>Список персонажей</>}/>}/> 
+          element={<MainLayout {...routes.persons} page={<PersonsPage/>}/>}/> 
 
         {/* Контекст игры */} 
         <Route
           path={routes.gamePersons.path}
-          element={<MainLayoutPermission {...routes.gamePersons} page={<PersonsPage/>}/>}/>        
+          element={<MainLayout {...routes.gamePersons} page={<PersonsPage/>}/>}/>        
 
         <Route
           path={routes.gameMap.path}
-          element={<MainLayoutPermission  {...routes.gameMap} page={<MapPage/>}/>}/>
+          element={<MainLayout  {...routes.gameMap} page={<GameMapPage/>}/>}/>
 
         <Route
           path={routes.gameScenario.path}
-          element={<MainLayoutPermission {...routes.gameScenario} page={<>Сценарий</>}/>}/>          
+          element={<MainLayout {...routes.gameScenario} page={<>Сценарий</>}/>}/>          
 
         <Route
           path={routes.gameInventory.path}
-          element={<MainLayoutPermission {...routes.gameInventory} page={<>Инвентарь</>}/>}/>                
+          element={<MainLayout {...routes.gameInventory} page={<>Инвентарь</>}/>}/>                
 
         <Route
           path={routes.gameForge.path}
-          element={<MainLayoutPermission {...routes.gameForge} page={<>Кузница</>}/>}/>             
+          element={<MainLayout {...routes.gameForge} page={<>Кузница</>}/>}/>             
       </Routes>
     </React.Suspense>
   );

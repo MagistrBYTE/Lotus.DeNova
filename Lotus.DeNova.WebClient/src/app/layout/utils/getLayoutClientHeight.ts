@@ -8,25 +8,25 @@ import { loadLayoutFromStorage } from './loadLayoutFromStorage';
 export const getLayoutClientHeight = (delta?: number):number =>
 {
   const layoutState = loadLayoutFromStorage();
-  const isFooter = layoutState.footer.isVisible;
-  const isHeader = layoutState.header.isVisible;
+  const isFooter = layoutState.footer.isVisible && layoutState.footer.isVisibleUser;
+  const isHeader = layoutState.header.isVisible && layoutState.header.isVisibleUser;
 
-  let screenClient = window.innerHeight;
+  let screenHeight = Math.min(screen.height, window.innerHeight);
 
   if(isHeader)
   {
-    screenClient -= layoutState.header.height;
+    screenHeight -= layoutState.header.height;
   }
 
   if(isFooter)
   {
-    screenClient -= layoutState.footer.height;
+    screenHeight -= layoutState.footer.height;
   }
   
   if(delta)
   {
-    screenClient -= delta;
+    screenHeight -= delta;
   }  
 
-  return screenClient;
+  return screenHeight;
 }

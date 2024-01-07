@@ -121,7 +121,10 @@ export const layoutSlice = createSlice({
     {
       if(state.leftPanelCommands)
       {
-        state.leftPanelCommands.push(action.payload);
+        if(state.leftPanelCommands.includes(action.payload) === false)
+        {
+          state.leftPanelCommands.push(action.payload);
+        }
       }
       else
       {

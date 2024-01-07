@@ -80,7 +80,7 @@ export const CommandButton: React.FC<ICommandButtonProps> = (props:ICommandButto
           <IconButton {...propsButton} color={colorSelected} disabled={!command.canExecute()} onClick={handleClick}>
             {command.icon}
           </IconButton>
-          <Typography variant='subtitle2' color={colorSelected} fontSize={12}>{command.icon}</Typography>
+          <Typography variant='subtitle2' color={colorSelected} fontSize={12}>{command.label}</Typography>
         </VerticalStack>)
       }
       else

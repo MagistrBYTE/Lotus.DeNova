@@ -67,7 +67,7 @@ export const LandscapeViewSettings:IViewSettings =
 {
   headerHeight: 56,
   leftPanelWidthMax: 240,
-  leftPanelWidthMin: 80,
+  leftPanelWidthMin: 120,
   rightPanelWidthMax: 240,
   rightPanelWidthMin: 80,
   footerHeight: 56
