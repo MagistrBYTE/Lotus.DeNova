@@ -7,6 +7,7 @@ export const useMediaQuery = (mediaQuery: string) =>
   const [matches, setMatches] = useState(() =>
     isSsr ? false : window.matchMedia(mediaQuery).matches,
   );
+  
   useLayoutEffect(() => 
   {
     if (isSsr) 
