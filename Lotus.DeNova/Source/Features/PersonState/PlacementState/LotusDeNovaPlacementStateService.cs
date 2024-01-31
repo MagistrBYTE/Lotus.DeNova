@@ -30,7 +30,7 @@ namespace Lotus
 		public class PlacementStateService : ILotusPlacementStateService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public PlacementStateService(DeNovaDbContext context)
+            public PlacementStateService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -61,8 +61,8 @@ namespace Lotus
 				
 				entity.PlacementStateId = Guid.NewGuid();
 
-				_context.PlacementStates.Add(entity);
-                await _context.SaveChangesAsync(token);
+				_repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 PlacementStateDto result = entity.Adapt<PlacementStateDto>();
 
@@ -81,8 +81,8 @@ namespace Lotus
             {
                 PlacementState entity = placementInfoUpdate.Adapt<PlacementState>();
 
-                _context.PlacementStates.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 PlacementStateDto result = entity.Adapt<PlacementStateDto>();
 
@@ -99,7 +99,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<PlacementStateDto>> GetAsync(Guid placementInfoId, CancellationToken token)
 			{
-				PlacementState? entity = await _context.PlacementStates
+				PlacementState? entity = await _repository.Query<PlacementState>()
 					.FirstOrDefaultAsync(x => (x.PlacementStateId == placementInfoId && x.GameSaveId == null), token);
 				if (entity == null)
 				{
@@ -121,7 +121,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<PlacementStateDto>> GetAllAsync(PlacementStatesDto placementInfoRequest, CancellationToken token)
             {
-                var query = _context.PlacementStates.AsQueryable();
+                var query = _repository.Query<PlacementState>();
 
 				query = query
 					.Where(x => x.GameId == placementInfoRequest.GameId &&
@@ -147,15 +147,15 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Guid placementInfoId, CancellationToken token)
             {
-                PlacementState? entity = await _context.PlacementStates
+                PlacementState? entity = await _repository.Query<PlacementState>()
 					.FirstOrDefaultAsync(x => (x.PlacementStateId == placementInfoId && x.GameSaveId == null), token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XPlacementStateErrors.NotFound);
                 }
 
-                _context.PlacementStates.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

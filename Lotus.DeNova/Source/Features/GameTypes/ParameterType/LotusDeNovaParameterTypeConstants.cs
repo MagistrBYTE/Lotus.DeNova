@@ -26,35 +26,13 @@ namespace Lotus
 		//-------------------------------------------------------------------------------------------------------------
 		public static class XParameterTypeConstants
 		{
-			#region ======================================= ДАННЫЕ ====================================================
-			/// <summary>
-			/// Список параметров существ для персонажей 
-			/// </summary>
-			public static readonly ParameterType[] PersonParameters = new ParameterType[]
-			{
-				PhysicalStrength,
-				Dexterity,
-				Endurance,
-				Physique,
-				Perception,
-				Mind,
-				Willpower,
-				Spirituality,
-				Appearance,
-				Charisma,
-				Influence,
-				Status
-			};
-			#endregion
-
-			#region ======================================= ДАННЫЕ ====================================================
 			//
 			// ФИЗИЧЕСКИЕ ПАРАМЕТРЫ
 			//
 			/// <summary>
 			/// Физическая сила
 			/// </summary>
-			public static readonly ParameterType PhysicalStrength = new ParameterType()
+			public static readonly ParameterType PhysicalStrength = new()
             {
                 Id = 1,
                 Name = "PhysicalStrength",
@@ -65,7 +43,7 @@ namespace Lotus
 			/// <summary>
 			/// Ловкость
 			/// </summary>
-			public static readonly ParameterType Dexterity = new ParameterType()
+			public static readonly ParameterType Dexterity = new()
 			{
 				Id = 2,
 				Name = "Dexterity",
@@ -76,7 +54,7 @@ namespace Lotus
 			/// <summary>
 			/// Выносливость
 			/// </summary>
-			public static readonly ParameterType Endurance = new ParameterType()
+			public static readonly ParameterType Endurance = new()
 			{
 				Id = 3,
 				Name = "Endurance",
@@ -87,7 +65,7 @@ namespace Lotus
 			/// <summary>
 			/// Телосложение
 			/// </summary>
-			public static readonly ParameterType Physique = new ParameterType()
+			public static readonly ParameterType Physique = new()
 			{
 				Id = 4,
 				Name = "Physique",
@@ -101,7 +79,7 @@ namespace Lotus
 			/// <summary>
 			/// Восприятие
 			/// </summary>
-			public static readonly ParameterType Perception = new ParameterType()
+			public static readonly ParameterType Perception = new()
 			{
 				Id = 5,
 				Name = "Perception",
@@ -112,7 +90,7 @@ namespace Lotus
 			/// <summary>
 			/// Разум
 			/// </summary>
-			public static readonly ParameterType Mind = new ParameterType()
+			public static readonly ParameterType Mind = new()
 			{
 				Id = 6,
 				Name = "Mind",
@@ -123,7 +101,7 @@ namespace Lotus
 			/// <summary>
 			/// Сила воли
 			/// </summary>
-			public static readonly ParameterType Willpower = new ParameterType()
+			public static readonly ParameterType Willpower = new()
 			{
 				Id = 7,
 				Name = "Willpower",
@@ -134,7 +112,7 @@ namespace Lotus
 			/// <summary>
 			/// Духовность
 			/// </summary>
-			public static readonly ParameterType Spirituality = new ParameterType()
+			public static readonly ParameterType Spirituality = new()
 			{
 				Id = 8,
 				Name = "Spirituality",
@@ -148,7 +126,7 @@ namespace Lotus
 			/// <summary>
 			/// Внешность 
 			/// </summary>
-			public static readonly ParameterType Appearance = new ParameterType()
+			public static readonly ParameterType Appearance = new()
 			{
 				Id = 9,
 				Name = "Appearance",
@@ -159,7 +137,7 @@ namespace Lotus
 			/// <summary>
 			/// Харизма 
 			/// </summary>
-			public static readonly ParameterType Charisma = new ParameterType()
+			public static readonly ParameterType Charisma = new()
 			{
 				Id = 10,
 				Name = "Charisma",
@@ -170,7 +148,7 @@ namespace Lotus
 			/// <summary>
 			/// Влияние
 			/// </summary>
-			public static readonly ParameterType Influence = new ParameterType()
+			public static readonly ParameterType Influence = new()
 			{
 				Id = 11,
 				Name = "Influence",
@@ -181,14 +159,32 @@ namespace Lotus
 			/// <summary>
 			/// Статус
 			/// </summary>
-			public static readonly ParameterType Status = new ParameterType()
+			public static readonly ParameterType Status = new()
 			{
 				Id = 12,
 				Name = "Status",
 				DisplayName = "Статус",
 				GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
 			};
-			#endregion
+
+			/// <summary>
+			/// Список параметров существ для персонажей 
+			/// </summary>
+			public static readonly ParameterType[] PersonParameters = new ParameterType[]
+			{
+				PhysicalStrength!,
+				Dexterity!,
+				Endurance!,
+				Physique!,
+				Perception!,
+				Mind!,
+				Willpower!,
+				Spirituality!,
+				Appearance!,
+				Charisma!,
+				Influence!,
+				Status!
+			};
 		}
         //-------------------------------------------------------------------------------------------------------------
         /**@}*/

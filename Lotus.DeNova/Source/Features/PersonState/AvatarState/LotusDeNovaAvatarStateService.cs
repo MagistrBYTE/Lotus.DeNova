@@ -30,7 +30,7 @@ namespace Lotus
 		public class AvatarStateService : ILotusAvatarStateService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public AvatarStateService(DeNovaDbContext context)
+            public AvatarStateService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -61,8 +61,8 @@ namespace Lotus
 
 				entity.AvatarStateId = Guid.NewGuid();
 
-				_context.AvatarStates.Add(entity);
-                await _context.SaveChangesAsync(token);
+				_repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 AvatarStateDto result = entity.Adapt<AvatarStateDto>();
 
@@ -81,8 +81,8 @@ namespace Lotus
             {
                 AvatarState entity = avatarInfoUpdate.Adapt<AvatarState>();
 
-                _context.AvatarStates.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 AvatarStateDto result = entity.Adapt<AvatarStateDto>();
 
@@ -99,7 +99,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<AvatarStateDto>> GetAsync(Guid avatarInfoId, CancellationToken token)
 			{
-				AvatarState? entity = await _context.AvatarStates
+				AvatarState? entity = await _repository.Query<AvatarState>()
 					.FirstOrDefaultAsync(x => (x.AvatarStateId == avatarInfoId && x.GameSaveId == null), token);
 				if (entity == null)
 				{
@@ -121,7 +121,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<AvatarStateDto>> GetAllAsync(AvatarStatesDto avatarInfoRequest, CancellationToken token)
             {
-                var query = _context.AvatarStates.AsQueryable();
+                var query = _repository.Query<AvatarState>();
 
 				query = query
 					.Where(x => x.GameId == avatarInfoRequest.GameId &&
@@ -147,15 +147,15 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Guid avatarInfoId, CancellationToken token)
             {
-                AvatarState? entity = await _context.AvatarStates
+                AvatarState? entity = await _repository.Query<AvatarState>()
 					.FirstOrDefaultAsync(x => (x.AvatarStateId == avatarInfoId && x.GameSaveId == null), token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XAvatarStateErrors.NotFound);
                 }
 
-                _context.AvatarStates.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

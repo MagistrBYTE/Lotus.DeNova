@@ -64,7 +64,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class AddressElement : EntityDbNotifyProperty<Int32>, IComparable<AddressElement>, ILotusSupportViewInspector
+		public class AddressElement : EntityDbNotifyProperty<Int32>, IComparable<AddressElement>
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -101,11 +101,11 @@ namespace Lotus
 
 			#region ======================================= ДАННЫЕ ====================================================
 			// Основные параметры
-			protected internal TAddressElementType mElementType;
-			protected internal String mName = String.Empty;
-			protected internal String mNumber = String.Empty;
-			protected internal String? mCadastralNumber;
-			protected internal String? mCode;
+			protected internal TAddressElementType _elementType;
+			protected internal String _name = String.Empty;
+			protected internal String _number = String.Empty;
+			protected internal String? _cadastralNumber;
+			protected internal String? _code;
 			#endregion
 
 			#region ======================================= СВОЙСТВА ==================================================
@@ -115,16 +115,12 @@ namespace Lotus
 			/// <summary>
 			/// Тип адресуемого элемента
 			/// </summary>
-			[DisplayName("Тип элемента")]
-			[Description("Тип адресуемого элемента")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(1)]
 			public TAddressElementType ElementType
 			{
-				get { return (mElementType); }
+				get { return (_elementType); }
 				set
 				{
-					mElementType = value;
+					_elementType = value;
 					NotifyPropertyChanged(PropertyArgsElementType);
 				}
 			}
@@ -132,17 +128,13 @@ namespace Lotus
 			/// <summary>
 			/// Наименование адресуемого элемента
 			/// </summary>
-			[DisplayName("Наименование")]
-			[Description("Наименование адресуемого элемента")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(2)]
 			[MaxLength(XAddressConstantsDb.LengthNameElement)]
 			public String Name
 			{
-				get { return (mName); }
+				get { return (_name); }
 				set
 				{
-					mName = value;
+					_name = value;
 					NotifyPropertyChanged(PropertyArgsName);
 				}
 			}
@@ -150,17 +142,13 @@ namespace Lotus
 			/// <summary>
 			/// Номер адресуемого элемента
 			/// </summary>
-			[DisplayName("Номер")]
-			[Description("Номер адресуемого элемента")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(3)]
 			[MaxLength(XAddressConstantsDb.LengthNumber)]
 			public String Number
 			{
-				get { return (mNumber); }
+				get { return (_number); }
 				set
 				{
-					mNumber = value;
+					_number = value;
 					NotifyPropertyChanged(PropertyArgsNumber);
 				}
 			}
@@ -168,17 +156,13 @@ namespace Lotus
 			/// <summary>
 			/// Кадастровый номер
 			/// </summary>
-			[DisplayName("Кадастровый номер")]
-			[Description("Кадастровый номер")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(4)]
 			[MaxLength(XAddressConstantsDb.LengthCadastralNumber)]
 			public String? CadastralNumber
 			{
-				get { return (mCadastralNumber); }
+				get { return (_cadastralNumber); }
 				set
 				{
-					mCadastralNumber = value;
+					_cadastralNumber = value;
 					NotifyPropertyChanged(PropertyArgsCadastralNumber);
 				}
 			}
@@ -186,17 +170,13 @@ namespace Lotus
 			/// <summary>
 			/// Уникальный номер адреса
 			/// </summary>
-			[DisplayName("Уникальный номер адреса")]
-			[Description("Уникальный номер адреса объекта адресации в государственном адресном реестре")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(5)]
 			[MaxLength(XAddressConstantsDb.LengthCadastralNumber)]
 			public String? Code
 			{
-				get { return (mCode); }
+				get { return (_code); }
 				set
 				{
-					mCode = value;
+					_code = value;
 					NotifyPropertyChanged(PropertyArgsCode);
 				}
 			}
@@ -204,38 +184,13 @@ namespace Lotus
 			/// <summary>
 			/// Внешний ключ для улицы
 			/// </summary>
-			[Browsable(false)]
 			public Int32? StreetId { get; set; }
 
 			/// <summary>
 			/// Навигационное свойство для улицы
 			/// </summary>
-			[Browsable(false)]
 			[ForeignKey(nameof(StreetId))]
 			public AddressStreet? Street { get; set; }
-			#endregion
-
-			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
-			/// <summary>
-			/// Отображаемое имя типа в инспекторе свойств
-			/// </summary>
-			[Browsable(false)]
-			public String InspectorTypeName
-			{
-				get { return ("АДРЕС"); }
-			}
-
-			/// <summary>
-			/// Отображаемое имя объекта в инспекторе свойств
-			/// </summary>
-			[Browsable(false)]
-			public String InspectorObjectName
-			{
-				get
-				{
-					return (mName + ", " + mNumber);
-				}
-			}
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -257,7 +212,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public AddressElement(String number)
 			{
-				mNumber = number;
+				_number = number;
 			}
 			#endregion
 
@@ -273,10 +228,10 @@ namespace Lotus
 			{
 				if(other == null) return 0;
 
-				var result = mName.CompareTo(other.Name);
+				var result = _name.CompareTo(other.Name);
 				if(result == 0)
 				{
-					return (mNumber.CompareTo(other.Number));
+					return (_number.CompareTo(other.Number));
 				}
 
 				return result;
@@ -290,7 +245,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public override String ToString()
 			{
-				return (InspectorObjectName);
+				return (_name);
 			}
 			#endregion
 		}

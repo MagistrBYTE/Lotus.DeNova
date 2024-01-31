@@ -30,7 +30,7 @@ namespace Lotus
 		public class ParameterAspectTypeService : ILotusParameterAspectTypeService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public ParameterAspectTypeService(DeNovaDbContext context)
+            public ParameterAspectTypeService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
 			#endregion
 
@@ -59,8 +59,8 @@ namespace Lotus
             {
                 ParameterAspectType entity = parameterAspectCreate.Adapt<ParameterAspectType>();
 
-                _context.ParameterAspectTypes.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 ParameterAspectTypeDto result = entity.Adapt<ParameterAspectTypeDto>();
 
@@ -79,8 +79,8 @@ namespace Lotus
             {
                 ParameterAspectType entity = parameterAspectUpdate.Adapt<ParameterAspectType>();
 
-                _context.ParameterAspectTypes.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 ParameterAspectTypeDto result = entity.Adapt<ParameterAspectTypeDto>();
 
@@ -97,7 +97,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<ParameterAspectTypeDto>> GetAsync(Int32 id, CancellationToken token)
 			{
-				ParameterAspectType? entity = await _context.ParameterAspectTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+				ParameterAspectType? entity = await _repository.GetByIdAsync<ParameterAspectType, Int32>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<ParameterAspectTypeDto>(XParameterAspectTypeErrors.NotFound);
@@ -118,7 +118,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<ParameterAspectTypeDto>> GetAllAsync(ParameterAspectTypesRequest parameterAspectRequest, CancellationToken token)
             {
-                var query = _context.ParameterAspectTypes.AsQueryable();
+                var query = _repository.Query<ParameterAspectType>();
 
 				if (parameterAspectRequest.GameSettingTypeId.HasValue)
 				{
@@ -144,7 +144,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Int32 id, CancellationToken token)
             {
-                ParameterAspectType? entity = await _context.ParameterAspectTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+                ParameterAspectType? entity = await _repository.GetByIdAsync<ParameterAspectType, Int32>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XParameterAspectTypeErrors.NotFound);
@@ -155,8 +155,8 @@ namespace Lotus
                     return XResponse.Failed(XParameterAspectTypeErrors.NotDeleteConst);
                 }
 
-                _context.ParameterAspectTypes.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

@@ -30,7 +30,7 @@ namespace Lotus
 		public class PersonService : ILotusPersonService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
 			private readonly ILotusResourceFileService _imageService;
 			#endregion
 
@@ -39,12 +39,12 @@ namespace Lotus
 			/// <summary>
 			/// Конструктор инициализирует объект класса указанными параметрами
 			/// </summary>
-			/// <param name="context">Контекст</param>
+			/// <param name="repository">Контекст</param>
 			/// <param name="imageService">Интерфейс сервиса для работы с файлами</param>
 			//---------------------------------------------------------------------------------------------------------
-			public PersonService(DeNovaDbContext context, ILotusResourceFileService imageService)
+			public PersonService(ILotusRepositoryDeNova repository, ILotusResourceFileService imageService)
             {
-                _context = context;
+                _repository = repository;
 				_imageService = imageService;
             }
             #endregion
@@ -71,43 +71,43 @@ namespace Lotus
 					await _imageService.CreateAsync(imageDto, token);
 				}
 
-				_context.Persons.Add(entity);
+				_repository.Add(entity);
 
-				_context.PersonParameters.Add(entity.PhysicalStrength);
-				_context.PersonParameters.Add(entity.Dexterity);
-				_context.PersonParameters.Add(entity.Endurance);
-				_context.PersonParameters.Add(entity.Physique);
+				_repository.Add(entity.PhysicalStrength);
+				_repository.Add(entity.Dexterity);
+				_repository.Add(entity.Endurance);
+				_repository.Add(entity.Physique);
 
-				_context.PersonParameters.Add(entity.Perception);
-				_context.PersonParameters.Add(entity.Mind);
-				_context.PersonParameters.Add(entity.Willpower);
-				_context.PersonParameters.Add(entity.Spirituality);
+				_repository.Add(entity.Perception);
+				_repository.Add(entity.Mind);
+				_repository.Add(entity.Willpower);
+				_repository.Add(entity.Spirituality);
 
-				_context.PersonParameters.Add(entity.Appearance);
-				_context.PersonParameters.Add(entity.Charisma);
-				_context.PersonParameters.Add(entity.Influence);
-				_context.PersonParameters.Add(entity.Status);
+				_repository.Add(entity.Appearance);
+				_repository.Add(entity.Charisma);
+				_repository.Add(entity.Influence);
+				_repository.Add(entity.Status);
 
-				await _context.SaveChangesAsync(token);
+				await _repository.FlushAsync(token);
 
 				entity.SetPersonId();
 
-				_context.PersonParameters.Update(entity.PhysicalStrength);
-				_context.PersonParameters.Update(entity.Dexterity);
-				_context.PersonParameters.Update(entity.Endurance);
-				_context.PersonParameters.Update(entity.Physique);
+				_repository.Update(entity.PhysicalStrength);
+				_repository.Update(entity.Dexterity);
+				_repository.Update(entity.Endurance);
+				_repository.Update(entity.Physique);
 
-				_context.PersonParameters.Update(entity.Perception);
-				_context.PersonParameters.Update(entity.Mind);
-				_context.PersonParameters.Update(entity.Willpower);
-				_context.PersonParameters.Update(entity.Spirituality);
+				_repository.Update(entity.Perception);
+				_repository.Update(entity.Mind);
+				_repository.Update(entity.Willpower);
+				_repository.Update(entity.Spirituality);
 
-				_context.PersonParameters.Update(entity.Appearance);
-				_context.PersonParameters.Update(entity.Charisma);
-				_context.PersonParameters.Update(entity.Influence);
-				_context.PersonParameters.Update(entity.Status);
+				_repository.Update(entity.Appearance);
+				_repository.Update(entity.Charisma);
+				_repository.Update(entity.Influence);
+				_repository.Update(entity.Status);
 
-				await _context.SaveChangesAsync(token);
+				await _repository.FlushAsync(token);
 
 				PersonDto result = entity.Adapt<PersonDto>();
 
@@ -136,8 +136,8 @@ namespace Lotus
 					await _imageService.CreateAsync(imageDto, token);
 				}
 
-				_context.Persons.Update(entity);
-                await _context.SaveChangesAsync(token);
+				_repository.Update(entity);
+                await _repository.FlushAsync(token);
 
 				PersonDto result = entity.Adapt<PersonDto>();
 
@@ -154,7 +154,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<PersonDto>> GetAsync(Guid id, CancellationToken token)
 			{
-				Person? entity = await _context.Persons
+				Person? entity = await _repository.Query<Person>()
 					.Include(x => x.Avatar)
 					.FirstOrDefaultAsync(x => x.Id == id, token);
 					
@@ -178,7 +178,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<PersonDto>> GetAllAsync(PersonsRequest personRequest, CancellationToken token)
             {
-                var query = _context.Persons.AsQueryable();
+                var query = _repository.Query<Person>();
 
                 query = query
 					.Include(x => x.Avatar)
@@ -201,14 +201,14 @@ namespace Lotus
             //---------------------------------------------------------------------------------------------------------
             public async Task<Response> DeleteAsync(Guid id, CancellationToken token)
             {
-                Person? entity = await _context.Persons.FirstOrDefaultAsync(x => x.Id == id, token);
+                Person? entity = await _repository.GetByIdAsync<Person, Guid>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XPersonErrors.NotFound);
                 }
 
-                _context.Persons.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

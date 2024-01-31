@@ -30,7 +30,7 @@ namespace Lotus
 		public class ParameterTypeService : ILotusParameterTypeService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public ParameterTypeService(DeNovaDbContext context)
+            public ParameterTypeService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
 			#endregion
 
@@ -59,8 +59,8 @@ namespace Lotus
             {
                 ParameterType entity = personParamsCreate.Adapt<ParameterType>();
 
-                _context.ParameterTypes.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 ParameterTypeDto result = entity.Adapt<ParameterTypeDto>();
 
@@ -79,8 +79,8 @@ namespace Lotus
             {
                 ParameterType entity = personParamsUpdate.Adapt<ParameterType>();
 
-                _context.ParameterTypes.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 ParameterTypeDto result = entity.Adapt<ParameterTypeDto>();
 
@@ -97,7 +97,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<ParameterTypeDto>> GetAsync(Int32 id, CancellationToken token)
 			{
-				ParameterType? entity = await _context.ParameterTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+				ParameterType? entity = await _repository.GetByIdAsync<ParameterType, Int32>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<ParameterTypeDto>(XParameterTypeErrors.NotFound);
@@ -118,7 +118,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<ParameterTypeDto>> GetAllAsync(ParameterTypesRequest personParamsRequest, CancellationToken token)
             {
-                var query = _context.ParameterTypes.AsQueryable();
+                var query = _repository.Query<ParameterType>();
 
 				if (personParamsRequest.GameSettingTypeId.HasValue)
 				{
@@ -144,7 +144,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Int32 id, CancellationToken token)
             {
-                ParameterType? entity = await _context.ParameterTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+                ParameterType? entity = await _repository.GetByIdAsync<ParameterType, Int32>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XParameterTypeErrors.NotFound);
@@ -155,8 +155,8 @@ namespace Lotus
                     return XResponse.Failed(XParameterTypeErrors.NotDeleteConst);
                 }
 
-                _context.ParameterTypes.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

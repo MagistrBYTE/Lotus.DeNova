@@ -40,6 +40,8 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public static IServiceCollection AddLotusDeNovaServices(this IServiceCollection services)
             {
+				services.AddScoped<ILotusRepositoryDeNova, RepositoryDeNova>();
+
 				services.AddScoped<ILotusAstrologyTypeService, AstrologyTypeService>();
 				services.AddScoped<ILotusRaceTypeService, RaceTypeService>();
 				services.AddScoped<ILotusScenarioTypeService, ScenarioTypeService>();

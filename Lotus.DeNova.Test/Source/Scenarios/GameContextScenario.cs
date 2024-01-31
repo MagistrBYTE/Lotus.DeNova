@@ -21,8 +21,11 @@ namespace Lotus.DeNova.Test
             _factory = factory;
         }
 
-		[Fact(DisplayName = "Создания персонажа")]
-		public async Task CreatePerson()
+		/// <summary>
+		/// Создание тестового персонажа
+		/// </summary>
+		/// <returns></returns>
+		private async Task<PersonDto> CreateTestPerson()
 		{
 			ILotusPersonService personService = _factory.ServiceProvider.GetRequiredService<ILotusPersonService>();
 
@@ -38,7 +41,13 @@ namespace Lotus.DeNova.Test
 			var person = _testPersonResponce.Payload;
 			Assert.Equal(personCreate.Name, person.Name);
 
-			Assert.Equal(personCreate.Name, person.Name);
+			return person;
+		}
+
+		[Fact(DisplayName = "Создания персонажа")]
+		public async Task CreatePerson()
+		{
+			_testPerson = await CreateTestPerson();
 		}
 
 		[Fact(DisplayName = "Создания новой игры")]
@@ -98,6 +107,14 @@ namespace Lotus.DeNova.Test
 			//
 			Assert.NotNull(gameContext.Payload);
 			Assert.True(gameContext.Payload.IsCurrent);
+
+			//
+			// Создаем персонажа
+			//
+			if(_testPerson is null)
+			{
+				_testPerson = await CreateTestPerson();
+			}
 
 			//
 			// Добавляем новые сведения о персонаже

@@ -34,8 +34,7 @@ namespace Lotus
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
 		[LotusSerializeData]
-		public class AddressVillageSettlement : EntityDbNotifyProperty<Int32>, IComparable<AddressVillageSettlement>, 
-			ILotusSupportViewInspector
+		public class AddressVillageSettlement : EntityDbNotifyProperty<Int32>, IComparable<AddressVillageSettlement>
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -70,9 +69,9 @@ namespace Lotus
 
 			#region ======================================= ДАННЫЕ ====================================================
 			// Основные параметры
-			protected internal String mName = String.Empty;
-			protected internal String? mShortName;
-			protected internal String? mVillageSettlementType;
+			protected internal String _name;
+			protected internal String? _shortName;
+			protected internal String? _villageSettlementType;
 			#endregion
 
 			#region ======================================= СВОЙСТВА ==================================================
@@ -82,17 +81,13 @@ namespace Lotus
 			/// <summary>
 			/// Наименование сельского поселения
 			/// </summary>
-			[DisplayName("Наименование")]
-			[Description("Наименование сельского поселения")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(2)]
 			[MaxLength(XAddressConstantsDb.LengthNameVillageSettlement)]
 			public String Name
 			{
-				get { return (mName); }
+				get { return (_name); }
 				set
 				{
-					mName = value;
+					_name = value;
 					NotifyPropertyChanged(PropertyArgsName);
 				}
 			}
@@ -100,34 +95,26 @@ namespace Lotus
 			/// <summary>
 			/// Краткое наименование
 			/// </summary>
-			[DisplayName("Краткое наименование")]
-			[Description("Краткое наименование")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(1)]
 			[MaxLength(XAddressConstantsDb.LengthShortName)]
 			public String? ShortName
 			{
-				get { return (mShortName); }
+				get { return (_shortName); }
 				set
 				{
-					mShortName = value;
+					_shortName = value;
 					NotifyPropertyChanged(PropertyArgsShortName);
 				}
 			}
 
 			/// <summary>
-			/// Население
+			/// Тип сельского поселения
 			/// </summary>
-			[DisplayName("Тип поселения")]
-			[Description("Тип поселения")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(3)]
 			public String? VillageSettlementType
 			{
-				get { return (mVillageSettlementType); }
+				get { return (_villageSettlementType); }
 				set
 				{
-					mVillageSettlementType = value;
+					_villageSettlementType = value;
 					NotifyPropertyChanged(PropertyArgsVillageSettlementType);
 				}
 			}
@@ -135,31 +122,7 @@ namespace Lotus
 			/// <summary>
 			/// Список населённых пунктов
 			/// </summary>
-			[Browsable(false)]
 			public List<AddressVillage> Villages { get; set; } = new List<AddressVillage>();
-			#endregion
-
-			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
-			/// <summary>
-			/// Отображаемое имя типа в инспекторе свойств
-			/// </summary>
-			[Browsable(false)]
-			public String InspectorTypeName
-			{
-				get { return ("СЕЛЬСКОЕ ПОСЕЛЕНИЕ"); }
-			}
-
-			/// <summary>
-			/// Отображаемое имя объекта в инспекторе свойств
-			/// </summary>
-			[Browsable(false)]
-			public String InspectorObjectName
-			{
-				get
-				{
-					return (mName);
-				}
-			}
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -170,7 +133,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public AddressVillageSettlement()
 			{
-				mName = String.Empty;
+				_name = String.Empty;
 			}
 
 			//---------------------------------------------------------------------------------------------------------
@@ -181,7 +144,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public AddressVillageSettlement(String name)
 			{
-				mName = name;
+				_name = name;
 			}
 			#endregion
 
@@ -207,7 +170,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public override String ToString()
 			{
-				return (InspectorObjectName);
+				return (_name);
 			}
 			#endregion
 		}

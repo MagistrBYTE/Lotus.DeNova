@@ -30,7 +30,7 @@ namespace Lotus
 		public class PersonParameterService : ILotusPersonParameterService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public PersonParameterService(DeNovaDbContext context)
+            public PersonParameterService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -59,8 +59,8 @@ namespace Lotus
             {
                 PersonParameter entity = personParameterCreate.Adapt<PersonParameter>();
 
-                _context.PersonParameters.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 PersonParameterDto result = entity.Adapt<PersonParameterDto>();
 
@@ -79,8 +79,8 @@ namespace Lotus
             {
                 PersonParameter entity = personParameterUpdate.Adapt<PersonParameter>();
 
-                _context.PersonParameters.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 PersonParameterDto result = entity.Adapt<PersonParameterDto>();
 
@@ -97,7 +97,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<PersonParameterDto>> GetAsync(Guid id, CancellationToken token)
 			{
-				PersonParameter? entity = await _context.PersonParameters.FirstOrDefaultAsync(x => x.Id == id, token);
+				PersonParameter? entity = await _repository.GetByIdAsync<PersonParameter, Guid>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<PersonParameterDto>(XPersonParameterErrors.NotFound);
@@ -118,7 +118,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<PersonParameterDto>> GetAllAsync(PersonParametersRequest personParameterRequest, CancellationToken token)
             {
-                var query = _context.PersonParameters.AsQueryable();
+                var query = _repository.Query<PersonParameter>();
 
 				if (personParameterRequest.PersonId.HasValue)
 				{
@@ -144,14 +144,14 @@ namespace Lotus
             //---------------------------------------------------------------------------------------------------------
             public async Task<Response> DeleteAsync(Guid id, CancellationToken token)
             {
-                PersonParameter? entity = await _context.PersonParameters.FirstOrDefaultAsync(x => x.Id == id, token);
+                PersonParameter? entity = await _repository.GetByIdAsync<PersonParameter, Guid>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XPersonParameterErrors.NotFound);
                 }
 
-                _context.PersonParameters.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lotus.DeNova.Migrations
 {
     [DbContext(typeof(DeNovaDbContext))]
-    [Migration("20231001174757_Initial")]
+    [Migration("20240131141551_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Lotus.DeNova.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -68,10 +68,6 @@ namespace Lotus.DeNova.Migrations
                     b.Property<int?>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("RoleSystemName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Surname")
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
@@ -95,7 +91,6 @@ namespace Lotus.DeNova.Migrations
                             PasswordHash = "012f28fd2973783520fa3115f886102a09c8a15e",
                             Patronymic = "Сергеевич",
                             RoleId = 1,
-                            RoleSystemName = "Нет роли",
                             Surname = "Дементьев"
                         });
                 });
@@ -515,8 +510,8 @@ namespace Lotus.DeNova.Migrations
                     b.Property<DateTime>("BeginPeriod")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly?>("EndPeriod")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("EndPeriod")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("GameId")
                         .HasColumnType("uuid");
@@ -1405,12 +1400,20 @@ namespace Lotus.DeNova.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
+                    b.Property<string>("ApplicationType")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("ClientId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("ClientSecret")
                         .HasColumnType("text");
+
+                    b.Property<string>("ClientType")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ConcurrencyToken")
                         .IsConcurrencyToken()
@@ -1425,6 +1428,9 @@ namespace Lotus.DeNova.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DisplayNames")
+                        .HasColumnType("text");
+
+                    b.Property<string>("JsonWebKeySet")
                         .HasColumnType("text");
 
                     b.Property<string>("Permissions")
@@ -1442,9 +1448,8 @@ namespace Lotus.DeNova.Migrations
                     b.Property<string>("Requirements")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<string>("Settings")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

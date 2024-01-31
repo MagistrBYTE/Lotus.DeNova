@@ -30,7 +30,7 @@ namespace Lotus
 		public class GameService : ILotusGameService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public GameService(DeNovaDbContext context)
+            public GameService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
 			#endregion
 
@@ -63,7 +63,7 @@ namespace Lotus
                 Game entity = gameCreate.Adapt<Game>();
 
 				// Деактивируем существующие контекст
-				var gameContext = await _context.Games
+				var gameContext = await _repository.Query<Game>()
 					.Where(x => x.UserId == gameCreate.UserId)
 					.Where(x => x.IsCurrent)
 					.SingleOrDefaultAsync();
@@ -71,14 +71,14 @@ namespace Lotus
 				if(gameContext != null)
 				{
 					gameContext.IsCurrent = false;
-					_context.Update(gameContext);
+					_repository.Update(gameContext);
 				}
 
 				// Делаем активной
 				entity.IsCurrent = true;
-				_context.Games.Add(entity);
+				_repository.Add(entity);
 
-				await _context.SaveChangesAsync(token);
+				await _repository.FlushAsync(token);
 
 				GameDto result = entity.Adapt<GameDto>();
 
@@ -99,7 +99,7 @@ namespace Lotus
 
 				if (saveCreate.GameSaveId.HasValue)
 				{
-					entity = await _context.GameSaves
+					entity = await _repository.Query<GameSave>()
 						.FirstOrDefaultAsync(x => x.Id == saveCreate.GameSaveId.Value, token);
 					if (entity == null)
 					{
@@ -110,17 +110,17 @@ namespace Lotus
 				{
 					entity = saveCreate.Adapt<GameSave>();
 
-					_context.GameSaves.Add(entity);
-					await _context.SaveChangesAsync(token);
+					_repository.Add(entity);
+					await _repository.FlushAsync(token);
 				}
 
 				//
 				// Сохранение данных
 				//
-				await _context.SaveGameEntity<AddressState>(entity.GameId, entity.Id, token);
-				await _context.SaveGameEntity<AvatarState>(entity.GameId, entity.Id, token);
-				await _context.SaveGameEntity<IdentityState>(entity.GameId, entity.Id, token);
-				await _context.SaveGameEntity<PlacementState>(entity.GameId, entity.Id, token);
+				await _repository.SaveGameEntity<AddressState>(entity.GameId, entity.Id, token);
+				await _repository.SaveGameEntity<AvatarState>(entity.GameId, entity.Id, token);
+				await _repository.SaveGameEntity<IdentityState>(entity.GameId, entity.Id, token);
+				await _repository.SaveGameEntity<PlacementState>(entity.GameId, entity.Id, token);
 
 				GameSaveDto result = entity.Adapt<GameSaveDto>();
 
@@ -140,10 +140,10 @@ namespace Lotus
 				//
 				// Загрузка данных
 				//
-				await _context.LoadGameEntity<AddressState>(loadRequest.GameId, loadRequest.GameSaveId, token);
-				await _context.LoadGameEntity<AvatarState>(loadRequest.GameId, loadRequest.GameSaveId, token);
-				await _context.LoadGameEntity<IdentityState>(loadRequest.GameId, loadRequest.GameSaveId, token);
-				await _context.LoadGameEntity<PlacementState>(loadRequest.GameId, loadRequest.GameSaveId, token);
+				await _repository.LoadGameEntity<AddressState>(loadRequest.GameId, loadRequest.GameSaveId, token);
+				await _repository.LoadGameEntity<AvatarState>(loadRequest.GameId, loadRequest.GameSaveId, token);
+				await _repository.LoadGameEntity<IdentityState>(loadRequest.GameId, loadRequest.GameSaveId, token);
+				await _repository.LoadGameEntity<PlacementState>(loadRequest.GameId, loadRequest.GameSaveId, token);
 				return XResponse.Succeed();
 			}
 
@@ -157,7 +157,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<GameDto>> GetAsync(Guid id, CancellationToken token)
 			{
-				Game? entity = await _context.Games.FirstOrDefaultAsync(x => x.Id == id, token);
+				Game? entity = await _repository.GetByIdAsync<Game, Guid>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<GameDto>(XGameErrors.NotFound);
@@ -178,7 +178,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<GameDto>> GetCurrentAsync(Guid playerId, CancellationToken token)
 			{
-				var entity = await _context.Games
+				var entity = await _repository.Query<Game>()
 					.Where(x => x.UserId == playerId)
 					.Where(x => x.IsCurrent)
 					.SingleOrDefaultAsync();
@@ -203,7 +203,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<GameDto>> GetAllAsync(GamesRequest gameRequest, CancellationToken token)
 			{
-				var query = _context.Games.AsQueryable();
+				var query = _repository.Query<Game>();
 
 				if (gameRequest.UserId.HasValue)
 				{
@@ -229,7 +229,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<GameSaveDto>> GetAllSaveAsync(GameSavesRequest saveRequest, CancellationToken token)
 			{
-				var query = _context.GameSaves.AsQueryable();
+				var query = _repository.Query<GameSave>();
 
 				query = query.Where(x => x.GameId == saveRequest.GameId);
 
@@ -252,14 +252,14 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Guid id, CancellationToken token)
 			{
-				Game? entity = await _context.Games.FirstOrDefaultAsync(x => x.Id == id, token);
+				Game? entity = await _repository.GetByIdAsync<Game, Guid>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed(XGameErrors.NotFound);
 				}
 
-				_context.Games.Remove(entity!);
-				await _context.SaveChangesAsync(token);
+				_repository.Remove(entity!);
+				await _repository.FlushAsync(token);
 
 				return XResponse.Succeed();
 			}
@@ -274,14 +274,14 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteSaveAsync(Guid id, CancellationToken token)
 			{
-				GameSave? entity = await _context.GameSaves.FirstOrDefaultAsync(x => x.Id == id, token);
+				GameSave? entity = await _repository.GetByIdAsync<GameSave, Guid>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed(XGameErrors.SaveNotFound);
 				}
 
-				_context.GameSaves.Remove(entity!);
-				await _context.SaveChangesAsync(token);
+				_repository.Remove(entity!);
+				await _repository.FlushAsync(token);
 
 				return XResponse.Succeed();
 			}

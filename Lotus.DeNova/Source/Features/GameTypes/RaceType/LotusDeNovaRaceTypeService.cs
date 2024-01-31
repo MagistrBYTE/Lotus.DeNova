@@ -30,7 +30,7 @@ namespace Lotus
 		public class RaceTypeService : ILotusRaceTypeService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public RaceTypeService(DeNovaDbContext context)
+            public RaceTypeService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -59,8 +59,8 @@ namespace Lotus
             {
                 RaceType entity = raceCreate.Adapt<RaceType>();
 
-                _context.RaceTypes.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 RaceTypeDto result = entity.Adapt<RaceTypeDto>();
 
@@ -79,8 +79,8 @@ namespace Lotus
             {
                 RaceType entity = raceUpdate.Adapt<RaceType>();
 
-                _context.RaceTypes.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 RaceTypeDto result = entity.Adapt<RaceTypeDto>();
 
@@ -97,7 +97,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<RaceTypeDto>> GetAsync(Int32 id, CancellationToken token)
 			{
-				RaceType? entity = await _context.RaceTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+				RaceType? entity = await _repository.GetByIdAsync<RaceType, Int32>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<RaceTypeDto>(XRaceTypeErrors.NotFound);
@@ -118,7 +118,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<RaceTypeDto>> GetAllAsync(RaceTypesRequest raceRequest, CancellationToken token)
             {
-                var query = _context.RaceTypes.AsQueryable();
+                var query = _repository.Query<RaceType>();
 
 				if (raceRequest.GameSettingTypeId.HasValue)
 				{
@@ -144,7 +144,7 @@ namespace Lotus
             //---------------------------------------------------------------------------------------------------------
             public async Task<Response> DeleteAsync(Int32 id, CancellationToken token)
             {
-                RaceType? entity = await _context.RaceTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+                RaceType? entity = await _repository.GetByIdAsync<RaceType, Int32>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XRaceTypeErrors.NotFound);
@@ -155,8 +155,8 @@ namespace Lotus
                     return XResponse.Failed(XRaceTypeErrors.NotDeleteConst);
                 }
 
-                _context.RaceTypes.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

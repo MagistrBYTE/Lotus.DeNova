@@ -30,19 +30,19 @@ namespace Lotus
 		public class AddressStateService : ILotusAddressStateService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
-            #endregion
+            private readonly ILotusRepositoryDeNova _repository;
+			#endregion
 
-            #region ======================================= КОНСТРУКТОРЫ ==============================================
-            //---------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// Конструктор инициализирует объект класса указанными параметрами
-            /// </summary>
-            /// <param name="context">Контекст БД</param>
-            //---------------------------------------------------------------------------------------------------------
-            public AddressStateService(DeNovaDbContext context)
+			#region ======================================= КОНСТРУКТОРЫ ==============================================
+			//---------------------------------------------------------------------------------------------------------
+			/// <summary>
+			/// Конструктор инициализирует объект класса указанными параметрами
+			/// </summary>
+			/// <param name="repository">Репозиторий игровой вселенной DeNova</param>
+			//---------------------------------------------------------------------------------------------------------
+			public AddressStateService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -61,8 +61,8 @@ namespace Lotus
 
 				entity.AddressStateId = Guid.NewGuid();
 
-				_context.AddressStates.Add(entity);
-                await _context.SaveChangesAsync(token);
+				_repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 AddressStateDto result = entity.Adapt<AddressStateDto>();
 
@@ -81,8 +81,8 @@ namespace Lotus
             {
                 AddressState entity = addressInfoUpdate.Adapt<AddressState>();
 
-                _context.AddressStates.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 AddressStateDto result = entity.Adapt<AddressStateDto>();
 
@@ -99,8 +99,8 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<AddressStateDto>> GetAsync(Guid addressInfoId, CancellationToken token)
 			{
-				AddressState? entity = await _context.AddressStates
-					.FirstOrDefaultAsync(x => (x.AddressStateId == addressInfoId && x.GameSaveId == null), token);
+				AddressState? entity = await _repository.Query<AddressState>().
+					FirstOrDefaultAsync(x => (x.AddressStateId == addressInfoId && x.GameSaveId == null), token);
 				if (entity == null)
 				{
 					return XResponse.Failed<AddressStateDto>(XAddressStateErrors.NotFound);
@@ -121,7 +121,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<AddressStateDto>> GetAllAsync(AddressStatesRequest addressInfoRequest, CancellationToken token)
             {
-                var query = _context.AddressStates.AsQueryable();
+                var query = _repository.Query<AddressState>();
 
 				query = query
 					.Where(x => x.GameId == addressInfoRequest.GameId &&
@@ -147,15 +147,15 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Guid addressInfoId, CancellationToken token)
             {
-                AddressState? entity = await _context.AddressStates
+                AddressState? entity = await _repository.Query<AddressState>()
 					.FirstOrDefaultAsync(x => (x.AddressStateId == addressInfoId && x.GameSaveId == null), token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XAddressStateErrors.NotFound);
                 }
 
-                _context.AddressStates.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

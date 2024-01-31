@@ -69,7 +69,7 @@ namespace Lotus
 		/// </summary>
 		//-------------------------------------------------------------------------------------------------------------
 		[Serializable]
-		public class AddressStreet : EntityDbNotifyProperty<Int32>, IComparable<AddressStreet>, ILotusSupportViewInspector
+		public class AddressStreet : EntityDbNotifyProperty<Int32>, IComparable<AddressStreet>
 		{
 			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
 			/// <summary>
@@ -103,8 +103,8 @@ namespace Lotus
 
 			#region ======================================= ДАННЫЕ ====================================================
 			// Основные параметры
-			protected internal String mName = String.Empty;
-			protected internal TAddressStreetType mStreetType;
+			protected internal String _name = String.Empty;
+			protected internal TAddressStreetType _streetType;
 			#endregion
 
 			#region ======================================= СВОЙСТВА ==================================================
@@ -114,16 +114,12 @@ namespace Lotus
 			/// <summary>
 			/// Тип улицы
 			/// </summary>
-			[DisplayName("Тип улицы")]
-			[Description("Тип улицы")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(1)]
 			public TAddressStreetType StreetType
 			{
-				get { return (mStreetType); }
+				get { return (_streetType); }
 				set
 				{
-					mStreetType = value;
+					_streetType = value;
 					NotifyPropertyChanged(PropertyArgsStreetType);
 				}
 			}
@@ -131,17 +127,13 @@ namespace Lotus
 			/// <summary>
 			/// Наименование
 			/// </summary>
-			[DisplayName("Наименование")]
-			[Description("Наименование улицы")]
-			[Category(XInspectorGroupDesc.ID)]
-			[LotusPropertyOrder(2)]
 			[MaxLength(XAddressConstantsDb.LengthNameStreet)]
 			public String Name
 			{
-				get { return (mName); }
+				get { return (_name); }
 				set
 				{
-					mName = value;
+					_name = value;
 					NotifyPropertyChanged(PropertyArgsName);
 				}
 			}
@@ -149,44 +141,18 @@ namespace Lotus
 			/// <summary>
 			/// Внешний ключ для населённого пункта
 			/// </summary>
-			[Browsable(false)]
 			public Int32? VillageId { get; set; }
 
 			/// <summary>
 			/// Навигационное свойство населённого пункта
 			/// </summary>
-			[Browsable(false)]
 			[ForeignKey(nameof(VillageId))]
 			public AddressVillage? Village { get; set; }
 
 			/// <summary>
 			/// Список элементов
 			/// </summary>
-			[Browsable(false)]
 			public List<AddressElement> Elements { get; set; } = new List<AddressElement>();
-			#endregion
-
-			#region ======================================= СВОЙСТВА ILotusSupportViewInspector =======================
-			/// <summary>
-			/// Отображаемое имя типа в инспекторе свойств
-			/// </summary>
-			[Browsable(false)]
-			public String InspectorTypeName
-			{
-				get { return ("УЛИЦА"); }
-			}
-
-			/// <summary>
-			/// Отображаемое имя объекта в инспекторе свойств
-			/// </summary>
-			[Browsable(false)]
-			public String InspectorObjectName
-			{
-				get
-				{
-					return (mName);
-				}
-			}
 			#endregion
 
 			#region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -207,7 +173,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public AddressStreet(String name)
 			{
-				mName = name;
+				_name = name;
 			}
 			#endregion
 
@@ -233,7 +199,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public override String ToString()
 			{
-				return (InspectorObjectName);
+				return (_name);
 			}
 			#endregion
 		}

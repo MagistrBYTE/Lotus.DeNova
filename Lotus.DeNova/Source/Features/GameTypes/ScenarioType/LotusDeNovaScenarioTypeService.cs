@@ -30,7 +30,7 @@ namespace Lotus
 		public class ScenarioTypeService : ILotusScenarioTypeService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public ScenarioTypeService(DeNovaDbContext context)
+            public ScenarioTypeService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -59,8 +59,8 @@ namespace Lotus
             {
                 ScenarioType entity = scenarioCreate.Adapt<ScenarioType>();
 
-                _context.ScenarioTypes.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 ScenarioTypeDto result = entity.Adapt<ScenarioTypeDto>();
 
@@ -79,8 +79,8 @@ namespace Lotus
             {
                 ScenarioType entity = scenarioUpdate.Adapt<ScenarioType>();
 
-                _context.ScenarioTypes.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 ScenarioTypeDto result = entity.Adapt<ScenarioTypeDto>();
 
@@ -97,7 +97,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<ScenarioTypeDto>> GetAsync(Int32 id, CancellationToken token)
 			{
-				ScenarioType? entity = await _context.ScenarioTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+				ScenarioType? entity = await _repository.GetByIdAsync<ScenarioType, Int32>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<ScenarioTypeDto>(XScenarioTypeErrors.NotFound);
@@ -118,7 +118,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<ScenarioTypeDto>> GetAllAsync(ScenarioTypesRequest scenarioRequest, CancellationToken token)
             {
-                var query = _context.ScenarioTypes.AsQueryable();
+                var query = _repository.Query<ScenarioType>();
 
 				if (scenarioRequest.GameSettingTypeId.HasValue)
 				{
@@ -144,7 +144,7 @@ namespace Lotus
             //---------------------------------------------------------------------------------------------------------
             public async Task<Response> DeleteAsync(Int32 id, CancellationToken token)
             {
-                ScenarioType? entity = await _context.ScenarioTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+                ScenarioType? entity = await _repository.GetByIdAsync<ScenarioType, Int32>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XScenarioTypeErrors.NotFound);
@@ -155,8 +155,8 @@ namespace Lotus
                     return XResponse.Failed(XScenarioTypeErrors.NotDeleteConst);
                 }
 
-                _context.ScenarioTypes.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

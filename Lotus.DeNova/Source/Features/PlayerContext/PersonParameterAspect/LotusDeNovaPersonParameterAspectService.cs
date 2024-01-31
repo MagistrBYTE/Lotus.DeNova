@@ -30,7 +30,7 @@ namespace Lotus
 		public class PersonParameterAspectService : ILotusPersonParameterAspectService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public PersonParameterAspectService(DeNovaDbContext context)
+            public PersonParameterAspectService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -60,8 +60,8 @@ namespace Lotus
             {
                 PersonParameterAspect entity = personParameterAspectCreate.Adapt<PersonParameterAspect>();
 
-                _context.PersonParameterAspects.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 PersonParameterAspectDto result = entity.Adapt<PersonParameterAspectDto>();
 
@@ -81,8 +81,8 @@ namespace Lotus
             {
                 PersonParameterAspect entity = personParameterAspectUpdate.Adapt<PersonParameterAspect>();
 
-                _context.PersonParameterAspects.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 PersonParameterAspectDto result = entity.Adapt<PersonParameterAspectDto>();
 
@@ -99,7 +99,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<PersonParameterAspectDto>> GetAsync(Guid id, CancellationToken token)
 			{
-				PersonParameterAspect? entity = await _context.PersonParameterAspects.FirstOrDefaultAsync(x => x.Id == id, token);
+				PersonParameterAspect? entity = await _repository.GetByIdAsync<PersonParameterAspect, Guid>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<PersonParameterAspectDto>(XPersonParameterAspectErrors.NotFound);
@@ -121,7 +121,7 @@ namespace Lotus
 			public async Task<ResponsePage<PersonParameterAspectDto>> GetAllAsync(PersonParameterAspectsRequest personParameterAspectRequest,
 				CancellationToken token)
             {
-                var query = _context.PersonParameterAspects.AsQueryable();
+                var query = _repository.Query<PersonParameterAspect>();
 
 				if (personParameterAspectRequest.PersonId.HasValue)
 				{
@@ -147,14 +147,14 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Guid id, CancellationToken token)
             {
-                PersonParameterAspect? entity = await _context.PersonParameterAspects.FirstOrDefaultAsync(x => x.Id == id, token);
+                PersonParameterAspect? entity = await _repository.GetByIdAsync<PersonParameterAspect, Guid>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XPersonParameterAspectErrors.NotFound);
                 }
 
-                _context.PersonParameterAspects.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

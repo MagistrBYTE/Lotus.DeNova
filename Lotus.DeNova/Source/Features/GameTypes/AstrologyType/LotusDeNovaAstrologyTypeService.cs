@@ -30,7 +30,7 @@ namespace Lotus
 		public class AstrologyTypeService : ILotusAstrologyTypeService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public AstrologyTypeService(DeNovaDbContext context)
+            public AstrologyTypeService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -59,8 +59,8 @@ namespace Lotus
             {
                 AstrologyType entity = astrologyCreate.Adapt<AstrologyType>();
 
-                _context.AstrologyTypes.Add(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 AstrologyTypeDto result = entity.Adapt<AstrologyTypeDto>();
 
@@ -79,8 +79,8 @@ namespace Lotus
             {
                 AstrologyType entity = astrologyUpdate.Adapt<AstrologyType>();
 
-                _context.AstrologyTypes.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 AstrologyTypeDto result = entity.Adapt<AstrologyTypeDto>();
 
@@ -97,7 +97,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<AstrologyTypeDto>> GetAsync(Int32 id, CancellationToken token)
 			{
-				AstrologyType? entity = await _context.AstrologyTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+				AstrologyType? entity = await _repository.GetByIdAsync<AstrologyType, Int32>(id, token);
 				if (entity == null)
 				{
 					return XResponse.Failed<AstrologyTypeDto>(XAstrologyTypeErrors.NotFound);
@@ -118,7 +118,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<AstrologyTypeDto>> GetAllAsync(AstrologyTypesRequest astrologyRequest, CancellationToken token)
             {
-                var query = _context.AstrologyTypes.AsQueryable();
+                var query = _repository.Query<AstrologyType>();
 
 				if(astrologyRequest.GameSettingTypeId.HasValue)
 				{
@@ -144,7 +144,7 @@ namespace Lotus
             //---------------------------------------------------------------------------------------------------------
             public async Task<Response> DeleteAsync(Int32 id, CancellationToken token)
             {
-                AstrologyType? entity = await _context.AstrologyTypes.FirstOrDefaultAsync(x => x.Id == id, token);
+                AstrologyType? entity = await _repository.GetByIdAsync<AstrologyType, Int32>(id, token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XAstrologyTypeErrors.NotFound);
@@ -155,8 +155,8 @@ namespace Lotus
                     return XResponse.Failed(XAstrologyTypeErrors.NotDeleteConst);
                 }
 
-                _context.AstrologyTypes.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }

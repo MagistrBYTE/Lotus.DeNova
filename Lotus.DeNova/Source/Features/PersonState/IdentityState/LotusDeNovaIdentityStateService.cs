@@ -30,7 +30,7 @@ namespace Lotus
 		public class IdentityStateService : ILotusIdentityStateService
         {
             #region ======================================= ДАННЫЕ ====================================================
-            private readonly DeNovaDbContext _context;
+            private readonly ILotusRepositoryDeNova _repository;
             #endregion
 
             #region ======================================= КОНСТРУКТОРЫ ==============================================
@@ -38,11 +38,11 @@ namespace Lotus
             /// <summary>
             /// Конструктор инициализирует объект класса указанными параметрами
             /// </summary>
-            /// <param name="context">Контекст БД</param>
+            /// <param name="repository">Репозиторий игровой вселенной DeNova</param>
             //---------------------------------------------------------------------------------------------------------
-            public IdentityStateService(DeNovaDbContext context)
+            public IdentityStateService(ILotusRepositoryDeNova repository)
             {
-                _context = context;
+                _repository = repository;
             }
             #endregion
 
@@ -60,8 +60,8 @@ namespace Lotus
                 IdentityState entity = identityInfoCreate.Adapt<IdentityState>();
 				entity.IdentityStateId = Guid.NewGuid();
 
-				_context.IdentityStates.Add(entity);
-                await _context.SaveChangesAsync(token);
+				_repository.Add(entity);
+                await _repository.FlushAsync(token);
 
                 IdentityStateDto result = entity.Adapt<IdentityStateDto>();
 
@@ -80,8 +80,8 @@ namespace Lotus
             {
                 IdentityState entity = identityInfoUpdate.Adapt<IdentityState>();
 
-                _context.IdentityStates.Update(entity);
-                await _context.SaveChangesAsync(token);
+                _repository.Update(entity);
+                await _repository.FlushAsync(token);
 
                 IdentityStateDto result = entity.Adapt<IdentityStateDto>();
 
@@ -98,7 +98,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response<IdentityStateDto>> GetAsync(Guid identityInfoId, CancellationToken token)
 			{
-				IdentityState? entity = await _context.IdentityStates
+				IdentityState? entity = await _repository.Query<IdentityState>()
 					.FirstOrDefaultAsync(x => (x.IdentityStateId == identityInfoId && x.GameSaveId == null), token);
 				if (entity == null)
 				{
@@ -120,7 +120,7 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<ResponsePage<IdentityStateDto>> GetAllAsync(IdentityStatesDto identityInfoRequest, CancellationToken token)
             {
-                var query = _context.IdentityStates.AsQueryable();
+                var query = _repository.Query<IdentityState>();
 
 				query = query
 					.Where(x => x.GameId == identityInfoRequest.GameId &&
@@ -146,15 +146,15 @@ namespace Lotus
 			//---------------------------------------------------------------------------------------------------------
 			public async Task<Response> DeleteAsync(Guid identityInfoId, CancellationToken token)
             {
-                IdentityState? entity = await _context.IdentityStates
+                IdentityState? entity = await _repository.Query<IdentityState>()
 					.FirstOrDefaultAsync(x => (x.IdentityStateId == identityInfoId && x.GameSaveId == null), token);
                 if (entity == null)
                 {
                     return XResponse.Failed(XIdentityStateErrors.NotFound);
                 }
 
-                _context.IdentityStates.Remove(entity!);
-                await _context.SaveChangesAsync(token);
+                _repository.Remove(entity!);
+                await _repository.FlushAsync(token);
 
                 return XResponse.Succeed();
             }
