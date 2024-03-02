@@ -58,9 +58,9 @@ namespace Lotus.DeNova
                 options.UseNpgsql(configuration.GetConnectionString(XDbConstants.ConnectingDenovaDb),
                             optionsBuilder =>
                             {
-                        optionsBuilder.MigrationsHistoryTable(XDbConstants.MigrationHistoryTableName,
-                            XDbConstants.SchemeName);
-                    });
+                                optionsBuilder.MigrationsHistoryTable(XDbConstants.MigrationHistoryTableName,
+                                    XDbConstants.SchemeName);
+                            });
             });
 
             return services;
