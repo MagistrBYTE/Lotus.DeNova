@@ -16,7 +16,7 @@ export interface IEditable
  * @param value Проверяемый объект
  * @returns true, если объекта поддерживает интерфейс, false в противном случае
  */
-export const checkOfEditable= (value: any): value is IEditable =>
+export const checkOfEditable= (value: any): boolean =>
 {
   if(value)
   {

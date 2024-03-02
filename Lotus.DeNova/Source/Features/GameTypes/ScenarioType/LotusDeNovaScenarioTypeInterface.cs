@@ -1,84 +1,53 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема сценария
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaScenarioTypeInterface.cs
-*		Определение интерфейса сервиса для работы со сценариями.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
 using Lotus.Repository;
-//=====================================================================================================================
-namespace Lotus
+
+namespace Lotus.DeNova
 {
-    namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/** \addtogroup DeNovaScenarioType
-		*@{*/
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Интерфейс сервиса для работы со сценариями
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public interface ILotusScenarioTypeService
-        {
-            //---------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// Создание сценария по указанным данным
-            /// </summary>
-            /// <param name="scenarioCreate">Параметры для создания сценария</param>
-            /// <param name="token">Токен отмены</param>
-            /// <returns>Сценарий</returns>
-            //---------------------------------------------------------------------------------------------------------
-            Task<Response<ScenarioTypeDto>> CreateAsync(ScenarioTypeCreateRequest scenarioCreate, CancellationToken token);
+    /** \addtogroup DeNovaScenarioType
+	*@{*/
+    /// <summary>
+    /// Интерфейс сервиса для работы со сценариями.
+    /// </summary>
+    public interface ILotusScenarioTypeService
+    {
+        /// <summary>
+        /// Создание сценария по указанным данным.
+        /// </summary>
+        /// <param name="scenarioCreate">Параметры для создания сценария.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Сценарий.</returns>
+        Task<Response<ScenarioTypeDto>> CreateAsync(ScenarioTypeCreateRequest scenarioCreate, CancellationToken token);
 
-            //---------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// Обновление данных указанной сценария
-            /// </summary>
-            /// <param name="scenarioUpdate">Параметры обновляемой сценария</param>
-            /// <param name="token">Токен отмены</param>
-            /// <returns>Сценарий</returns>
-            //---------------------------------------------------------------------------------------------------------
-            Task<Response<ScenarioTypeDto>> UpdateAsync(ScenarioTypeDto scenarioUpdate, CancellationToken token);
+        /// <summary>
+        /// Обновление данных указанной сценария.
+        /// </summary>
+        /// <param name="scenarioUpdate">Параметры обновляемой сценария.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Сценарий.</returns>
+        Task<Response<ScenarioTypeDto>> UpdateAsync(ScenarioTypeDto scenarioUpdate, CancellationToken token);
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Получение указанной сценария
-			/// </summary>
-			/// <param name="id">Идентификатор сценария</param>
-			/// <param name="token">Токен отмены</param>
-			/// <returns>Сценарий</returns>
-			//---------------------------------------------------------------------------------------------------------
-			Task<Response<ScenarioTypeDto>> GetAsync(Int32 id, CancellationToken token);
+        /// <summary>
+        /// Получение указанной сценария.
+        /// </summary>
+        /// <param name="id">Идентификатор сценария.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Сценарий.</returns>
+        Task<Response<ScenarioTypeDto>> GetAsync(int id, CancellationToken token);
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Получение списка сценариев
-			/// </summary>
-			/// <param name="scenarioRequest">Параметры получения списка</param>
-			/// <param name="token">Токен отмены</param>
-			/// <returns>Cписок рас</returns>
-			//---------------------------------------------------------------------------------------------------------
-			Task<ResponsePage<ScenarioTypeDto>> GetAllAsync(ScenarioTypesRequest scenarioRequest, CancellationToken token);
+        /// <summary>
+        /// Получение списка сценариев.
+        /// </summary>
+        /// <param name="scenarioRequest">Параметры получения списка.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Cписок рас.</returns>
+        Task<ResponsePage<ScenarioTypeDto>> GetAllAsync(ScenarioTypesRequest scenarioRequest, CancellationToken token);
 
-            //---------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// Удаление сценария
-            /// </summary>
-            /// <param name="id">Идентификатор сценария</param>
-            /// <param name="token">Токен отмены</param>
-            /// <returns>Статус успешности</returns>
-            //---------------------------------------------------------------------------------------------------------
-            Task<Response> DeleteAsync(Int32 id, CancellationToken token);
-        }
-        //-------------------------------------------------------------------------------------------------------------
-        /**@}*/
-        //-------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Удаление сценария.
+        /// </summary>
+        /// <param name="id">Идентификатор сценария.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Статус успешности.</returns>
+        Task<Response> DeleteAsync(int id, CancellationToken token);
     }
+    /**@}*/
 }
-//=====================================================================================================================

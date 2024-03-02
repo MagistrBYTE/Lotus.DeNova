@@ -22,7 +22,7 @@ export interface IGrouping<TItem = any>
  * @param value Проверяемый объект
  * @returns true, если объекта поддерживает интерфейс, false в противном случае
  */
-export function checkOfGrouping(value: any): value is IGrouping 
+export function checkOfGrouping(value: any): boolean 
 {
   if(value)
   {

@@ -12,9 +12,9 @@
     <Authors>MagistrBYTE aka DanielDem</Authors>
     <Company>LotusPlatform</Company>
     <Copyright>MagistrBYTE aka DanielDem</Copyright>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0.0</Version>
     <Title>Lotus.DeNova</Title>
     <PackageTags></PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -39,10 +39,10 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Publish'">
-    <PackageReference Include="Lotus.Core" Version="1.9.2" />
-    <PackageReference Include="Lotus.Math" Version="1.9.1" />
-    <PackageReference Include="Lotus.Repository" Version="1.9.2" />
-    <PackageReference Include="Lotus.Account" Version="1.0.5" />
+    <PackageReference Include="Lotus.Core" Version="3.0.0" />
+    <PackageReference Include="Lotus.Math" Version="3.0.0" />
+    <PackageReference Include="Lotus.Repository" Version="3.0.0" />
+    <PackageReference Include="Lotus.Account" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'Publish'">
@@ -53,19 +53,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Source\Features\GameTypes\PersonParameterType\**" />
-    <EmbeddedResource Remove="Source\Features\GameTypes\PersonParameterType\**" />
-    <None Remove="Source\Features\GameTypes\PersonParameterType\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Source\Features\PlayerContext\PersonParameterAspect\" />
   </ItemGroup>
 
 </Project>

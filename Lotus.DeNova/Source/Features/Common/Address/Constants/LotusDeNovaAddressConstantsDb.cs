@@ -1,69 +1,46 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема адресного хозяйства
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaAddressConstantsDb.cs
-*		Константны для сущностей базы данных подсистемы адресного хозяйства.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
-using System;
-//=====================================================================================================================
-namespace Lotus
+namespace Lotus.DeNova
 {
-	namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/** \addtogroup DeNovaAddress
-		*@{*/
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Константны для подсистемы адресного хозяйства
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public static class XAddressConstantsDb
-		{
-			/// <summary>
-			/// Размер поля Number
-			/// </summary>
-			public const Int32 LengthNumber = 4;
+    /** \addtogroup DeNovaAddress
+	*@{*/
+    /// <summary>
+    /// Константны для подсистемы адресного хозяйства.
+    /// </summary>
+    public static class XAddressConstantsDb
+    {
+        /// <summary>
+        /// Размер поля Number.
+        /// </summary>
+        public const int LengthNumber = 4;
 
-			/// <summary>
-			/// Размер поля Name для Element
-			/// </summary>
-			public const Int32 LengthNameElement = 30;
+        /// <summary>
+        /// Размер поля Name для Element.
+        /// </summary>
+        public const int LengthNameElement = 30;
 
-			/// <summary>
-			/// Размер поля Name для Street
-			/// </summary>
-			public const Int32 LengthNameStreet = 16;
+        /// <summary>
+        /// Размер поля Name для Street.
+        /// </summary>
+        public const int LengthNameStreet = 16;
 
-			/// <summary>
-			/// Размер поля Name для Village
-			/// </summary>
-			public const Int32 LengthNameVillage = 16;
+        /// <summary>
+        /// Размер поля Name для Village.
+        /// </summary>
+        public const int LengthNameVillage = 16;
 
-			/// <summary>
-			/// Размер поля Name для VillageSettlement
-			/// </summary>
-			public const Int32 LengthNameVillageSettlement = 40;
+        /// <summary>
+        /// Размер поля Name для VillageSettlement.
+        /// </summary>
+        public const int LengthNameVillageSettlement = 40;
 
-			/// <summary>
-			/// Размер поля CadastralNumber
-			/// </summary>
-			public const Int32 LengthCadastralNumber = 18;
+        /// <summary>
+        /// Размер поля CadastralNumber.
+        /// </summary>
+        public const int LengthCadastralNumber = 18;
 
-			/// <summary>
-			/// Размер поля ShortName
-			/// </summary>
-			public const Int32 LengthShortName = 20;
-		}
-		//-------------------------------------------------------------------------------------------------------------
-		/**@}*/
-		//-------------------------------------------------------------------------------------------------------------
-	}
+        /// <summary>
+        /// Размер поля ShortName.
+        /// </summary>
+        public const int LengthShortName = 20;
+    }
+    /**@}*/
 }
-//=====================================================================================================================

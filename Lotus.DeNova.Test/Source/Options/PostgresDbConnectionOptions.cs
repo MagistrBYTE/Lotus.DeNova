@@ -1,27 +1,27 @@
-﻿namespace Lotus.DeNova.Test
+namespace Lotus.DeNova.Test
 {
     /// <summary>
-    /// Параметры подключения к БД POstgres
+    /// Параметры подключения к БД POstgres.
     /// </summary>
     public class PostgresDbConnectionOptions
     {
         /// <summary>
-        /// Пароль
+        /// Пароль.
         /// </summary>
         public string Password { get; set; }
 
         /// <summary>
-        /// Порт
+        /// Порт.
         /// </summary>
         public string Port { get; set; }
 
         /// <summary>
-        /// Сервер
+        /// Сервер.
         /// </summary>
         public string Server { get; set; }
 
         /// <summary>
-        /// Пользователь
+        /// Пользователь.
         /// </summary>
         public string UserId { get; set; }
     }

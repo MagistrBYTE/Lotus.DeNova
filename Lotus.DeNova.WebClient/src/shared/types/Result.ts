@@ -29,7 +29,7 @@ export interface IResult<TData = any>
  * @param value Проверяемый объект
  * @returns true, если объекта поддерживает интерфейс, false в противном случае
  */
-export function checkOfResult(value: any): value is IResult 
+export function checkOfResult(value: any): boolean
 {
   if(value)
   {

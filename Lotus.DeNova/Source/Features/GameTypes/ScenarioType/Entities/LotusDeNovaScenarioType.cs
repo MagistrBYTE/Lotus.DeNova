@@ -1,119 +1,91 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема сценария
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaScenarioType.cs
-*		Класс для определения сценария игры.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
-using System;
 using System.ComponentModel.DataAnnotations;
-//---------------------------------------------------------------------------------------------------------------------
+
 #if USE_EFC
 using Microsoft.EntityFrameworkCore;
 #endif
-//---------------------------------------------------------------------------------------------------------------------
+
 using Lotus.Core;
-//=====================================================================================================================
-namespace Lotus
+
+namespace Lotus.DeNova
 {
-	namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/**
-         * \defgroup DeNovaScenarioType Подсистема сценария
-         * \ingroup DeNova
-         * \brief Подсистема сценария.
-         * @{
-         */
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Класс для определения сценария игры
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public class ScenarioType : EntityDb<Int32>, IComparable<ScenarioType>
-		{
-			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
-			/// <summary>
-			/// Имя таблицы
-			/// </summary>
-			public const String TABLE_NAME = "ScenarioType";
-			#endregion
+    /**
+     * \defgroup DeNovaScenarioType Подсистема сценария
+     * \ingroup DeNova
+     * \brief Подсистема сценария.
+     * @{
+     */
+    /// <summary>
+    /// Класс для определения сценария игры.
+    /// </summary>
+    public class ScenarioType : EntityDb<int>, IComparable<ScenarioType>
+    {
+        #region Const
+        /// <summary>
+        /// Имя таблицы.
+        /// </summary>
+        public const string TABLE_NAME = "ScenarioType";
+        #endregion
 
-			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Конфигурирование модели для типа <see cref="ScenarioType"/>
-			/// </summary>
-			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
-			//---------------------------------------------------------------------------------------------------------
-			public static void ModelCreating(ModelBuilder modelBuilder)
-			{
-				// Определение для таблицы
-				var model = modelBuilder.Entity<ScenarioType>();
-				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
-			}
-			#endregion
+        #region Models methods
+        /// <summary>
+        /// Конфигурирование модели для типа <see cref="ScenarioType"/>.
+        /// </summary>
+        /// <param name="modelBuilder">Интерфейс для построения моделей.</param>
+        public static void ModelCreating(ModelBuilder modelBuilder)
+        {
+            // Определение для таблицы
+            var model = modelBuilder.Entity<ScenarioType>();
+            model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
+        }
+        #endregion
 
-			#region ======================================= СВОЙСТВА ==================================================
-			/// <summary>
-			/// Идентификатор сеттинга
-			/// </summary>
-			public Int32? GameSettingTypeId { get; set; }
+        #region Properties
+        /// <summary>
+        /// Идентификатор сеттинга.
+        /// </summary>
+        public int? GameSettingTypeId { get; set; }
 
-			/// <summary>
-			/// Название сценария
-			/// </summary>
-			[MaxLength(20)]
-			public String Name { get; set; } = null!;
+        /// <summary>
+        /// Название сценария.
+        /// </summary>
+        [MaxLength(20)]
+        public string Name { get; set; } = null!;
 
-			/// <summary>
-			/// Название сценария для отображения
-			/// </summary>
-			[MaxLength(40)]
-			public String? DisplayName { get; set; }
+        /// <summary>
+        /// Название сценария для отображения.
+        /// </summary>
+        [MaxLength(40)]
+        public string? DisplayName { get; set; }
 
-			/// <summary>
-			/// Дополнительная информация
-			/// </summary>
-			[MaxLength(256)]
-			public String? AdditionalInfo { get; set; }
-			#endregion
+        /// <summary>
+        /// Дополнительная информация.
+        /// </summary>
+        [MaxLength(256)]
+        public string? AdditionalInfo { get; set; }
+        #endregion
 
-			#region ======================================= СИСТЕМНЫЕ МЕТОДЫ ==========================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Сравнение объектов для упорядочивания
-			/// </summary>
-			/// <param name="other">Сравниваемый объект</param>
-			/// <returns>Статус сравнения объектов</returns>
-			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(ScenarioType? other)
-			{
-				if (other == null) return 0;
+        #region System methods
+        /// <summary>
+        /// Сравнение объектов для упорядочивания.
+        /// </summary>
+        /// <param name="other">Сравниваемый объект.</param>
+        /// <returns>Статус сравнения объектов.</returns>
+        public int CompareTo(ScenarioType? other)
+        {
+            if (other == null) return 0;
 
-				return Name.CompareTo(other.Name);
-			}
+            return Name.CompareTo(other.Name);
+        }
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Преобразование к текстовому представлению
-			/// </summary>
-			/// <returns>Имя объекта</returns>
-			//---------------------------------------------------------------------------------------------------------
-			public override String ToString()
-			{
-				return (DisplayName ?? Name);
-			}
-			#endregion
-		}
-		//-------------------------------------------------------------------------------------------------------------
-		/**@}*/
-		//-------------------------------------------------------------------------------------------------------------
-	}
+        /// <summary>
+        /// Преобразование к текстовому представлению.
+        /// </summary>
+        /// <returns>Имя объекта.</returns>
+        public override string ToString()
+        {
+            return (DisplayName ?? Name);
+        }
+        #endregion
+    }
+    /**@}*/
 }
-//=====================================================================================================================

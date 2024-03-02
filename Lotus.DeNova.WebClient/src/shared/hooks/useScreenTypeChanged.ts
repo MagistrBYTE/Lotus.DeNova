@@ -4,7 +4,7 @@ import { useLayoutEffect } from 'react';
  * Хук для вызова функции в случае изменения размера или ориентации экрана
  * @param callback Вызываемая функция
  */
-export const useScreenResizeOrOrientation = (callback:()=>void) =>
+export const useScreenResizeOrOrientation = (callback: Function) =>
 {
   const handleScreenResizeOrOrientation = () =>
   {

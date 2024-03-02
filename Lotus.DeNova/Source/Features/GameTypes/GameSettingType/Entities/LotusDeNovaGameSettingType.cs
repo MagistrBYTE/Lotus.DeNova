@@ -1,107 +1,80 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема сеттинга игры
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaGameSettingType.cs
-*		Класс для определения сеттинга игры.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
 using System.ComponentModel.DataAnnotations;
-//---------------------------------------------------------------------------------------------------------------------
+
 #if USE_EFC
 using Microsoft.EntityFrameworkCore;
 #endif
-//---------------------------------------------------------------------------------------------------------------------
+
 using Lotus.Core;
-//=====================================================================================================================
-namespace Lotus
+
+namespace Lotus.DeNova
 {
-	namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/**
-         * \defgroup DeNovaGameSettingType Подсистема сеттинга игры
-         * \ingroup DeNova
-         * \brief Подсистема сеттинга игры.
-         * @{
-         */
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Класс для определения сеттинга игры
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public class GameSettingType : EntityDb<Int32>, IComparable<GameSettingType>
-		{
-			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
-			/// <summary>
-			/// Имя таблицы
-			/// </summary>
-			public const String TABLE_NAME = "GameSettingType";
-			#endregion
+    /**
+     * \defgroup DeNovaGameSettingType Подсистема сеттинга игры
+     * \ingroup DeNova
+     * \brief Подсистема сеттинга игры.
+     * @{
+     */
+    /// <summary>
+    /// Класс для определения сеттинга игры.
+    /// </summary>
+    public class GameSettingType : EntityDb<int>, IComparable<GameSettingType>
+    {
+        #region Const
+        /// <summary>
+        /// Имя таблицы.
+        /// </summary>
+        public const string TABLE_NAME = "GameSettingType";
+        #endregion
 
-			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Конфигурирование модели для типа <see cref="GameSettingType"/>
-			/// </summary>
-			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
-			//---------------------------------------------------------------------------------------------------------
-			public static void ModelCreating(ModelBuilder modelBuilder)
-			{
-				// Определение для таблицы
-				var model = modelBuilder.Entity<GameSettingType>();
-				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
-			}
-			#endregion
+        #region Models methods
+        /// <summary>
+        /// Конфигурирование модели для типа <see cref="GameSettingType"/>.
+        /// </summary>
+        /// <param name="modelBuilder">Интерфейс для построения моделей.</param>
+        public static void ModelCreating(ModelBuilder modelBuilder)
+        {
+            // Определение для таблицы
+            var model = modelBuilder.Entity<GameSettingType>();
+            model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
+        }
+        #endregion
 
-			#region ======================================= СВОЙСТВА ==================================================
-			/// <summary>
-			/// Название сеттинга
-			/// </summary>
-			[MaxLength(20)]
-			public String Name { get; set; } = null!;
+        #region Properties
+        /// <summary>
+        /// Название сеттинга.
+        /// </summary>
+        [MaxLength(20)]
+        public string Name { get; set; } = null!;
 
-			/// <summary>
-			/// Название сеттинга для отображения
-			/// </summary>
-			[MaxLength(40)]
-			public String? DisplayName { get; set; }
-			#endregion
+        /// <summary>
+        /// Название сеттинга для отображения.
+        /// </summary>
+        [MaxLength(40)]
+        public string? DisplayName { get; set; }
+        #endregion
 
-			#region ======================================= СИСТЕМНЫЕ МЕТОДЫ ==========================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Сравнение объектов для упорядочивания
-			/// </summary>
-			/// <param name="other">Сравниваемый объект</param>
-			/// <returns>Статус сравнения объектов</returns>
-			//---------------------------------------------------------------------------------------------------------
-			public Int32 CompareTo(GameSettingType? other)
-			{
-				if (other == null) return 0;
+        #region System methods
+        /// <summary>
+        /// Сравнение объектов для упорядочивания.
+        /// </summary>
+        /// <param name="other">Сравниваемый объект.</param>
+        /// <returns>Статус сравнения объектов.</returns>
+        public int CompareTo(GameSettingType? other)
+        {
+            if (other == null) return 0;
 
-				return Name.CompareTo(other.Name);
-			}
+            return Name.CompareTo(other.Name);
+        }
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Преобразование к текстовому представлению
-			/// </summary>
-			/// <returns>Имя объекта</returns>
-			//---------------------------------------------------------------------------------------------------------
-			public override String ToString()
-			{
-				return (DisplayName ?? Name);
-			}
-			#endregion
-		}
-		//-------------------------------------------------------------------------------------------------------------
-		/**@}*/
-		//-------------------------------------------------------------------------------------------------------------
-	}
+        /// <summary>
+        /// Преобразование к текстовому представлению.
+        /// </summary>
+        /// <returns>Имя объекта.</returns>
+        public override string ToString()
+        {
+            return (DisplayName ?? Name);
+        }
+        #endregion
+    }
+    /**@}*/
 }
-//=====================================================================================================================

@@ -1,72 +1,49 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема данных астрологии
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaAstrologyTypeConstants.cs
-*		Работа с константными и первоначальными данными подсистемы данных астрологии.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
-using Lotus.Core;
-//=====================================================================================================================
-namespace Lotus
+namespace Lotus.DeNova
 {
-    namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/** \addtogroup DeNovaAstrologyType
-		*@{*/
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Статический класс для определения констант и первоначальных данных подсистемы данных астрологии
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public static class XAstrologyTypeConstants
-		{
-			#region ======================================= ДАННЫЕ ====================================================
-			/// <summary>
-			/// Змееносец
-			/// </summary>
-			public static readonly AstrologyType Ophiuchus = new AstrologyType()
-            {
-                Id = 1,
-                ZodiacSign = "Змееносец",
-				StoneZodiac = "Алмаз",
-				TreeZodiac = "Лиана",
-				GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
-			};
+    /** \addtogroup DeNovaAstrologyType
+	*@{*/
+    /// <summary>
+    /// Статический класс для определения констант и первоначальных данных подсистемы данных астрологии.
+    /// </summary>
+    public static class XAstrologyTypeConstants
+    {
+        #region Fields
+        /// <summary>
+        /// Змееносец.
+        /// </summary>
+        public static readonly AstrologyType Ophiuchus = new()
+        {
+            Id = 1,
+            ZodiacSign = "Змееносец",
+            StoneZodiac = "Алмаз",
+            TreeZodiac = "Лиана",
+            GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
+        };
 
-			/// <summary>
-			/// Кецалькоатль
-			/// </summary>
-			public static readonly AstrologyType Quetzalcoatl = new AstrologyType()
-			{
-				Id = 2,
-				ZodiacSign = "Кецалькоатль",
-				StoneZodiac = "Изумруд",
-				TreeZodiac = "Ива",
-				GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
-			};
+        /// <summary>
+        /// Кецалькоатль.
+        /// </summary>
+        public static readonly AstrologyType Quetzalcoatl = new()
+        {
+            Id = 2,
+            ZodiacSign = "Кецалькоатль",
+            StoneZodiac = "Изумруд",
+            TreeZodiac = "Ива",
+            GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
+        };
 
-			/// <summary>
-			/// Телец
-			/// </summary>
-			public static readonly AstrologyType Taurus = new AstrologyType()
-			{
-				Id = 3,
-				ZodiacSign = "Телец",
-				StoneZodiac = "Топаз",
-				TreeZodiac = "Дуб",
-				GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
-			};
-			#endregion
-		}
-        //-------------------------------------------------------------------------------------------------------------
-        /**@}*/
-        //-------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Телец.
+        /// </summary>
+        public static readonly AstrologyType Taurus = new()
+        {
+            Id = 3,
+            ZodiacSign = "Телец",
+            StoneZodiac = "Топаз",
+            TreeZodiac = "Дуб",
+            GameSettingTypeId = XGameSettingTypeConstants.Sentra.Id
+        };
+        #endregion
     }
+    /**@}*/
 }
-//=====================================================================================================================

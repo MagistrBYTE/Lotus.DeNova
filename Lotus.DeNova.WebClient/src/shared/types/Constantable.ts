@@ -14,7 +14,7 @@ export interface IConstantable
  * @param value Проверяемый объект
  * @returns true, если объекта поддерживает интерфейс, false в противном случае
  */
-export const checkOfConstantable= (value: any): value is IConstantable =>
+export const checkOfConstantable= (value: any): boolean =>
 {
   if(value)
   {

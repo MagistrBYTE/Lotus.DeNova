@@ -1,75 +1,49 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема параметров существ
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaParameterTypeAspectRelation.cs
-*		Класс для определения параметра существа.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
-using System;
-using System.ComponentModel.DataAnnotations;
-//---------------------------------------------------------------------------------------------------------------------
 #if USE_EFC
 using Microsoft.EntityFrameworkCore;
 #endif
-//---------------------------------------------------------------------------------------------------------------------
+
 using Lotus.Core;
-//=====================================================================================================================
-namespace Lotus
+
+namespace Lotus.DeNova
 {
-	namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/** \addtogroup DeNovaCreatureParameter
-        *@{*/
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Класс для связывания параметра и его аспекта
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public class ParameterTypeAspectRelation : EntityDb<Int32>
-		{
-			#region ======================================= КОНСТАНТНЫЕ ДАННЫЕ ========================================
-			/// <summary>
-			/// Имя таблицы
-			/// </summary>
-			public const String TABLE_NAME = "ParameterTypeAspectRelation";
-			#endregion
+    /** \addtogroup DeNovaCreatureParameter
+    *@{*/
+    /// <summary>
+    /// Класс для связывания параметра и его аспекта.
+    /// </summary>
+    public class ParameterTypeAspectRelation : EntityDb<int>
+    {
+        #region Const
+        /// <summary>
+        /// Имя таблицы.
+        /// </summary>
+        public const string TABLE_NAME = "ParameterTypeAspectRelation";
+        #endregion
 
-			#region ======================================= МЕТОДЫ ОПРЕДЕЛЕНИЯ МОДЕЛЕЙ ================================
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Конфигурирование модели для типа <see cref="ParameterTypeAspectRelation"/>
-			/// </summary>
-			/// <param name="modelBuilder">Интерфейс для построения моделей</param>
-			//---------------------------------------------------------------------------------------------------------
-			public static void ModelCreating(ModelBuilder modelBuilder)
-			{
-				// Определение для таблицы
-				var model = modelBuilder.Entity<ParameterTypeAspectRelation>();
-				model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
-			}
-			#endregion
+        #region Models methods
+        /// <summary>
+        /// Конфигурирование модели для типа <see cref="ParameterTypeAspectRelation"/>.
+        /// </summary>
+        /// <param name="modelBuilder">Интерфейс для построения моделей.</param>
+        public static void ModelCreating(ModelBuilder modelBuilder)
+        {
+            // Определение для таблицы
+            var model = modelBuilder.Entity<ParameterTypeAspectRelation>();
+            model.ToTable(TABLE_NAME, XDbConstants.SchemeName);
+        }
+        #endregion
 
-			#region ======================================= СВОЙСТВА ==================================================
-			/// <summary>
-			/// Идентификатор типа параметра
-			/// </summary>
-			public Int32 ParameterTypeId { get; set; }
+        #region Properties
+        /// <summary>
+        /// Идентификатор типа параметра.
+        /// </summary>
+        public int ParameterTypeId { get; set; }
 
-			/// <summary>
-			/// Идентификатор типа аспекта параметра
-			/// </summary>
-			public Int32 ParameterAspectTypeId { get; set; }
-			#endregion
-		}
-		//-------------------------------------------------------------------------------------------------------------
-		/**@}*/
-		//-------------------------------------------------------------------------------------------------------------
-	}
+        /// <summary>
+        /// Идентификатор типа аспекта параметра.
+        /// </summary>
+        public int ParameterAspectTypeId { get; set; }
+        #endregion
+    }
+    /**@}*/
 }
-//=====================================================================================================================

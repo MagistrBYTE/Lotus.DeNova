@@ -1,84 +1,53 @@
-﻿//=====================================================================================================================
-// Проект: Модуль игровой вселенной DeNova
-// Раздел: Подсистема перемещения персонажа
-// Автор: MagistrBYTE aka DanielDem <dementevds@gmail.com>
-//---------------------------------------------------------------------------------------------------------------------
-/** \file LotusDeNovaPlacementStateInterface.cs
-*		Определение интерфейса сервиса для работы с местоположением персонажа.
-*/
-//---------------------------------------------------------------------------------------------------------------------
-// Версия: 1.0.0.0
-// Последнее изменение от 30.04.2023
-//=====================================================================================================================
 using Lotus.Repository;
-//=====================================================================================================================
-namespace Lotus
+
+namespace Lotus.DeNova
 {
-    namespace DeNova
-	{
-		//-------------------------------------------------------------------------------------------------------------
-		/** \addtogroup DeNovaPlacementState
-		*@{*/
-		//-------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Интерфейс сервиса для работы с местоположением персонажа
-		/// </summary>
-		//-------------------------------------------------------------------------------------------------------------
-		public interface ILotusPlacementStateService
-        {
-            //---------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// Создание местоположения персонажа по указанным данным
-            /// </summary>
-            /// <param name="placementInfoCreate">Параметры для создания местоположения персонажа</param>
-            /// <param name="token">Токен отмены</param>
-            /// <returns>Местоположение персонажа</returns>
-            //---------------------------------------------------------------------------------------------------------
-            Task<Response<PlacementStateDto>> CreateAsync(PlacementStateCreateRequest placementInfoCreate, CancellationToken token);
+    /** \addtogroup DeNovaPlacementState
+	*@{*/
+    /// <summary>
+    /// Интерфейс сервиса для работы с местоположением персонажа.
+    /// </summary>
+    public interface ILotusPlacementStateService
+    {
+        /// <summary>
+        /// Создание местоположения персонажа по указанным данным.
+        /// </summary>
+        /// <param name="placementInfoCreate">Параметры для создания местоположения персонажа.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Местоположение персонажа.</returns>
+        Task<Response<PlacementStateDto>> CreateAsync(PlacementStateCreateRequest placementInfoCreate, CancellationToken token);
 
-            //---------------------------------------------------------------------------------------------------------
-            /// <summary>
-            /// Обновление данных о местоположении персонажа
-            /// </summary>
-            /// <param name="placementInfoUpdate">Параметры обновляемого местоположения персонажа</param>
-            /// <param name="token">Токен отмены</param>
-            /// <returns>Местоположение персонажа</returns>
-            //---------------------------------------------------------------------------------------------------------
-            Task<Response<PlacementStateDto>> UpdateAsync(PlacementStateDto placementInfoUpdate, CancellationToken token);
+        /// <summary>
+        /// Обновление данных о местоположении персонажа.
+        /// </summary>
+        /// <param name="placementInfoUpdate">Параметры обновляемого местоположения персонажа.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Местоположение персонажа.</returns>
+        Task<Response<PlacementStateDto>> UpdateAsync(PlacementStateDto placementInfoUpdate, CancellationToken token);
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Получение указанного местоположения персонажа
-			/// </summary>
-			/// <param name="placementInfoId">Идентификатор местоположения персонажа</param>
-			/// <param name="token">Токен отмены</param>
-			/// <returns>Местоположение персонажа</returns>
-			//---------------------------------------------------------------------------------------------------------
-			Task<Response<PlacementStateDto>> GetAsync(Guid placementInfoId, CancellationToken token);
+        /// <summary>
+        /// Получение указанного местоположения персонажа.
+        /// </summary>
+        /// <param name="placementInfoId">Идентификатор местоположения персонажа.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Местоположение персонажа.</returns>
+        Task<Response<PlacementStateDto>> GetAsync(Guid placementInfoId, CancellationToken token);
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Получение списка местоположений персонажа 
-			/// </summary>
-			/// <param name="placementInfoRequest">Параметры получения списка</param>
-			/// <param name="token">Токен отмены</param>
-			/// <returns>Список местоположений персонажа</returns>
-			//---------------------------------------------------------------------------------------------------------
-			Task<ResponsePage<PlacementStateDto>> GetAllAsync(PlacementStatesDto placementInfoRequest, CancellationToken token);
+        /// <summary>
+        /// Получение списка местоположений персонажа.
+        /// </summary>
+        /// <param name="placementInfoRequest">Параметры получения списка.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Список местоположений персонажа.</returns>
+        Task<ResponsePage<PlacementStateDto>> GetAllAsync(PlacementStatesDto placementInfoRequest, CancellationToken token);
 
-			//---------------------------------------------------------------------------------------------------------
-			/// <summary>
-			/// Удаление местоположения персонажа
-			/// </summary>
-			/// <param name="placementInfoId">Идентификатор местоположения персонажа</param>
-			/// <param name="token">Токен отмены</param>
-			/// <returns>Статус успешности</returns>
-			//---------------------------------------------------------------------------------------------------------
-			Task<Response> DeleteAsync(Guid placementInfoId, CancellationToken token);
-        }
-        //-------------------------------------------------------------------------------------------------------------
-        /**@}*/
-        //-------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Удаление местоположения персонажа.
+        /// </summary>
+        /// <param name="placementInfoId">Идентификатор местоположения персонажа.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <returns>Статус успешности.</returns>
+        Task<Response> DeleteAsync(Guid placementInfoId, CancellationToken token);
     }
+    /**@}*/
 }
-//=====================================================================================================================
